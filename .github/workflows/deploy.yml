@@ -24,7 +24,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12
-      - name: src
+      - name: tree
+          run: |
+            tree
+      - name: cd
         run: |
           cd frontend
       - name: Install dependencies
