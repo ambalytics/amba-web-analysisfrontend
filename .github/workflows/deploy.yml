@@ -9,11 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Vue
     steps:
-    - uses: actions/checkout@v2
-    - id: Build-Vue
-      uses: xRealNeon/VuePagesAction@1.0.0
-      with:
-        username: 'ambalytics'
-        reponame: 'amba-web-analysisfrontend'
-        cname: 'analysis.ambalytics.cloud'
-        token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+      - name: build
+        run: |
+          npm ci
+          npm run build
+          cd dist
+          echo 'analysis.ambalytics.cloud' > CNAME; fi
+          git config --global user.email "CI@example.com"
+          git config --global user.name "lukasjesche"
+          git init
+          git add -A
+          git commit -m 'deploy'
+          git push -f https://}}:${{ secrets.GITHUB_TOKEN }}@github.com/ambalytics/amba-web-analysisfrontend.git master:gh-pages
+        shell: bash
