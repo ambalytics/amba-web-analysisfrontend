@@ -29,14 +29,11 @@ jobs:
           cd frontend
           npm ci
           npm run build
-      - name: tree
-        run: |
-          tree
       - name: Upload built
         uses: actions/upload-artifact@v2.2.3
         with:
           name: dist
-          path: dist
+          path: frontend/dist
           if-no-files-found: error
           retention-days: 1
   deploy:
