@@ -15,4 +15,5 @@ jobs:
       with:
         username: 'lukasjesche'
         reponame: 'amba-web-analysisfrontend'
+        cname: 'analysis.ambalytics.cloud'
         token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
