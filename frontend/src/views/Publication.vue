@@ -56,6 +56,56 @@
         <div class="p-col-3">
             <Card>
                 <template #title>
+                    Stats
+                </template>
+                <template #content>
+                    <div>
+                        <h2>Tweet Count</h2>
+                        {{ tweetCount }}
+                    </div>
+                    <div>
+                        <h2>Tweet Author Count</h2>
+                        {{ authorCount }}
+                    </div>
+                    <div>
+                        <h2>Total Followers Reached</h2>
+                        {{ totalFollowers }}
+                    </div>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-6">
+            <Card>
+                <template #title>
+                    Authors
+                </template>
+                <template #content>
+                    <MapChart v-if="renderMap" :countryData="countries"
+                              highColor="#ff0000"
+                              lowColor="#aaaaaa"
+                              countryStrokeColor="#909090"
+                              defaultCountryFillColor="#dadada"
+                              showLegend="true"
+                    />
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-6">
+            <Card>
+                <template #title>
+                    Words
+                </template>
+                <template #content>
+                    <word-cloud v-if="render" :data="words" :fontSizeMapper="fontSizeMapper"></word-cloud>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-3">
+            <Card>
+                <template #title>
                     Entities
                 </template>
                 <template #content>
@@ -64,7 +114,7 @@
             </Card>
         </div>
 
-         <div class="p-col-3">
+        <div class="p-col-3">
             <Card>
                 <template #title>
                     Types
@@ -140,28 +190,38 @@
 
     import PublicationDonutChart from "../components/PublicationDonutChart";
     import PublicationService from "../services/PublicationService";
+    import WordCloud from "../components/WordCloud";
+    import MapChart from 'vue-map-chart'
 
     export default {
         name: 'Publication',
-        components: {PublicationDonutChart},
+        components: {PublicationDonutChart, WordCloud, MapChart},
         data: () => ({
             publication: {},
-               columns: [
-                    {field: '_id', header: 'id', sortable: false},
-                    {field: 'time_past', header: 'time_past', sortable: true},
-                    {field: 'text', header: 'text', sortable: true},
-                    {field: 'source', header: 'source', sortable: true},
-                    {field: 'lang', header: 'lang', sortable: true},
-                    {field: 'tweet_type', header: 'tweet_type', sortable: true},
-                    {field: 'score', header: 'score', sortable: true},
-                    {field: 'question_mark_count', header: 'question_mark_count', sortable: true},
-                    {field: 'exclamation_mark_count', header: 'exclamation_mark_count', sortable: true},
-                    {field: 'length', header: 'length', sortable: true},
-                    {field: 'contains_abstract', header: 'contains_abstract', sortable: true},
-                    {field: 'bot_rating', header: 'bot_rating', sortable: true},
-                ],
-                data: [],
-                loading: true
+            fontSizeMapper: word => Math.log2(word.value * 10) * 10,
+            columns: [
+                {field: '_id', header: 'id', sortable: false},
+                {field: 'time_past', header: 'time_past', sortable: true},
+                {field: 'text', header: 'text', sortable: true},
+                {field: 'source', header: 'source', sortable: true},
+                {field: 'lang', header: 'lang', sortable: true},
+                {field: 'tweet_type', header: 'tweet_type', sortable: true},
+                {field: 'score', header: 'score', sortable: true},
+                {field: 'question_mark_count', header: 'question_mark_count', sortable: true},
+                {field: 'exclamation_mark_count', header: 'exclamation_mark_count', sortable: true},
+                {field: 'length', header: 'length', sortable: true},
+                {field: 'contains_abstract', header: 'contains_abstract', sortable: true},
+                {field: 'bot_rating', header: 'bot_rating', sortable: true},
+            ],
+            countries: [],
+            data: [],
+            words: [],
+            render: false,
+            renderMap: false,
+            loading: true,
+            tweetCount: '-',
+            authorCount: '-',
+            totalFollowers: '-',
         }), created() {
             console.log('created');
             // fetch the data when the view is created and the data is
@@ -202,10 +262,90 @@
                     .catch(e => {
                         console.log(e);
                     });
+
                 PublicationService.twitter(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         this.loading = false;
                         this.data = response.data.data[0];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+
+                PublicationService.tweetCount(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.tweetCount = response.data.data[0]['count'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.followers(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.totalFollowers = response.data.data[0]['sum'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.authorCount(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.authorCount = response.data.data[0]['count'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.countries(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.loading = false;
+                        console.log('countries')
+                        let c = {}
+                        response.data.data.forEach((e) => {
+                            c[e._id.toUpperCase()] = e.sum
+                        });
+                        console.log(c)
+                        this.countries = c;
+                        this.renderMap = true
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.words(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.loading = false;
+                        this.words = response.data.data.words;
+                        console.log('words')
+                        console.log(this.words)
+
+                        if (!this.words || this.words.length < 1)
+                            return [];
+
+                        let occurences = this.words.reduce((allNames, name) => {
+                            if (name in allNames) {
+                                allNames[name]++;
+                            } else {
+                                allNames[name] = 1;
+                            }
+                            return allNames;
+                        }, {});
+
+                        let occurencesCount = []
+
+                        for (var text in occurences) {
+                            let obj = {}
+                            obj.text = text;
+                            obj.value = occurences[text]
+                            occurencesCount.push(obj)
+                        }
+                        console.log('words')
+                        console.log(occurencesCount)
+                        this.words = occurencesCount
+                        this.render = true
+                        console.log(this.render)
+                        console.log('render')
                     })
                     .catch(e => {
                         console.log(e);

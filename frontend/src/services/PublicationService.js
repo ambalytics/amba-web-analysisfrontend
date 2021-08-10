@@ -26,6 +26,10 @@ class PublicationService {
         return id === null ? http.get("/stats/types") : http.get(`/stats/types?id=${id}`);
     }
 
+    words(id) {
+        return http.get(`/stats/words?id=${id}`);
+    }
+
     sources(id = null) {
         return id === null ? http.get("/stats/sources") : http.get(`/stats/sources?id=${id}`);
     }
@@ -49,6 +53,22 @@ class PublicationService {
 
     timeOfDay(id = null) {
         return id === null ? http.get("/stats/dayhour") : http.get(`/stats/dayhour?id=${id}`);
+    }
+
+    countries(id = null) {
+        return id === null ? http.get("/stats/locations") : http.get(`/stats/locations?id=${id}`);
+    }
+
+    followers(id = null) {
+        return id === null ? http.get("/stats/followers") : http.get(`/stats/followers?id=${id}`);
+    }
+
+    authorCount(id = null) {
+        return id === null ? http.get("/stats/authorcount") : http.get(`/stats/authorcount?id=${id}`);
+    }
+
+    tweetCount(id = null) {
+        return id === null ? http.get("/stats/tweetcount") : http.get(`/stats/tweetcount?id=${id}`);
     }
 }
 
