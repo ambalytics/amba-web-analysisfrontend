@@ -24,17 +24,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12
-      - name: cd
-        run: |
-          cd frontend
-      - name: tree
-        run: |
-          tree
       - name: Install dependencies
         run: |
           cd frontend
           npm ci
           npm run build
+      - name: tree
+        run: |
+          tree
       - name: Upload built
         uses: actions/upload-artifact@v2.2.3
         with:
