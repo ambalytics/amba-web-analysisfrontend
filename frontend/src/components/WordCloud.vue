@@ -25,7 +25,8 @@ export default {
         onWordClick: {
             type: Function,
             default: (word) => {
-                window.alert(`You clicked ${word.text}`)
+                console.log(word.target.textContent);
+                window.alert(`You clicked ${word}`)
             },
         },
         rotate: {

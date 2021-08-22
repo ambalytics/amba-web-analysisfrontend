@@ -86,7 +86,7 @@
                               lowColor="#aaaaaa"
                               countryStrokeColor="#909090"
                               defaultCountryFillColor="#dadada"
-                              showLegend="true"
+                              @hoverCountry="hover"
                     />
                 </template>
             </Card>
@@ -246,6 +246,11 @@
             },
             hashtagsGetter() {
                 return PublicationService.hashtags(this.$route.params.p + "/" + this.$route.params.s)
+            },
+            hover(e){
+              if (!e) {
+                  console.log(e)
+              }
             },
             fetchData() {
                 console.log('fetch data');
