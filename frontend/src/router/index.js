@@ -9,7 +9,11 @@ const routes = [
         name: 'Home',
         component: Home
     },
-        {
+    {
+        path: '/trending',
+        name: 'Trending',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Trending.vue')
+    },{
         path: '/publications',
         name: 'Publications',
         component: () => import(/* webpackChunkName: "about" */ '../views/Publications.vue')

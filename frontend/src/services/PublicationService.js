@@ -70,6 +70,14 @@ class PublicationService {
     tweetCount(id = null) {
         return id === null ? http.get("/stats/tweetcount") : http.get(`/stats/tweetcount?id=${id}`);
     }
+
+    scoreSum(id = null) {
+        return id === null ? http.get("/stats/scoresum") : http.get(`/stats/scoresum?id=${id}`);
+    }
+
+    timeBinned(id = null) {
+        return id === null ? http.get("/stats/timebinned") : http.get(`/stats/timebinned?id=${id}`);
+    }
 }
 
 export default new PublicationService();

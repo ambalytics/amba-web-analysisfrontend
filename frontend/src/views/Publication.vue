@@ -1,7 +1,7 @@
 <template>
     <div class="p-grid">
 
-        <div class="p-col-6">
+        <div class="p-col-3">
             <Card>
                 <template #title>
                     {{ publication.title }}
@@ -10,7 +10,7 @@
                     {{ publication.abstract }}
                 </template>
                 <template #footer>
-                    More Information: <a class="doi" :href="publication.url">{{ publication.url }}</a>
+                    More Information: <a class="doi" target="_blank" :href="realUrl">{{ publication.url }}</a>
                 </template>
             </Card>
         </div>
@@ -59,18 +59,46 @@
                     Stats
                 </template>
                 <template #content>
-                    <div>
-                        <h2>Tweet Count</h2>
-                        {{ tweetCount }}
+                    <div class="padding-left">
+                        <h3>Score</h3>
+                        <p class="padding-left">{{ localeNumber(scoreSum) }}</p>
                     </div>
-                    <div>
-                        <h2>Tweet Author Count</h2>
-                        {{ authorCount }}
+                    <div class="padding-left">
+                        <h3>Tweet Count</h3>
+                        <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div>
-                        <h2>Total Followers Reached</h2>
-                        {{ totalFollowers }}
+                    <div class="padding-left">
+                        <h3>Tweet Author Count</h3>
+                        <p class="padding-left">{{ localeNumber(authorCount) }}</p>
                     </div>
+                    <div class="padding-left">
+                        <h3>Total Followers Reached</h3>
+                        <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
+                    </div>
+                    <!-- total score, average score -->
+                    <div class="padding-left">
+                        <h3>Average Score per Tweet</h3>
+                        <p class="padding-left">{{ localeNumber(scoreSum / tweetCount) }}</p>
+                    </div>
+                    <div class="padding-left">
+                        <h3>Average Tweets per Author</h3>
+                        <p class="padding-left">{{ localeNumber(tweetCount / authorCount) }}</p>
+                    </div>
+                    <div class="padding-left">
+                        <h3>Average Followers per Author</h3>
+                        <p class="padding-left">{{ localeNumber(totalFollowers / authorCount) }}</p>
+                    </div>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-3">
+            <Card>
+                <template #title>
+                    Entities
+                </template>
+                <template #content>
+                    <publication-donut-chart :getter="entitiesGetter"></publication-donut-chart>
                 </template>
             </Card>
         </div>
@@ -92,24 +120,13 @@
             </Card>
         </div>
 
-        <div class="p-col-6">
+        <div class="p-col-6 word-wrapper">
             <Card>
                 <template #title>
                     Words
                 </template>
                 <template #content>
-                    <word-cloud v-if="render" :data="words" :fontSizeMapper="fontSizeMapper"></word-cloud>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-3">
-            <Card>
-                <template #title>
-                    Entities
-                </template>
-                <template #content>
-                    <publication-donut-chart :getter="entitiesGetter"></publication-donut-chart>
+                    <word-cloud ref="worldCloud" v-if="render" :data="words" :fontSizeMapper="fontSizeMapper"></word-cloud>
                 </template>
             </Card>
         </div>
@@ -121,6 +138,17 @@
                 </template>
                 <template #content>
                     <publication-donut-chart :getter="typeGetter"></publication-donut-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-3">
+            <Card>
+                <template #title>
+                    Hashtags
+                </template>
+                <template #content>
+                    <publication-donut-chart :getter="hashtagsGetter"></publication-donut-chart>
                 </template>
             </Card>
         </div>
@@ -147,13 +175,13 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-6">
             <Card>
                 <template #title>
-                    Hashtags
+                    Time of Day
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="hashtagsGetter"></publication-donut-chart>
+                    <publication-donut-chart :title="publication.doi" :getter="timeOfDayGetter" type="line"></publication-donut-chart>
                 </template>
             </Card>
         </div>
@@ -161,17 +189,17 @@
         <div class="p-col-6">
             <Card>
                 <template #title>
-                    Time of Day
+                    Tweets over Time
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="timeOfDayGetter" type="line"></publication-donut-chart>
+                    <publication-donut-chart :title="publication.doi" :dateFormat="true" :getter="timeGetter" type="line"></publication-donut-chart>
                 </template>
             </Card>
         </div>
 
         <div class="p-col-12">
             <DataTable :value="data" dataKey="_id" :paginator="true" :rows="10" :rowHover="true"
-                       :loading="loading" :rowsPerPageOptions="[10,25,50]">
+                       :loading="loading" :rowsPerPageOptions="[10,25,50]" @row-click="openTweet($event)">
                 <template #empty>
                     No Events found.
                 </template>
@@ -202,14 +230,12 @@
             columns: [
                 {field: '_id', header: 'id', sortable: false},
                 {field: 'time_past', header: 'time_past', sortable: true},
+                {field: 'name', header: 'name', sortable: true},
                 {field: 'text', header: 'text', sortable: true},
                 {field: 'source', header: 'source', sortable: true},
                 {field: 'lang', header: 'lang', sortable: true},
                 {field: 'tweet_type', header: 'tweet_type', sortable: true},
                 {field: 'score', header: 'score', sortable: true},
-                {field: 'question_mark_count', header: 'question_mark_count', sortable: true},
-                {field: 'exclamation_mark_count', header: 'exclamation_mark_count', sortable: true},
-                {field: 'length', header: 'length', sortable: true},
                 {field: 'contains_abstract', header: 'contains_abstract', sortable: true},
                 {field: 'bot_rating', header: 'bot_rating', sortable: true},
             ],
@@ -221,6 +247,7 @@
             loading: true,
             tweetCount: '-',
             authorCount: '-',
+            scoreSum: '-',
             totalFollowers: '-',
         }), created() {
             console.log('created');
@@ -228,7 +255,20 @@
             // already being observed
             this.fetchData()
         },
+        computed: {
+            realUrl: function () {
+                return 'http://' + this.publication.url
+            },
+        },
         methods: {
+            openTweet(event) {
+                console.log(event.data.conversation_id);
+                window.open('https://twitter.com/pauljstorey/status/' + event.data.conversation_id, '_blank')
+            },
+            localeNumber: function (x) {
+                if (isNaN(x)) return '-';
+                return x.toLocaleString('de-De');
+            },
             typeGetter() {
                 return PublicationService.types(this.$route.params.p + "/" + this.$route.params.s)
             },
@@ -247,10 +287,13 @@
             hashtagsGetter() {
                 return PublicationService.hashtags(this.$route.params.p + "/" + this.$route.params.s)
             },
-            hover(e){
-              if (!e) {
-                  console.log(e)
-              }
+            timeGetter() {
+                return PublicationService.timeBinned(this.$route.params.p + "/" + this.$route.params.s)
+            },
+            hover(e) {
+                if (!e) {
+                    console.log(e)
+                }
             },
             fetchData() {
                 console.log('fetch data');
@@ -297,6 +340,14 @@
                 PublicationService.authorCount(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         this.authorCount = response.data.data[0]['count'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.scoreSum(this.$route.params.p + "/" + this.$route.params.s)
+                    .then(response => {
+                        this.scoreSum = response.data.data[0]['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -371,11 +422,66 @@
         }
     }
 
+    .p-card {
+        height: 100%;
+    }
+
+    .word-wrapper {
+        .p-card-body {
+            height: 100%;
+
+            .p-card-content {
+                height: 100%;
+            }
+
+        }
+
+        .wordCloud {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            svg {
+            }
+        }
+
+    }
+
+
+    .vue-map-legend {
+        width: 185px;
+        background: var(--surface-c);
+        overflow: auto;
+        border: 1px solid;
+        position: absolute;
+
+        .vue-map-legend-header {
+            padding: 10px 15px;
+            background: var(--surface-a);
+        }
+
+        .vue-map-legend-content {
+            padding: 10px 15px;
+            background: var(--surface-b);
+            border-top: 1px solid #acacad;
+        }
+    }
+
+
     .info {
         margin-bottom: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid #fff;
         width: 100%;
+
+        h4 {
+            margin: 5px 0;
+        }
+    }
+
+    .padding-left {
+        padding-left: 10px;
     }
 
     .side {

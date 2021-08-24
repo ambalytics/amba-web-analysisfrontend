@@ -25,8 +25,12 @@ export default {
         onWordClick: {
             type: Function,
             default: (word) => {
-                console.log(word.target.textContent);
-                window.alert(`You clicked ${word}`)
+                // console.log(word.target.textContent);
+                let annotation = word.target.textContent;
+                if (annotation.startsWith('@')) {
+                    // remove @
+                    window.open("https://twitter.com/" + annotation, '_blank');
+                }
             },
         },
         rotate: {
@@ -127,6 +131,7 @@ export default {
             .append('svg')
             .attr('width', this.width)
             .attr('height', this.height)
+            .attr('viewbox', "0 0 " + this.height + " " + this.width)
             .append('g')
             .attr('transform', `translate(${this.width / 2},${this.height / 2})`)
             .selectAll('text')

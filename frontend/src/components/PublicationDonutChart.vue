@@ -20,6 +20,14 @@
                 type: Function,
                 default: PublicationService.types
             },
+            dateFormat: {
+                type: Boolean,
+                default: false
+            },
+            title: {
+                type: String,
+                default: 'unknown'
+            },
         },
         data: () => ({
             loaded: false,
@@ -36,12 +44,20 @@
                     response.data.data.forEach(e => {
                         if (e.count) data.push(e.count);
                         if (e.total) data.push(e.total);
+
+
+                    if(this.dateFormat) {
+                        let date = new Date(e._id);
+                        const options = { hour: '2-digit', minute: '2-digit' };
+                        label.push(date.toLocaleTimeString('de-DE', options))
+                    } else {
                         label.push(e._id);
+                    }
                         // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                     });
 
                     let dt = [{
-                        label: '10.1134/S1560354716060058',
+                        label: this.title,
                         backgroundColor: ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
                         borderColor: '#555',
                         borderWidth: 2,
@@ -51,7 +67,7 @@
 
                     if (this.type === "line") {
                         dt = [{
-                            label: '10.1134/S1560354716060058',
+                        label: this.title,
                             backgroundColor: '#1b9e77',
                             borderColor: '#555',
                             fill: true,
@@ -59,6 +75,7 @@
                             hoverOffset: 4,
                             data: data,
                         }];
+
                     }
 
                     this.chartdata = {
