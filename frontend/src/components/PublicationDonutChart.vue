@@ -1,5 +1,5 @@
 <template>
-    <Chart v-if="loaded" :type="type" :data="chartdata" :options="options" height="200"/>
+    <Chart v-if="loaded" :type="type" :data="chartdata" :options="options" :height="height"/>
 </template>
 
 <script>
@@ -31,6 +31,10 @@
             growingData: {
                 type: Boolean,
                 default: false
+            },
+            height: {
+                type: Number,
+                default: 150
             },
         },
         data: () => ({

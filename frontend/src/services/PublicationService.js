@@ -10,8 +10,8 @@ class PublicationService {
         return http.get(`/publication/get/${id}`);
     }
 
-    getCount(field, limit) {
-        return http.get(`/publication/count?field=${field}&limit=${limit}`);
+    getCount() {
+        return http.get('/publication/count');
     }
 
     top(limit) {

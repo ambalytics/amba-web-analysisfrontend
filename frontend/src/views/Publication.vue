@@ -18,7 +18,7 @@
         <div class="p-col-3">
             <Card class="side">
                 <template #title>
-                    {{ Information }}
+                    Information
                 </template>
                 <template #content>
                     <table class="info">

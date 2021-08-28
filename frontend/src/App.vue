@@ -256,6 +256,7 @@
         }
 
     }
+
     .vue-map-legend {
         width: 185px;
         background: var(--surface-c);
@@ -270,25 +271,35 @@
 
         .vue-map-legend-content {
             padding: 10px 15px;
-            background: var(--surface-b);
+            background: rgba($color-main, 0.3);
             border-top: 1px solid #acacad;
         }
     }
     .stats {
+
         .p-card-content {;
             display: grid;
             padding: 0 1vw;
-            grid-template-columns: 100%;
+            grid-template-columns: 85%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+
+
+            div.padding-left {
+                width: 100%;
+            }
 
             h3 {
-              margin: 1em 0 0 0.5em;
-                font-size: 0.8vw;
+               margin: 0.6em 0 0.2em 0.7em;
+               font-size: 0.8vw;
+               width: 100%;
             }
 
             p.padding-left {
-                margin: 0;
+                margin: -5px 0 0 0;
                 font-weight: 700;
-                font-size: 1.7vw;
+                font-size: 2.6em;
                 font-family: 'Courier New', monospace !important;
                 text-align: end;
                 width: 100%;

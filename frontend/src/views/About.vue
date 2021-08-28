@@ -11,8 +11,7 @@
                     src="../assets/crossref-logo.svg"></a></div>
             <div class="about-line">Source Code<a href="https://github.com/ambalytics" target="_blank"><img
                     src="../assets/repo.png"></a></div>
-            <div class="about-line">© Lukas Jesche, License <a href="https://opensource.org/licenses/MIT"
-                                                               target="_blank">MIT</a></div>
+            <div class="about-line"><a href="https://github.com/lukasjesche" target="_blank"><img class="logo" src="../assets/logo_lj.png">Lukas Jesche</a>License <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a></div>
         </div>
     </div>
 </template>
@@ -84,12 +83,18 @@
 
                 a {
                     color: $color-main;
+                    text-decoration: none;
                 }
 
                 img {
                     margin-left: 20px;
                     height: 50px;
                     width: auto;
+                }
+                .logo {
+                    margin-bottom: -13px;
+                    margin-right: 15px;
+                    margin-left: 0;
                 }
             }
         }

@@ -32,6 +32,10 @@
                         <h3>Average Followers per Author</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(totalFollowers / authorCount)) }}</p>
                     </div>
+                    <div class="padding-left">
+                        <h3>Publication Count</h3>
+                        <p class="padding-left">{{ localeNumber(pubCount)}}</p>
+                    </div>
                 </template>
             </Card>
         </div>
@@ -125,7 +129,7 @@
                     Tweets over Time
                 </template>
                 <template #content>
-                    <publication-donut-chart title=" " :dateFormat="true" :getter="timeGetter" type="line"></publication-donut-chart>
+                    <publication-donut-chart height="200" title=" " :dateFormat="true" :getter="timeGetter" type="line"></publication-donut-chart>
                 </template>
             </Card>
         </div>
@@ -149,6 +153,7 @@
             render: false,
             renderMap: false,
             loading: true,
+            pubCount: '-',
             tweetCount: '-',
             authorCount: '-',
             scoreSum: '-',
@@ -197,6 +202,15 @@
                 PublicationService.scoreSum()
                     .then(response => {
                         this.scoreSum = response.data.data[0]['sum'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.getCount()
+                    .then(response => {
+                        console.log('count')
+                        this.pubCount = response.data.data[0][0]['count'];
                     })
                     .catch(e => {
                         console.log(e);
