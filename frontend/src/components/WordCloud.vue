@@ -42,7 +42,7 @@ export default {
         },
         font: {
             type: [String, Function],
-            default: 'Lato'
+            default: 'Candara'
         },
         width: {
             type: [Number, String],
@@ -80,7 +80,8 @@ export default {
         this.ro = new ResizeObserver(this.onResize).observe(this.$refs.wordCloud)
     },
     beforeUnmount () {
-      this.ro.unobserve(this.$refs.wordCloud)
+        if (this.ro)
+          this.ro.unobserve(this.$refs.wordCloud)
     },
     watch: {
         data() {

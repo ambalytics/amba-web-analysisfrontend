@@ -110,8 +110,8 @@
                 </template>
                 <template #content>
                     <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364"
-                              lowColor="#eee"
+                              highColor="#0f6364ff"
+                              lowColor="#0f636420"
                               countryStrokeColor="#eee"
                               defaultCountryFillColor="#fff"
                               @hoverCountry="hover"
@@ -467,6 +467,29 @@
         }
 
     }
+
+        .scroller .p-card-content , .special-scrollbar {
+
+            &::-webkit-scrollbar {
+              width: 8px;
+            }
+
+            /* Track */
+            &::-webkit-scrollbar-track {
+              background: #fff;
+            }
+
+            /* Handle */
+            &::-webkit-scrollbar-thumb {
+              background: $color-main;
+            }
+
+            /* Handle on hover */
+            &::-webkit-scrollbar-thumb:hover {
+              background: $color-main;
+            }
+        }
+
 
     @-moz-document url-prefix('') {
         .scroller .p-card-content , .special-scrollbar {
