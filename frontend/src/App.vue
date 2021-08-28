@@ -28,6 +28,7 @@
 <script>
     export default {
         created() {
+            document.title = "ambalytics analysis streams";
             this.$router.options.routes.forEach(route => {
                 this.items.push({
                     label: route.name,
