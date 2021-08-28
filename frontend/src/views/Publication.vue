@@ -1,16 +1,16 @@
 <template>
     <div class="p-grid">
 
-        <div class="p-col-3">
+        <div class="p-col-3 publication_info_main scroller">
             <Card>
                 <template #title>
                     {{ publication.title }}
                 </template>
                 <template #content>
-                    {{ publication.abstract }}
+                        {{ publication.abstract }}
                 </template>
                 <template #footer>
-                    More Information: <a class="doi" target="_blank" :href="realUrl">{{ publication.url }}</a>
+                    <a class="doi" target="_blank" :href="realUrl">{{ publication.url }}</a>
                 </template>
             </Card>
         </div>
@@ -37,7 +37,7 @@
                     </table>
 
                     <h4>Authors:</h4>
-                    <ul class="authors">
+                    <ul class="authors special-scrollbar">
                         <li v-for="author in publication.authors" v-bind:key="author.name">
                             {{ author.name }}
                         </li>
@@ -54,14 +54,14 @@
         </div>
 
         <div class="p-col-3">
-            <Card>
+            <Card class="stats">
                 <template #title>
                     Stats
                 </template>
                 <template #content>
                     <div class="padding-left">
                         <h3>Score</h3>
-                        <p class="padding-left">{{ localeNumber(scoreSum) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum)) }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Tweet Count</h3>
@@ -78,15 +78,15 @@
                     <!-- total score, average score -->
                     <div class="padding-left">
                         <h3>Average Score per Tweet</h3>
-                        <p class="padding-left">{{ localeNumber(scoreSum / tweetCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount)) }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Tweets per Author</h3>
-                        <p class="padding-left">{{ localeNumber(tweetCount / authorCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round((tweetCount / authorCount) * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Followers per Author</h3>
-                        <p class="padding-left">{{ localeNumber(totalFollowers / authorCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(totalFollowers / authorCount)) }}</p>
                     </div>
                 </template>
             </Card>
@@ -110,10 +110,10 @@
                 </template>
                 <template #content>
                     <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#ff0000"
-                              lowColor="#aaaaaa"
-                              countryStrokeColor="#909090"
-                              defaultCountryFillColor="#dadada"
+                              highColor="#0f6364"
+                              lowColor="#eee"
+                              countryStrokeColor="#eee"
+                              defaultCountryFillColor="#fff"
                               @hoverCountry="hover"
                     />
                 </template>
@@ -126,7 +126,7 @@
                     Words
                 </template>
                 <template #content>
-                    <word-cloud ref="worldCloud" v-if="render" :data="words" :fontSizeMapper="fontSizeMapper"></word-cloud>
+                    <word-cloud ref="worldCloud" v-if="render" :data="words" :fontSizeMapper="fontSizeMapper" ></word-cloud>
                 </template>
             </Card>
         </div>
@@ -192,13 +192,13 @@
                     Tweets over Time
                 </template>
                 <template #content>
-                    <publication-donut-chart :title="publication.doi" :dateFormat="true" :getter="timeGetter" type="line"></publication-donut-chart>
+                    <publication-donut-chart :title="publication.doi" :dateFormat="true" :getter="timeGetter" :growingData="true" type="line"></publication-donut-chart>
                 </template>
             </Card>
         </div>
 
         <div class="p-col-12">
-            <DataTable :value="data" dataKey="_id" :paginator="true" :rows="10" :rowHover="true"
+            <DataTable :value="data" dataKey="_id" :paginator="true" :rows="10" :rowHover="true" :autoLayout="true"
                        :loading="loading" :rowsPerPageOptions="[10,25,50]" @row-click="openTweet($event)">
                 <template #empty>
                     No Events found.
@@ -220,6 +220,7 @@
     import PublicationService from "../services/PublicationService";
     import WordCloud from "../components/WordCloud";
     import MapChart from 'vue-map-chart'
+    import chroma from 'chroma-js';
 
     export default {
         name: 'Publication',
@@ -406,65 +407,39 @@
                     .catch(e => {
                         console.log(e);
                     });
+                   console.log('chroma');
+                   let chromaa = chroma.scale([this.$props.lowColor, this.$props.highColor]);
+                   console.log(chromaa);
+                   if (chromaa) {
+                       this.loading = true;
+                       console.log('sfa')
+                   }
             },
         }
     }
 </script>
 
 <style lang="scss">
+    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+
     a.doi {
-        font-size: 0.9em;
-        color: #9dc4dc;
+        float: right;
+        font-family: 'Courier New', monospace;
+        color: $color-main;
         text-decoration: none;
 
         &:hover {
-            color: white;
+            font-weight: 700;
+            /*<!--letter-spacing: -0.4px;-->*/
         }
     }
 
-    .p-card {
-        height: 100%;
-    }
-
-    .word-wrapper {
-        .p-card-body {
-            height: 100%;
-
-            .p-card-content {
-                height: 100%;
-            }
-
-        }
-
-        .wordCloud {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-
-            svg {
-            }
-        }
-
-    }
-
-
-    .vue-map-legend {
-        width: 185px;
-        background: var(--surface-c);
-        overflow: auto;
-        border: 1px solid;
-        position: absolute;
-
-        .vue-map-legend-header {
-            padding: 10px 15px;
-            background: var(--surface-a);
-        }
-
-        .vue-map-legend-content {
-            padding: 10px 15px;
-            background: var(--surface-b);
-            border-top: 1px solid #acacad;
+    .publication_info_main {
+        .p-card-content{
+            height: 550px;
+            overflow-y: auto;
+            text-align: justify;
+            padding-right: 10px;
         }
     }
 
@@ -480,13 +455,23 @@
         }
     }
 
-    .padding-left {
-        padding-left: 10px;
-    }
-
     .side {
+
         li {
             padding: 5px 0;
+        }
+
+        ul.authors {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+    }
+
+    @-moz-document url-prefix('') {
+        .scroller .p-card-content , .special-scrollbar {
+            scrollbar-color: $color-main white !important;
+            scrollbar-width: thin !important;
         }
     }
 </style>

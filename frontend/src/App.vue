@@ -4,13 +4,15 @@
         <div class="logo-link">
             <router-link to="/" class="logo p-d-flex p-ai-center">
                 <img alt="logo" src="./assets/logo.png">
-                <div class="p-text-bold p-text-uppercase">Amba Twitter Analysis</div>
             </router-link>
         </div>
 
+
+        <div class="header-text">ambalytics analysis streams</div>
+
         <Menubar :model="items">
             <template #item="{item}">
-                <router-link :to="item.to" class="p-d-flex p-ai-center p-menuitem-link">
+                <router-link v-if="item.show" :to="item.to" class="p-d-flex p-ai-center p-menuitem-link">
                     <span class="p-menuitem-text">{{item.label}}</span>
                 </router-link>
             </template>
@@ -30,6 +32,7 @@
                 this.items.push({
                     label: route.name,
                     to: route.path,
+                    show: route.show,
                     icon: route.icon
                 })
             })
@@ -43,14 +46,130 @@
     }
 </script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 <style lang="scss">
+    @import './assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+
+    /*.text-align-right {*/
+    /*    text-align: center !important;*/
+    /*    padding-right: 3rem !important;*/
+    /*}*/
+
+    /*.wrapper {*/
+    /*    width: 70px;*/
+    /*}*/
+
+    td > .wrapper {
+        text-align: right;
+        /*border: 2px dotted blue;*/
+        /*padding: 5px 35% 5px 5px;*/
+        display: inline-block;
+        min-width: 100%;
+        font-weight: 700;
+        font-family: 'Courier New', monospace !important;
+        padding: 10px 40px 10px 10px !important
+    }
+
+    th.text-align-right > .p-column-header-content > span.p-column-title  {
+        display: inline-block !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    th.amba > .p-column-header-content > span.p-column-title  {
+        color: darken($color-main, 0.5) !important;
+    }
+
+    .p-column-header-content > span.p-column-title  {
+        font-weight: 700;
+    }
+
+    th.text-align-right {
+        text-align: center;
+    }
+
+    td.text-align-right {
+        /*border: 2px solid red !important;*/
+        /*text-align: right !important;*/
+
+        /*min-width: 150px !important;*/
+        /*padding: 10px 2.5% 10px 20px !important;*/
+    }
+
+    table.p-datatable-table {
+        /*border: 1px solid #aaa;*/
+        .p-datatable-tbody > tr > td {
+            text-align: left;
+            /*border-right: 1px solid #ccc;*/
+            border-bottom: none;
+        }
+
+        .p-datatable-tbody > tr:nth-child(odd) {
+              background: rgba($color-main, 0.05)
+        }
+
+        .p-datatable-thead > tr > th {
+            border-bottom: 1px solid #ccc;
+        }
+    }
+
+    td.amba {
+        color: $color-main;
+        font-weight: bold;
+        font-size: 1.05em;
+    }
+
+    .layout-topbar .p-menubar .p-menuitem .p-menuitem-link{
+        background: white !important;
+        box-shadow:inset 0 0 0 2px $color-main;
+        margin-left: 5px;
+
+        .p-menuitem-text {
+            color: $color-main !important;
+            font-weight: bold;
+        }
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        background: rgba($color-main, 0.8) !important;
+        color: white !important;
+    }
+
+    .layout-topbar .p-menubar .p-menuitem .router-link-active {
+        background: $color-main !important;
+
+        .p-menuitem-text {
+            color: white !important;
+            font-weight: bold;
+        }
+
+    }
+    .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
+        background: rgba($color-main, 0.7) !important;
+        .p-menuitem-text {
+            color: white !important;
+        }
+
+    }
+
+    .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+        background: rgba($color-main, 0.2) !important;
+    }
+
+    .p-card-title {
+        color: $color-main;
+    }
+
+
     body {
         margin: 0;
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
         background-color: var(--surface-b);
-        font-family: var(--font-family);
+        font-family: 'Lato', sans-serif;
         font-weight: 400;
         color: var(--text-color);
     }
@@ -78,27 +197,30 @@
             padding: 5px;
 
             a {
-                padding: 14px;
+                padding: 5px;
                 color: var(--text-color);
                 text-decoration: none;
 
                 &:hover {
-                    background: rgba(255, 255, 255, 0.04);
+                    background: rgba(0, 0, 0, 0.06);
                     border-radius: 4px;
                 }
             }
 
-            div {
-                padding-left: 10px;
-                color: var(--text-color);
-                font-size: 1.2em;
-            }
-
 
             img {
-                height: 1.5em;
-                width: 1.5em;
+                height: 50px;
+                width: auto;
             }
+        }
+
+        div.header-text {
+            color: $color-main;
+            /*font-variant: small-caps;*/
+            letter-spacing: -2.5px;
+            font-family: 'Lato', sans-serif;
+            font-size: 2em;
+            font-weight: bold;
         }
 
     }
@@ -110,4 +232,72 @@
             padding: 1em;
         }
     }
+
+    .word-wrapper {
+        .p-card-body {
+            height: 100%;
+
+            .p-card-content {
+                height: 100%;
+            }
+
+        }
+
+        .wordCloud {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            svg {
+                overflow: visible;
+            }
+        }
+
+    }
+    .vue-map-legend {
+        width: 185px;
+        background: var(--surface-c);
+        overflow: auto;
+        border: 1px solid;
+        position: absolute;
+
+        .vue-map-legend-header {
+            padding: 10px 15px;
+            background: var(--surface-a);
+        }
+
+        .vue-map-legend-content {
+            padding: 10px 15px;
+            background: var(--surface-b);
+            border-top: 1px solid #acacad;
+        }
+    }
+    .stats {
+        .p-card-content {;
+            display: grid;
+            padding: 0 1vw;
+            grid-template-columns: 100%;
+
+            h3 {
+              margin: 1em 0 0 0.5em;
+                font-size: 0.8vw;
+            }
+
+            p.padding-left {
+                margin: 0;
+                font-weight: 700;
+                font-size: 1.7vw;
+                font-family: 'Courier New', monospace !important;
+                text-align: end;
+                width: 100%;
+                color: $color-main;
+            }
+        }
+    }
+
+    .p-card {
+        height: 100%;
+    }
+
 </style>

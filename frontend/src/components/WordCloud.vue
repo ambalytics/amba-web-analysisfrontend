@@ -1,22 +1,25 @@
 <template>
-    <div class="wordCloud" ref="wordCloud"></div>
+    <div class="wordCloud" ref="wordCloud" :style="style"></div>
 </template>
 
 <script>
 import * as d3 from "d3";
 import * as cloud from 'd3-cloud';
+
 export default {
     data() {
         return {
             layout: {},
             chart: {},
             fill: null,
+            style: ''
         }
     },
     props: {
         data: {
             type: Array,
             required: true,
+            ro: null,
         },
         fontSizeMapper: {
             type: Function,
@@ -39,7 +42,7 @@ export default {
         },
         font: {
             type: [String, Function],
-            default: 'Serif'
+            default: 'Lato'
         },
         width: {
             type: [Number, String],
@@ -63,12 +66,21 @@ export default {
         },
         colors: {
             type: Array,
+            default() {
+                return ['#0F6364', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666']
+            }
         }
     },
     mounted() {
+        console.log('this.$refs.wordCloud.clientHeight')
+        console.log(this.$refs.wordCloud.clientHeight)
         console.log('mounted canvas')
         console.log(this.data)
         this.createCanvas()
+        this.ro = new ResizeObserver(this.onResize).observe(this.$refs.wordCloud)
+    },
+    beforeUnmount () {
+      this.ro.unobserve(this.$refs.wordCloud)
     },
     watch: {
         data() {
@@ -94,6 +106,21 @@ export default {
         }
     },
     methods: {
+        onResize () {
+            console.log(this.$refs.wordCloud.offsetHeight);
+            console.log(this.$refs.wordCloud.offsetWidth);
+            let wrapperHeight = this.$refs.wordCloud.offsetHeight;
+            let wrapperWidth = this.$refs.wordCloud.offsetWidth;
+            let dh = wrapperHeight / this.height;
+            let dw = wrapperWidth / this.width;
+            let r = 1;
+            if (dh > dw) {
+                r = dw;
+            } else {
+                r = dh;
+            }
+            this.style = 'transform: scale(' + r + ');';
+        },
         createCanvas: function() {
             const wordCounts = this.data.map(
                 text => ({ ...text })
@@ -108,6 +135,8 @@ export default {
             .font(this.font)
             .fontSize(this.fontSizeMapper)
             .on('end', this.end);
+
+
 
             if(this.colors)
                 this.fill = d3.scaleOrdinal().range(this.colors)

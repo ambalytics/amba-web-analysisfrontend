@@ -1,6 +1,6 @@
 <template>
-    <DataTable :value="data" dataKey="doi" :paginator="true" :rows="10" :rowHover="true"
-               :rowsPerPageOptions="[10,25,50]"
+    <DataTable :value="data" dataKey="doi" :rowHover="true"
+               sortField="rank" :sortOrder="1" :autoLayout="true"
                @row-click="rowClick($event)">
         <template #empty>
             No Publications found.
@@ -9,7 +9,11 @@
             Loading Publications data. Please wait.
         </template>
         <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                :key="col.field"></Column>
+                :key="col.field" :class="col.class">
+               <template v-if="col.numberTemplate" #body="slotProps">
+                    <div class="wrapper">{{ localeNumber(slotProps.data[col.field]) }}</div>
+                </template>
+        </Column>
     </DataTable>
 </template>
 
@@ -22,14 +26,15 @@
         data() {
             return {
                 columns: [
-                    {field: 'rank', header: 'Rank', sortable: false},
-                    {field: 'doi', header: 'DOI', sortable: false},
+                    {field: 'rank', header: 'Rank', sortable: false, class:"amba"},
                     {field: 'title', header: 'Title', sortable: false},
-                    {field: 'year', header: 'Year', sortable: true},
-                    {field: 'citationCount', header: 'Citation Count', sortable: true},
-                    {field: 'count', header: 'Total Tweet Count', sortable: true},
-                    {field: 'trending_score', header: 'Trending Score', sortable: true},
-                    {field: 'score', header: 'Score', sortable: true},
+                    {field: 'count', header: 'Total Tweet Count', sortable: false, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'trending_score', header: 'Trending Score', sortable: false, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'score', header: 'Total Score', sortable: false, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'doi', header: 'DOI', sortable: false},
+                    {field: 'fieldsOfStudy', header: 'Fields Of Study', sortable: false},
+                    {field: 'year', header: 'Year', sortable: false},
+                    {field: 'citationCount', header: 'Citation Count', sortable: false, class:"text-align-right", numberTemplate: true},
                 ],
                 data: [],
                 dataRaw: [],
@@ -56,7 +61,7 @@
                         let pub = {
                             doi: doi,
                             trending_score: value.score,
-                            rank: key
+                            rank: parseInt(key) + 1
                         };
                         that.dataRaw.push(pub)
                     }
@@ -71,6 +76,10 @@
 
         },
         methods: {
+            localeNumber: function (x) {
+                if (isNaN(x)) return '-';
+                return x.toLocaleString('de-De');
+            },
             rowClick(event) {
                 console.log(event.data.doi);
                 // this.$router.push('/publication/' + event.data.doi)
@@ -87,7 +96,13 @@
                         let publication = response.data.data[0];
                         publication.url = 'doi.org/' + publication['doi'];
                         publication.rank = element.rank;
-                        publication.trending_score = element.trending_score;
+                        publication.trending_score = Math.round(element.trending_score);
+                        let fields = '';
+                        publication.fieldsOfStudy.forEach(f => {
+                            fields += f.name + ', ';
+                        });
+                        publication.fieldsOfStudy = fields.substr(0, fields.length-2);
+                        // publication.score = Math.round(publication.score);
                         this.data.push(publication)
                     })
                     .catch(e => {
@@ -109,7 +124,7 @@
                         // console.log(response.data.data[0].count)
                         this.data.forEach(pub => {
                            if (pub.doi === element.doi) {
-                               pub.score = response.data.data[0].sum;
+                               pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
                            }
                         });
                     });
@@ -119,3 +134,11 @@
         }
     }
 </script>
+<style lang="scss">
+    .p-datatable .p-datatable-tbody > tr > td:first-of-type {
+        text-align: center;
+    }
+        td > .wrapper {
+            padding: 10px 30px 10px 10px !important
+    }
+</style>

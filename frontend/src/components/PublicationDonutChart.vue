@@ -1,5 +1,5 @@
 <template>
-    <Chart v-if="loaded" :type="type" :data="chartdata"/>
+    <Chart v-if="loaded" :type="type" :data="chartdata" :options="options" height="200"/>
 </template>
 
 <script>
@@ -28,6 +28,10 @@
                 type: String,
                 default: 'unknown'
             },
+            growingData: {
+                type: Boolean,
+                default: false
+            },
         },
         data: () => ({
             loaded: false,
@@ -41,24 +45,38 @@
 
                     let data = [];
                     let label = [];
+                    let total = 0;
                     response.data.data.forEach(e => {
-                        if (e.count) data.push(e.count);
-                        if (e.total) data.push(e.total);
 
+                        if (this.growingData) {
+                            console.log(total)
+                            if (e.count) {
+                                total += e.count;
+                            } else if (e.total) {
+                                total += e.total
+                            }
+                            data.push(total);
+                        } else {
+                            if (e.count) {
+                                data.push(e.count);
+                            } else if (e.total) {
+                                data.push(e.total);
+                            }
+                        }
 
-                    if(this.dateFormat) {
-                        let date = new Date(e._id);
-                        const options = { hour: '2-digit', minute: '2-digit' };
-                        label.push(date.toLocaleTimeString('de-DE', options))
-                    } else {
-                        label.push(e._id);
-                    }
+                        if (this.dateFormat) {
+                            let date = new Date(e._id);
+                            const options = { hour: '2-digit', minute: '2-digit' };
+                            label.push(date.toLocaleTimeString('de-DE', options))
+                        } else {
+                            label.push(e._id);
+                        }
                         // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                     });
 
                     let dt = [{
                         label: this.title,
-                        backgroundColor: ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
+                        backgroundColor: ['#0F6364', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
                         borderColor: '#555',
                         borderWidth: 2,
                         hoverOffset: 4,
@@ -68,7 +86,7 @@
                     if (this.type === "line") {
                         dt = [{
                         label: this.title,
-                            backgroundColor: '#1b9e77',
+                            backgroundColor: '#0F6364',
                             borderColor: '#555',
                             fill: true,
                             borderWidth: 2,
@@ -77,6 +95,10 @@
                         }];
 
                     }
+
+                    this.options = {
+                        responsive: true,
+                    };
 
                     this.chartdata = {
                         labels: label,

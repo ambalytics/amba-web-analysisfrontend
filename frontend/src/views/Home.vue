@@ -2,7 +2,7 @@
     <div class="p-grid">
 
         <div class="p-col-3">
-            <Card>
+            <Card class="stats">
                 <template #title>
                     Stats
                 </template>
@@ -22,15 +22,15 @@
                     <!-- total score, average score -->
                     <div class="padding-left">
                         <h3>Average Score per Tweet</h3>
-                        <p class="padding-left">{{ localeNumber(scoreSum / tweetCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount)) }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Tweets per Author</h3>
-                        <p class="padding-left">{{ localeNumber(tweetCount / authorCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round((tweetCount / authorCount) * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Followers per Author</h3>
-                        <p class="padding-left">{{ localeNumber(totalFollowers / authorCount) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(totalFollowers / authorCount)) }}</p>
                     </div>
                 </template>
             </Card>
@@ -109,10 +109,10 @@
                 </template>
                 <template #content>
                     <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#ff0000"
-                              lowColor="#aaaaaa"
-                              countryStrokeColor="#909090"
-                              defaultCountryFillColor="#dadada"
+                              highColor="#0f6364ff"
+                              lowColor="#0f636420"
+                              countryStrokeColor="#eee"
+                              defaultCountryFillColor="#fff"
                               @hoverCountry="hover"
                     />
                 </template>
@@ -120,7 +120,7 @@
         </div>
 
         <div class="p-col-6">
-            <Card>
+            <Card class="big-chart">
                 <template #title>
                     Tweets over Time
                 </template>
@@ -246,81 +246,9 @@
 </script>
 
 <style lang="scss">
-    a.doi {
-        font-size: 0.9em;
-        color: #9dc4dc;
-        text-decoration: none;
-
-        &:hover {
-            color: white;
-        }
-    }
-
-    .p-card {
-        height: 100%;
-    }
-
-    .word-wrapper {
-        .p-card-body {
+    .big-chart {
+        .p-card-content, .p-card-body {
             height: 100%;
-
-            .p-card-content {
-                height: 100%;
-            }
-
-        }
-
-        .wordCloud {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-
-            svg {
-            }
-        }
-
-    }
-
-
-    .vue-map-legend {
-        width: 185px;
-        background: var(--surface-c);
-        overflow: auto;
-        border: 1px solid;
-        position: absolute;
-
-        .vue-map-legend-header {
-            padding: 10px 15px;
-            background: var(--surface-a);
-        }
-
-        .vue-map-legend-content {
-            padding: 10px 15px;
-            background: var(--surface-b);
-            border-top: 1px solid #acacad;
-        }
-    }
-
-
-    .info {
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #fff;
-        width: 100%;
-
-        h4 {
-            margin: 5px 0;
-        }
-    }
-
-    .padding-left {
-        padding-left: 10px;
-    }
-
-    .side {
-        li {
-            padding: 5px 0;
         }
     }
 </style>
