@@ -1,6 +1,6 @@
 <template>
-    <DataTable :value="data" dataKey="doi" :rowHover="true"
-               sortField="rank" :sortOrder="1" :autoLayout="true"
+    <DataTable :value="pubData" dataKey="doi" :rowHover="true" ref="trendTable"
+               sortField="rank" :sortOrder="1" :autoLayout="true" :lazy="true"
                @row-click="rowClick($event)">
         <template #empty>
             No Publications found.
@@ -9,7 +9,7 @@
             Loading Publications data. Please wait.
         </template>
         <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                :key="col.field" :class="col.class">
+                :key="col.field" :class="col.class" >
                <template v-if="col.numberTemplate" #body="slotProps">
                     <div class="wrapper">{{ localeNumber(slotProps.data[col.field]) }}</div>
                 </template>
@@ -36,8 +36,10 @@
                     {field: 'year', header: 'Year', sortable: false},
                     {field: 'citationCount', header: 'Citation Count', sortable: false, class:"text-align-right", numberTemplate: true},
                 ],
-                data: [],
-                dataRaw: [],
+                pubData: [],
+                pubDataRaw: [],
+                tempData: [],
+                loadLevel: [false,false,false],
                 loading: false,
                 connection: null
             }
@@ -48,14 +50,35 @@
 
             let that = this;
             this.connection.onmessage = function(event) {
+                if (event.data) {
+                    that.handleMessage(event);
+                }
+            };
+
+            this.connection.onopen = function(event) {
+                if (event.data) {
+                    that.handleMessage(event);
+                console.log("2 connected to the echo websocket server...");
+                }
+                console.log("Successfully connected to the echo websocket server...");
+            };
+
+        },
+        methods: {
+            handleMessage(event) {
                 let eventData = JSON.parse(event.data);
+                // that.pubData.destroy();
+                // that.pubDataRaw.destroy();
                 this.loading = false;
+                let that = this;
                 if (eventData.Message.aggregated_data) {
                     let trendingRaw = eventData.Message.aggregated_data;
 
-                    that.data = [];
-                    that.dataRaw = [];
-
+                    // that.$refs.trendTable.$destroy();
+                    // that.pubData = [];
+                    that.loadLevel = [false,false,false];
+                    that.pubDataRaw = [];
+                    that.tempData= [];
                     for (const [key, value] of Object.entries(trendingRaw)) {
                         let doi = value.doi.substring(16); // https://doi.org/
                         let pub = {
@@ -63,72 +86,100 @@
                             trending_score: value.score,
                             rank: parseInt(key) + 1
                         };
-                        that.dataRaw.push(pub)
+                        that.pubDataRaw.push(pub)
                     }
                     that.fetchData();
                 }
-            };
-
-            this.connection.onopen = function(event) {
-              console.log(event);
-              console.log("Successfully connected to the echo websocket server...");
-            };
-
-        },
-        methods: {
+                // eventData.destroy();
+            },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
             },
             rowClick(event) {
-                console.log(event.data.doi);
+                // console.log(event.data.doi);
                 // this.$router.push('/publication/' + event.data.doi)
                 // window.open('/publication/' + event.data.doi, '_blank');
                 let routeData = this.$router.resolve('/publication/' + event.data.doi);
                 window.open(routeData.href, '_blank');
             },
-            fetchData() {
-                // console.log('fetch data');
-                this.dataRaw.forEach(element => {
-                     PublicationService.get(element.doi)
-                    .then(response => {
-                        // console.log(response.data)
-                        let publication = response.data.data[0];
-                        publication.url = 'doi.org/' + publication['doi'];
-                        publication.rank = element.rank;
-                        publication.trending_score = Math.round(element.trending_score);
-                        let fields = '';
-                        publication.fieldsOfStudy.forEach(f => {
-                            fields += f.name + ', ';
-                        });
-                        publication.fieldsOfStudy = fields.substr(0, fields.length-2);
-                        // publication.score = Math.round(publication.score);
-                        this.data.push(publication)
-                    })
-                    .catch(e => {
-                        console.log(e);
+            switchData() {
+                let run = true;
+                this.loadLevel.forEach(element => {
+                    if (!element) {
+                        run = false;
+                    }
+                });
+                if (run) {
+                    this.pubData = [];
+                    // this.pubData = [...this.tempData];
+                    // this.pubData = JSON.parse(JSON.stringify(this.tempData));
+                    this.tempData.forEach(pub => {
+                         this.pubData.push(pub)
                     });
+                    // this.tempData = [];
+                }
+            },
+            fetchData() {
+                console.log('fetch data');
+                let that = this;
+                this.pubDataRaw.forEach((element, index, array) => {
+                   let lastElement = false;
+                   if (index === array.length - 1){
+                       lastElement = true;
+                   }
+                     PublicationService.get(element.doi)
+                        .then(response => {
+                            // console.log(response.data)
+                            let publication = response.data.data[0];
+                            publication.url = 'doi.org/' + publication['doi'];
+                            publication.rank = element.rank;
+                            publication.trending_score = Math.round(element.trending_score);
+                            let fields = '';
+                            publication.fieldsOfStudy.forEach(f => {
+                                fields += f.name + ', ';
+                            });
+                            publication.fieldsOfStudy = fields.substr(0, fields.length-2);
+                            // publication.score = Math.round(publication.score);
+                            that.tempData.push(publication)
+                            if (lastElement) {
+                                that.loadLevel[0] = true;
+                                that.switchData()
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
 
                      PublicationService.tweetCount(element.doi)
-                    .then(response => {
-                        // console.log(response.data.data[0].count)
-                        this.data.forEach(pub => {
-                           if (pub.doi === element.doi) {
-                               pub.count = response.data.data[0].count;
-                           }
+                        .then(response => {
+                            // console.log(response.data.data[0].count)
+                            that.tempData.forEach(pub => {
+                               if (pub.doi === element.doi) {
+                                   pub.count = response.data.data[0].count;
+                               }
+                            });
+
+                            if (lastElement) {
+                                that.loadLevel[1] = true;
+                                that.switchData()
+                            }
                         });
-                    });
 
                      PublicationService.scoreSum(element.doi)
-                    .then(response => {
-                        // console.log(response.data.data[0].count)
-                        this.data.forEach(pub => {
-                           if (pub.doi === element.doi) {
-                               pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
-                           }
-                        });
-                    });
+                        .then(response => {
+                            // console.log(response.data.data[0].count)
+                            that.tempData.forEach(pub => {
+                               if (pub.doi === element.doi) {
+                                   pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
+                               }
+                            });
 
+                            if (lastElement) {
+                                that.loadLevel[2] = true;
+                                that.switchData()
+                            }
+                        });
                 });
             },
         }

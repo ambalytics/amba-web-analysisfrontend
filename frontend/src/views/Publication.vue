@@ -220,7 +220,6 @@
     import PublicationService from "../services/PublicationService";
     import WordCloud from "../components/WordCloud";
     import MapChart from 'vue-map-chart'
-    import chroma from 'chroma-js';
 
     export default {
         name: 'Publication',
@@ -263,7 +262,7 @@
         },
         methods: {
             openTweet(event) {
-                console.log(event.data.conversation_id);
+                // console.log(event.data.conversation_id);
                 window.open('https://twitter.com/pauljstorey/status/' + event.data.conversation_id, '_blank')
             },
             localeNumber: function (x) {
@@ -374,8 +373,8 @@
                     .then(response => {
                         this.loading = false;
                         this.words = response.data.data.words;
-                        console.log('words')
-                        console.log(this.words)
+                        // console.log('words')
+                        // console.log(this.words)
 
                         if (!this.words || this.words.length < 1)
                             return [];
@@ -397,23 +396,23 @@
                             obj.value = occurences[text]
                             occurencesCount.push(obj)
                         }
-                        console.log('words')
-                        console.log(occurencesCount)
+                        // console.log('words')
+                        // console.log(occurencesCount)
                         this.words = occurencesCount
                         this.render = true
-                        console.log(this.render)
-                        console.log('render')
+                        // console.log(this.render)
+                        // console.log('render')
                     })
                     .catch(e => {
                         console.log(e);
                     });
-                   console.log('chroma');
-                   let chromaa = chroma.scale([this.$props.lowColor, this.$props.highColor]);
-                   console.log(chromaa);
-                   if (chromaa) {
-                       this.loading = true;
-                       console.log('sfa')
-                   }
+                   // console.log('chroma');
+                   // let chromaa = chroma.scale([this.$props.lowColor, this.$props.highColor]);
+                   // console.log(chromaa);
+                   // if (chromaa) {
+                   //     this.loading = true;
+                   //     console.log('sfa')
+                   // }
             },
         }
     }

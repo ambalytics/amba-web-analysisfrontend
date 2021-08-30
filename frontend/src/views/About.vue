@@ -7,7 +7,7 @@
                     style="margin-bottom: -10px" src="../assets/amba-logo.png"></a></div>
             <div class="about-line">Twitter Data from <a href="https://twitter.com/" target="_blank"><img
                     src="../assets/twitter-logo.svg"></a></div>
-            <div class="about-line">Publication Data by <a href="https://crossref.org/" target="_blank"><img
+            <div class="about-line">Publication Data from <a href="https://crossref.org/" target="_blank"><img
                     src="../assets/crossref-logo.svg"></a></div>
             <div class="about-line">Source Code<a href="https://github.com/ambalytics" target="_blank"><img
                     src="../assets/repo.png"></a></div>

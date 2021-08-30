@@ -51,7 +51,7 @@
         },
         methods: {
             rowClick(event) {
-                console.log(event.data.doi)
+                // console.log(event.data.doi)
                 this.$router.push('/publication/' + event.data.doi)
             },
             localeNumber: function (x) {
@@ -64,7 +64,7 @@
                 this.loading = true;
                 PublicationService.top(100)
                     .then(response => {
-                        console.log(response.data.data);
+                        // console.log(response.data.data);
                         this.data = response.data.data[0]
                         this.data.forEach(element => {
                             element.score = Math.round(element.score);
@@ -73,7 +73,7 @@
                             // element.bot_rating_avg = Math.round(element.bot_rating_avg * 10000) / 10000;
                         });
                         this.loading = false
-                        console.log(this.data);
+                        // console.log(this.data);
                     })
                     .catch(e => {
                         console.log(e);

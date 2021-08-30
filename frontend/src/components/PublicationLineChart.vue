@@ -31,7 +31,7 @@
             this.loaded = false;
             this.getter(this.id)
                 .then(response => {
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
 
 
                     let data = [];
@@ -42,8 +42,8 @@
                         // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                     });
                     console.log("LINE");
-                    console.log(data);
-                    console.log(label);
+                    // console.log(data);
+                    // console.log(label);
                     this.chartdata = {
                         labels: label,
                         datasets: [{
@@ -53,7 +53,7 @@
                             data: data,
                         }],
                     };
-                    console.log(this.chartdata)
+                    // console.log(this.chartdata)
                     this.loaded = true;
                 })
                 .catch(e => {

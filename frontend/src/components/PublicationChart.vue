@@ -34,7 +34,7 @@
 
                 EventService.forPublication("2419563916")
                     .then(response => {
-                        console.log(response.data.data);
+                        // console.log(response.data.data);
 
                         let data = [];
                         let label = [];
@@ -50,7 +50,7 @@
                                 data: data,
                             }],
                         };
-                        console.log(this.chartdata);
+                        // console.log(this.chartdata);
 
                         this.renderChart(this.chartdata, this.options)
                     })

@@ -72,10 +72,10 @@ export default {
         }
     },
     mounted() {
-        console.log('this.$refs.wordCloud.clientHeight')
-        console.log(this.$refs.wordCloud.clientHeight)
-        console.log('mounted canvas')
-        console.log(this.data)
+        // console.log('this.$refs.wordCloud.clientHeight')
+        // console.log(this.$refs.wordCloud.clientHeight)
+        // console.log('mounted canvas')
+        // console.log(this.data)
         this.createCanvas()
         this.ro = new ResizeObserver(this.onResize).observe(this.$refs.wordCloud)
     },
@@ -108,8 +108,8 @@ export default {
     },
     methods: {
         onResize () {
-            console.log(this.$refs.wordCloud.offsetHeight);
-            console.log(this.$refs.wordCloud.offsetWidth);
+            // console.log(this.$refs.wordCloud.offsetHeight);
+            // console.log(this.$refs.wordCloud.offsetWidth);
             let wrapperHeight = this.$refs.wordCloud.offsetHeight;
             let wrapperWidth = this.$refs.wordCloud.offsetWidth;
             let dh = wrapperHeight / this.height;

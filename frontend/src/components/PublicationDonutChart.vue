@@ -45,7 +45,7 @@
             this.loaded = false;
             this.getter(this.id)
                 .then(response => {
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
 
                     let data = [];
                     let label = [];
@@ -53,7 +53,7 @@
                     response.data.data.forEach(e => {
 
                         if (this.growingData) {
-                            console.log(total)
+                            // console.log(total)
                             if (e.count) {
                                 total += e.count;
                             } else if (e.total) {
@@ -80,12 +80,17 @@
 
                     let dt = [{
                         label: this.title,
+                        // backgroundColor: ['#0F6364FF', '#0F6364EE', '#0F6364DD', '#0F6364CC', '#0F6364BB', '#0F6364AA', '#0F636499', '#0F636488', '#0F636477', '#0F636466', '#0F636455', '#0F636444', '#0F636433', '#0F636422', '#0F636411'],
                         backgroundColor: ['#0F6364', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
                         borderColor: '#555',
                         borderWidth: 2,
                         hoverOffset: 4,
                         data: data,
                     }];
+
+                    this.options = {
+                        responsive: true,
+                    };
 
                     if (this.type === "line") {
                         dt = [{
@@ -97,18 +102,18 @@
                             hoverOffset: 4,
                             data: data,
                         }];
-
+                        this.options['scales'] = {
+                            y: {
+                                min: 0
+                            }
+                        }
                     }
-
-                    this.options = {
-                        responsive: true,
-                    };
 
                     this.chartdata = {
                         labels: label,
                         datasets: dt
                     };
-                    console.log(this.chartdata);
+                    // console.log(this.chartdata);
                     this.loaded = true;
                 })
                 .catch(e => {

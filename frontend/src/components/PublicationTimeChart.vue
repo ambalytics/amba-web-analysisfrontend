@@ -31,7 +31,7 @@
             this.loaded = false;
             EventService.forPublication("2419563916")
                 .then(response => {
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
 
                     let data = [];
                     let label = [];
@@ -40,7 +40,7 @@
                         label.push(new Date(e._id.y, e._id.m, e._id.d, e._id.h));
                         // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                     });
-                    console.log(label)
+                    // console.log(label)
                     this.chartdata = {
                         labels: label,
                         datasets: [{
@@ -49,7 +49,7 @@
                             data: data,
                         }],
                     };
-                    console.log(this.chartdata)
+                    // console.log(this.chartdata)
                     this.loaded = true;
                 })
                 .catch(e => {
