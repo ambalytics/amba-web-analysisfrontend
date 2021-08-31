@@ -181,9 +181,9 @@
                             // console.log(response.data.data[0].count)
                             // let lastElement = true;
                             that.pubData.forEach(pub => {
-                                print(pub.doi);
-                                print(element.doi);
-                                print(pub.doi === element.doi);
+                                console.log(pub.doi);
+                                console.log(element.doi);
+                                console.log(pub.doi === element.doi);
                                if (pub.doi === element.doi) {
                                    pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
                                } //else if (pub.score === undefined) {
