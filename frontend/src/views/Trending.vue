@@ -111,6 +111,10 @@
                     }
                 });
                 if (run) {
+                    console.log('switch')
+                    console.log(this.tempData)
+                    console.log(this.loadLevel)
+
                     this.pubData = [];
                     // this.pubData = [...this.tempData];
                     // this.pubData = JSON.parse(JSON.stringify(this.tempData));
@@ -123,11 +127,11 @@
             fetchData() {
                 console.log('fetch data');
                 let that = this;
-                this.pubDataRaw.forEach((element, index, array) => {
-                   let lastElement = false;
-                   if (index === array.length - 1){
-                       lastElement = true;
-                   }
+                this.pubDataRaw.forEach((element, index) => {
+                   //  let lastDataElement = false;
+                   // if (index === array.length - 1){
+                   //     lastDataElement = true;
+                   // }
                      PublicationService.get(element.doi)
                         .then(response => {
                             // console.log(response.data)
@@ -141,11 +145,13 @@
                             });
                             publication.fieldsOfStudy = fields.substr(0, fields.length-2);
                             // publication.score = Math.round(publication.score);
-                            that.tempData.push(publication)
-                            if (lastElement) {
-                                that.loadLevel[0] = true;
-                                that.switchData()
-                            }
+
+                            that.pubData[index] = publication
+                            // that.tempData.push(publication)
+                            // if (lastDataElement) {
+                            //     that.loadLevel[0] = true;
+                            //     that.switchData()
+                            // }
                         })
                         .catch(e => {
                             console.log(e);
@@ -154,31 +160,41 @@
                      PublicationService.tweetCount(element.doi)
                         .then(response => {
                             // console.log(response.data.data[0].count)
-                            that.tempData.forEach(pub => {
+                            // let lastElement = true;
+                            that.pubData.forEach(pub => {
                                if (pub.doi === element.doi) {
                                    pub.count = response.data.data[0].count;
-                               }
+                               } //else if (pub.count === undefined) {
+                               //     lastElement = false;
+                               // }
                             });
 
-                            if (lastElement) {
-                                that.loadLevel[1] = true;
-                                that.switchData()
-                            }
+                            // if (lastElement) {
+                            //     console.log(that.tempData);
+                            //     that.loadLevel[1] = true;
+                            //     that.switchData()
+                            // }
                         });
 
                      PublicationService.scoreSum(element.doi)
                         .then(response => {
                             // console.log(response.data.data[0].count)
-                            that.tempData.forEach(pub => {
+                            // let lastElement = true;
+                            that.pubData.forEach(pub => {
+                                print(pub.doi);
+                                print(element.doi);
+                                print(pub.doi === element.doi);
                                if (pub.doi === element.doi) {
                                    pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
-                               }
+                               } //else if (pub.score === undefined) {
+                               //     lastElement = false;
+                               // }
                             });
 
-                            if (lastElement) {
-                                that.loadLevel[2] = true;
-                                that.switchData()
-                            }
+                            // if (lastElement) {
+                            //     that.loadLevel[2] = true;
+                            //     that.switchData()
+                            // }
                         });
                 });
             },
@@ -188,6 +204,8 @@
 <style lang="scss">
     .p-datatable .p-datatable-tbody > tr > td:first-of-type {
         text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
     }
         td > .wrapper {
             padding: 10px 30px 10px 10px !important
