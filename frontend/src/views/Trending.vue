@@ -46,7 +46,7 @@
         }, created() {
             console.log("Starting connection to WebSocket Server");
             // var ws = new WebSocket("ws://localhost:8080/live");
-            this.connection = new WebSocket("ws://api-analysis.ambalytics.com/live");
+            this.connection = new WebSocket("wss://api-analysis.ambalytics.com/live");
 
             let that = this;
             this.connection.onmessage = function(event) {
