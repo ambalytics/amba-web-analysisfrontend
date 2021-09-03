@@ -38,10 +38,10 @@ class PublicationService {
         return id === null ? http.get("/stats/lang") : http.get(`/stats/lang?id=${id}`);
     }
 
-    // todo boolean original
-    authors(id = null) {
-        return id === null ? http.get("/stats/authors") : http.get(`/stats/authors?id=${id}`);
-    }
+
+    // authors(id = null) {
+    //     return id === null ? http.get("/stats/authors") : http.get(`/stats/authors?id=${id}`);
+    // }
 
     entities(id = null) {
         return id === null ? http.get("/stats/entities") : http.get(`/stats/entities?id=${id}`);

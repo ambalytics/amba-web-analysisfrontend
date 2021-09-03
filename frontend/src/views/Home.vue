@@ -90,7 +90,7 @@
                     Time of Day
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="timeOfDayGetter" type="line"></publication-donut-chart>
+                    <publication-donut-chart :getter="timeOfDayGetter"  title=" " type="line"></publication-donut-chart>
                 </template>
             </Card>
         </div>
@@ -113,9 +113,9 @@
                 </template>
                 <template #content>
                     <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364ff"
-                              lowColor="#0f636420"
-                              countryStrokeColor="#eee"
+                              highColor="#0f6364"
+                              lowColor="#E6B24B"
+                              countryStrokeColor="#fff"
                               defaultCountryFillColor="#fff"
                               @hoverCountry="hover"
                     />
@@ -160,7 +160,7 @@
             totalFollowers: '-',
             a: 0,
         }), created() {
-            console.log('created');
+            // console.log('created');
             // fetch the data when the view is created and the data is
             // already being observed
             this.fetchData()
@@ -171,13 +171,13 @@
                 return x.toLocaleString('de-De');
             },
             fetchData() {
-                console.log('fetch data');
+                // console.log('fetch data');
 
                 this.loading = true;
 
                 PublicationService.tweetCount()
                     .then(response => {
-                        this.tweetCount = response.data.data[0]['count'];
+                        this.tweetCount = response.data[0]['count'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -185,7 +185,7 @@
 
                 PublicationService.followers()
                     .then(response => {
-                        this.totalFollowers = response.data.data[0]['sum'];
+                        this.totalFollowers = response.data[0]['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -193,7 +193,7 @@
 
                 PublicationService.authorCount()
                     .then(response => {
-                        this.authorCount = response.data.data[0]['count'];
+                        this.authorCount = response.data[0]['count'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -201,7 +201,7 @@
 
                 PublicationService.scoreSum()
                     .then(response => {
-                        this.scoreSum = response.data.data[0]['sum'];
+                        this.scoreSum = response.data[0]['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -209,8 +209,8 @@
 
                 PublicationService.getCount()
                     .then(response => {
-                        console.log('count')
-                        this.pubCount = response.data.data[0][0]['count'];
+                        // console.log('count')
+                        this.pubCount = response.data['count'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -219,12 +219,12 @@
                 PublicationService.countries()
                     .then(response => {
                         this.loading = false;
-                        console.log('countries')
+                        // console.log('countries')
                         let c = {}
-                        response.data.data.forEach((e) => {
-                            c[e._id.toUpperCase()] = e.sum
+                        response.data.forEach((e) => {
+                            c[e.authorLocation.toUpperCase()] = e.count
                         });
-                        console.log(c)
+                        // console.log(c)
                         this.countries = c;
                         this.renderMap = true
                     })
@@ -263,6 +263,7 @@
     .big-chart {
         .p-card-content, .p-card-body {
             height: 100%;
+            color: #fff;
         }
     }
 </style>

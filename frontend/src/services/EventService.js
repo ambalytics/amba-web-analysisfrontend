@@ -2,15 +2,15 @@ import http from "../../http-common";
 
 class EventService {
     getAll() {
-        return http.get("/event");
+        return 'no longer supported '
     }
 
     get(id) {
-        return http.get(`/event/${id}`);
+        return 'no longer supported ' + id
     }
 
     newest() {
-        return http.get("/event/newest");
+        return 'no longer supported '
     }
 
     words() {
@@ -18,7 +18,7 @@ class EventService {
     }
 
     forPublication(id) {
-        return http.get(`/event/publication/${id}`);
+        return 'no longer supported ' + id
     }
 }
 

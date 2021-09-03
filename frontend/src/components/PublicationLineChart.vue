@@ -41,7 +41,7 @@
                         label.push(e._id);
                         // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                     });
-                    console.log("LINE");
+                    // console.log("LINE");
                     // console.log(data);
                     // console.log(label);
                     this.chartdata = {

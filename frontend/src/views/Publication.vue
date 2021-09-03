@@ -110,8 +110,8 @@
                 </template>
                 <template #content>
                     <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364ff"
-                              lowColor="#0f636420"
+                              highColor="#0f6364"
+                              lowColor="#E6B24B"
                               countryStrokeColor="#eee"
                               defaultCountryFillColor="#fff"
                               @hoverCountry="hover"
@@ -196,20 +196,6 @@
                 </template>
             </Card>
         </div>
-
-        <div class="p-col-12">
-            <DataTable :value="data" dataKey="_id" :paginator="true" :rows="10" :rowHover="true" :autoLayout="true"
-                       :loading="loading" :rowsPerPageOptions="[10,25,50]" @row-click="openTweet($event)">
-                <template #empty>
-                    No Events found.
-                </template>
-                <template #loading>
-                    Loading Event data. Please wait.
-                </template>
-                <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                        :key="col.field"></Column>
-            </DataTable>
-        </div>
     </div>
 
 </template>
@@ -227,18 +213,6 @@
         data: () => ({
             publication: {},
             fontSizeMapper: word => Math.log2(word.value * 10) * 10,
-            columns: [
-                {field: '_id', header: 'id', sortable: false},
-                {field: 'time_past', header: 'time_past', sortable: true},
-                {field: 'name', header: 'name', sortable: true},
-                {field: 'text', header: 'text', sortable: true},
-                {field: 'source', header: 'source', sortable: true},
-                {field: 'lang', header: 'lang', sortable: true},
-                {field: 'tweet_type', header: 'tweet_type', sortable: true},
-                {field: 'score', header: 'score', sortable: true},
-                {field: 'contains_abstract', header: 'contains_abstract', sortable: true},
-                {field: 'bot_rating', header: 'bot_rating', sortable: true},
-            ],
             countries: [],
             data: [],
             words: [],
@@ -250,7 +224,7 @@
             scoreSum: '-',
             totalFollowers: '-',
         }), created() {
-            console.log('created');
+            // console.log('created');
             // fetch the data when the view is created and the data is
             // already being observed
             this.fetchData()
@@ -296,14 +270,16 @@
                 }
             },
             fetchData() {
-                console.log('fetch data');
+                // console.log('fetch data');
 
                 this.loading = true;
                 // todo check how many / can be in doi
                 PublicationService.get(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         // console.log(response.data.data);
-                        this.publication = response.data.data[0];
+                        this.publication = response.data['publication'][0];
+                        this.publication['authors'] = response.data['authors'];
+                        this.publication['fieldsOfStudy'] = response.data['fieldsOfStudy'];
                         this.publication.url = 'doi.org/' + this.publication['doi'];
                         // console.log(this.publication);
                     })
@@ -311,19 +287,9 @@
                         console.log(e);
                     });
 
-                PublicationService.twitter(this.$route.params.p + "/" + this.$route.params.s)
-                    .then(response => {
-                        this.loading = false;
-                        this.data = response.data.data[0];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-
                 PublicationService.tweetCount(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.tweetCount = response.data.data[0]['count'];
+                        this.tweetCount = response.data[0]['count'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -331,7 +297,7 @@
 
                 PublicationService.followers(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.totalFollowers = response.data.data[0]['sum'];
+                        this.totalFollowers = response.data[0]['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -339,7 +305,7 @@
 
                 PublicationService.authorCount(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.authorCount = response.data.data[0]['count'];
+                        this.authorCount = response.data[0]['count'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -347,7 +313,7 @@
 
                 PublicationService.scoreSum(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.scoreSum = response.data.data[0]['sum'];
+                        this.scoreSum = response.data[0]['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -356,12 +322,12 @@
                 PublicationService.countries(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         this.loading = false;
-                        console.log('countries')
+                        // console.log('countries')
                         let c = {}
-                        response.data.data.forEach((e) => {
-                            c[e._id.toUpperCase()] = e.sum
+                        response.data.forEach((e) => {
+                            c[e.authorLocation.toUpperCase()] = e.count
                         });
-                        console.log(c)
+                        // console.log(c)
                         this.countries = c;
                         this.renderMap = true
                     })
@@ -372,33 +338,42 @@
                 PublicationService.words(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         this.loading = false;
-                        this.words = response.data.data.words;
+                        this.words = [];
                         // console.log('words')
                         // console.log(this.words)
+                        //
+                        // if (!this.words || this.words.length < 1)
+                        //     return [];
 
-                        if (!this.words || this.words.length < 1)
-                            return [];
-
-                        let occurences = this.words.reduce((allNames, name) => {
-                            if (name in allNames) {
-                                allNames[name]++;
-                            } else {
-                                allNames[name] = 1;
-                            }
-                            return allNames;
-                        }, {});
-
-                        let occurencesCount = []
-
-                        for (var text in occurences) {
+                        // let occurences = this.words.reduce((allNames, name) => {
+                        //     if (name in allNames) {
+                        //         allNames[name]++;
+                        //     } else {
+                        //         allNames[name] = 1;
+                        //     }
+                        //     return allNames;
+                        // }, {});
+                        //
+                        // let occurencesCount = []
+                        //
+                        // for (var text in occurences) {
+                        //     let obj = {}
+                        //     obj.text = text;
+                        //     obj.value = occurences[text]
+                        //     occurencesCount.push(obj)
+                        // }
+                        let that = this;
+                        response.data.forEach((e) => {
                             let obj = {}
-                            obj.text = text;
-                            obj.value = occurences[text]
-                            occurencesCount.push(obj)
-                        }
+                            obj.text = e.value;
+                            obj.value = e.count;
+                            that.words.push(obj)
+                        });
+                        // console.log(this.words);
+
                         // console.log('words')
                         // console.log(occurencesCount)
-                        this.words = occurencesCount
+                        // this.words = occurencesCount
                         this.render = true
                         // console.log(this.render)
                         // console.log('render')

@@ -4,6 +4,7 @@
 
 <script>
     import PublicationService from "../services/PublicationService";
+    import chroma from 'chroma-js';
 
     export default {
         name: 'PublicationDonutChart',
@@ -50,71 +51,84 @@
                     let data = [];
                     let label = [];
                     let total = 0;
-                    response.data.data.forEach(e => {
+                    if (response.data) {
 
-                        if (this.growingData) {
-                            // console.log(total)
-                            if (e.count) {
-                                total += e.count;
-                            } else if (e.total) {
-                                total += e.total
+                        response.data.forEach(e => {
+
+                            if (e.value !== "total") {
+                                // console.log(total)
+                                if (this.growingData) {
+                                    if (e.count) {
+                                        total += e.count;
+                                    } else if (e.total) {
+                                        total += e.total
+                                    }
+                                    data.push(total);
+                                } else {
+                                    if (e.count) {
+                                        data.push(e.count);
+                                    } else if (e.total) {
+                                        data.push(e.total);
+                                    }
+                                }
+
+                                if (this.dateFormat) {
+                                    let date = new Date(e.year, e.month, e.day, e.hour);
+                                    const options = {hour: '2-digit', minute: '2-digit'};
+                                    label.push(date.toLocaleTimeString('de-DE', options))
+                                } else {
+                                    label.push(e.value);
+                                }
                             }
-                            data.push(total);
-                        } else {
-                            if (e.count) {
-                                data.push(e.count);
-                            } else if (e.total) {
-                                data.push(e.total);
-                            }
+                            // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
+                        });
+
+                        let colors = [];
+                        let c = chroma.scale(['#0F6364', '#67002E', '#E6B24B']);
+                        for (let i = 0; i < data.length; i++) {
+                            colors.push(c(i / (data.length - 1)).hex())
                         }
+                        // console.log(response.data.length);
+                        // console.log(colors);
 
-                        if (this.dateFormat) {
-                            let date = new Date(e._id);
-                            const options = { hour: '2-digit', minute: '2-digit' };
-                            label.push(date.toLocaleTimeString('de-DE', options))
-                        } else {
-                            label.push(e._id);
-                        }
-                        // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
-                    });
-
-                    let dt = [{
-                        label: this.title,
-                        // backgroundColor: ['#0F6364FF', '#0F6364EE', '#0F6364DD', '#0F6364CC', '#0F6364BB', '#0F6364AA', '#0F636499', '#0F636488', '#0F636477', '#0F636466', '#0F636455', '#0F636444', '#0F636433', '#0F636422', '#0F636411'],
-                        backgroundColor: ['#0F6364', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
-                        borderColor: '#555',
-                        borderWidth: 2,
-                        hoverOffset: 4,
-                        data: data,
-                    }];
-
-                    this.options = {
-                        responsive: true,
-                    };
-
-                    if (this.type === "line") {
-                        dt = [{
-                        label: this.title,
-                            backgroundColor: '#0F6364',
+                        let dt = [{
+                            label: this.title,
+                            // backgroundColor: ['#0F6364FF', '#0F6364EE', '#0F6364DD', '#0F6364CC', '#0F6364BB', '#0F6364AA', '#0F636499', '#0F636488', '#0F636477', '#0F636466', '#0F636455', '#0F636444', '#0F636433', '#0F636422', '#0F636411'],
+                            backgroundColor: colors,
                             borderColor: '#555',
-                            fill: true,
                             borderWidth: 2,
                             hoverOffset: 4,
                             data: data,
                         }];
-                        this.options['scales'] = {
-                            y: {
-                                min: 0
+
+                        this.options = {
+                            responsive: true,
+                        };
+
+                        if (this.type === "line") {
+                            dt = [{
+                                label: this.title,
+                                backgroundColor: '#0F6364',
+                                borderColor: '#555',
+                                fill: true,
+                                borderWidth: 2,
+                                hoverOffset: 4,
+                                data: data,
+                            }];
+                            this.options['scales'] = {
+                                y: {
+                                    min: 0
+                                }
                             }
                         }
-                    }
 
-                    this.chartdata = {
-                        labels: label,
-                        datasets: dt
-                    };
-                    // console.log(this.chartdata);
-                    this.loaded = true;
+                        this.chartdata = {
+                            labels: label,
+                            datasets: dt
+                        };
+                        // console.log(this.chartdata);
+                        this.loaded = true;
+                    }
                 })
                 .catch(e => {
                     console.log(e);

@@ -1,6 +1,6 @@
 <template>
-    <DataTable :value="data" dataKey="doi" :paginator="true" :rows="20" :rowHover="true"
-               :loading="loading" :rowsPerPageOptions="[20,50,100]" :autoLayout="true" sort-order="2"
+    <DataTable :value="data" dataKey="doi" :paginator="true" :rows="10" :rowHover="true"
+               :loading="loading" :rowsPerPageOptions="[10]" :autoLayout="true" sort-order="2"
                @row-click="rowClick($event)">
         <template #empty>
             No Publications found.
@@ -44,7 +44,7 @@
                 loading: true
             }
         }, created() {
-            console.log('created');
+            // console.log('created');
             // fetch the data when the view is created and the data is
             // already being observed
             this.fetchData()
@@ -59,13 +59,13 @@
                 return x.toLocaleString('de-De');
             },
             fetchData() {
-                console.log('fetch data');
+                // console.log('fetch data');
                 this.error = this.post = null
                 this.loading = true;
                 PublicationService.top(100)
                     .then(response => {
                         // console.log(response.data.data);
-                        this.data = response.data.data[0]
+                        this.data = response.data
                         this.data.forEach(element => {
                             element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);

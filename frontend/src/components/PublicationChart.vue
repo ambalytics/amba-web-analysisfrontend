@@ -21,14 +21,14 @@
             }
         }),
         mounted() {
-            console.log('created');
+            // console.log('created');
             // fetch the data when the view is created and the data is
             // already being observed
             this.fetchData()
         },
         methods: {
             fetchData() {
-                console.log('fetch data');
+                // console.log('fetch data');
                 this.error = this.post = null
                 this.loading = true
 

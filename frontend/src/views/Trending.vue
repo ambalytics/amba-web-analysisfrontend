@@ -1,6 +1,6 @@
 <template>
     <DataTable :value="pubData" dataKey="doi" :rowHover="true" ref="trendTable"
-               sortField="rank" :sortOrder="1" :autoLayout="true" :lazy="true"
+               sortField="rank" :sortOrder="1" :autoLayout="true"
                @row-click="rowClick($event)">
         <template #empty>
             No Publications found.
@@ -26,7 +26,7 @@
         data() {
             return {
                 columns: [
-                    {field: 'rank', header: 'Rank', sortable: false, class:"amba"},
+                    {field: 'rank', header: 'Rank', sortable: false, class:"amba rank"},
                     {field: 'title', header: 'Title', sortable: false},
                     {field: 'count', header: 'Total Tweet Count', sortable: false, class:"text-align-right amba", numberTemplate: true},
                     {field: 'trending_score', header: 'Trending Score', sortable: false, class:"text-align-right amba", numberTemplate: true},
@@ -112,8 +112,8 @@
                 });
                 if (run) {
                     console.log('switch')
-                    console.log(this.tempData)
-                    console.log(this.loadLevel)
+                    // console.log(this.tempData)
+                    // console.log(this.loadLevel)
 
                     this.pubData = [];
                     // this.pubData = [...this.tempData];
@@ -127,26 +127,61 @@
             fetchData() {
                 console.log('fetch data');
                 let that = this;
-                this.pubDataRaw.forEach((element, index) => {
+                this.pubDataRaw.forEach((element) => {
                    //  let lastDataElement = false;
                    // if (index === array.length - 1){
                    //     lastDataElement = true;
                    // }
                      PublicationService.get(element.doi)
                         .then(response => {
-                            // console.log(response.data)
-                            let publication = response.data.data[0];
+                            // console.log(response.data.publication);
+                            let publication = response.data.publication[0];
                             publication.url = 'doi.org/' + publication['doi'];
                             publication.rank = element.rank;
                             publication.trending_score = Math.round(element.trending_score);
                             let fields = '';
-                            publication.fieldsOfStudy.forEach(f => {
+                            response.data.fieldsOfStudy.forEach(f => {
                                 fields += f.name + ', ';
                             });
                             publication.fieldsOfStudy = fields.substr(0, fields.length-2);
                             // publication.score = Math.round(publication.score);
 
-                            that.pubData[index] = publication
+                            let updated = false;
+
+                            // update with the new data
+                            that.pubData.forEach((pub, index) => {
+                                if (pub.doi === publication.doi) {
+                                    // console.log('update entry');
+                                    that.pubData[index] = publication;
+                                    updated = true;
+                                }
+                            });
+
+                            // go through them again and choose one that is not in raw data (new data)
+                            that.pubData.forEach((pub, index) => {
+
+                               let entryStillInUse = false;
+                               that.pubDataRaw.forEach(p => {
+                                   if (p.doi === pub.doi) {
+                                       entryStillInUse = true;
+                                   }
+                               });
+                               // console.log(pub.doi);
+                               // console.log(entryStillInUse);
+                               if (!updated && !entryStillInUse) {
+                                   // console.log('use replacement');
+                                   that.pubData[index] = publication;
+                                   updated = true;
+                               }
+                            });
+
+                            if (!updated) {
+                                // console.log('just push');
+                                that.pubData.push(publication)
+                            }
+
+                            // that.pubData.push(publication)
+                            // console.log(index)
                             // that.tempData.push(publication)
                             // if (lastDataElement) {
                             //     that.loadLevel[0] = true;
@@ -163,7 +198,7 @@
                             // let lastElement = true;
                             that.pubData.forEach(pub => {
                                if (pub.doi === element.doi) {
-                                   pub.count = response.data.data[0].count;
+                                   pub.count = response.data[0].count;
                                } //else if (pub.count === undefined) {
                                //     lastElement = false;
                                // }
@@ -181,11 +216,11 @@
                             // console.log(response.data.data[0].count)
                             // let lastElement = true;
                             that.pubData.forEach(pub => {
-                                console.log(pub.doi);
-                                console.log(element.doi);
-                                console.log(pub.doi === element.doi);
+                                // console.log(pub.doi);
+                                // console.log(element.doi);
+                                // console.log(pub.doi === element.doi);
                                if (pub.doi === element.doi) {
-                                   pub.score = Math.round(response.data.data[0].sum); // todo duplicate?
+                                   pub.score = Math.round(response.data[0].sum); // todo duplicate?
                                } //else if (pub.score === undefined) {
                                //     lastElement = false;
                                // }
@@ -202,7 +237,7 @@
     }
 </script>
 <style lang="scss">
-    .p-datatable .p-datatable-tbody > tr > td:first-of-type {
+    .p-datatable .p-datatable-tbody > tr > td.rank {
         text-align: center;
         font-size: 1.5em;
         font-weight: bold;
