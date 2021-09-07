@@ -1,7 +1,7 @@
 <template>
     <div class="p-grid">
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card class="stats">
                 <template #title>
                     Stats
@@ -40,7 +40,7 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
                     Types
@@ -51,7 +51,7 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
                     Sources
@@ -62,7 +62,7 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
                     Languages
@@ -73,7 +73,7 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
                     Hashtags
@@ -84,7 +84,7 @@
             </Card>
         </div>
 
-        <div class="p-col-6">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
                 <template #title>
                     Time of Day
@@ -95,7 +95,7 @@
             </Card>
         </div>
 
-        <div class="p-col-3">
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
                     Entities
@@ -106,7 +106,7 @@
             </Card>
         </div>
 
-        <div class="p-col-6">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
                 <template #title>
                     Authors
@@ -115,15 +115,14 @@
                     <MapChart v-if="renderMap" :countryData="countries"
                               highColor="#0f6364"
                               lowColor="#E6B24B"
-                              countryStrokeColor="#fff"
+                              countryStrokeColor="#eee"
                               defaultCountryFillColor="#fff"
-                              @hoverCountry="hover"
                     />
                 </template>
             </Card>
         </div>
 
-        <div class="p-col-6">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
                     Tweets over Time
@@ -142,7 +141,7 @@
 
     import PublicationDonutChart from "../components/PublicationDonutChart";
     import PublicationService from "../services/PublicationService";
-    import MapChart from "vue-map-chart";
+    import MapChart from "../components/MapChart";
 
     export default {
         name: 'Home',

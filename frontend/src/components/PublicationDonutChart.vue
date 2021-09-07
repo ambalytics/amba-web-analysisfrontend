@@ -50,6 +50,7 @@
 
                     let data = [];
                     let label = [];
+                    let rest = 0;
                     let total = 0;
                     if (response.data) {
 
@@ -57,12 +58,12 @@
 
                             if (e.value !== "total") {
                                 // console.log(total)
+                                if (e.count) {
+                                    total += e.count;
+                                } else if (e.total) {
+                                    total += e.total
+                                }
                                 if (this.growingData) {
-                                    if (e.count) {
-                                        total += e.count;
-                                    } else if (e.total) {
-                                        total += e.total
-                                    }
                                     data.push(total);
                                 } else {
                                     if (e.count) {
@@ -73,15 +74,27 @@
                                 }
 
                                 if (this.dateFormat) {
-                                    let date = new Date(e.year, e.month, e.day, e.hour);
+                                    let date = new Date(Date.UTC(e.year, e.month, e.day, e.hour, 0, 0));
                                     const options = {hour: '2-digit', minute: '2-digit'};
                                     label.push(date.toLocaleTimeString('de-DE', options))
                                 } else {
+                                    // todo hour shift to local time for time of day
                                     label.push(e.value);
                                 }
+                            } else {
+                                    if (e.count) {
+                                        rest = e.count;
+                                    } else if (e.total) {
+                                        rest = e.total;
+                                    }
                             }
                             // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
                         });
+
+                        if (rest > 0) {
+                            data.push(rest - total);
+                            label.push('Others');
+                        }
 
                         let colors = [];
                         let c = chroma.scale(['#0F6364', '#67002E', '#E6B24B']);

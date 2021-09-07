@@ -122,7 +122,7 @@
         font-size: 1.05em;
     }
 
-    .layout-topbar .p-menubar .p-menuitem .p-menuitem-link{
+    .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
         background: white !important;
         box-shadow:inset 0 0 0 2px $color-main;
         margin-left: 5px;
@@ -292,7 +292,7 @@
 
             h3 {
                margin: 0.6em 0 0.2em 0.7em;
-               font-size: 0.8vw;
+               font-size: 1.2em;
                width: 100%;
             }
 
@@ -312,4 +312,17 @@
         height: 100%;
     }
 
+    @media only screen and (max-width: 960px) {
+
+        .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
+            box-shadow: none;
+            margin-left: 0;
+        }
+
+       .p-menubar.p-menubar-mobile-active .p-menubar-root-list[role=menubar] {
+            top: 90%;
+            left: -50px;
+            min-width: max-content;
+        }
+    }
 </style>
