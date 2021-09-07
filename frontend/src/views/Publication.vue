@@ -112,7 +112,7 @@
                     <MapChart v-if="renderMap" :countryData="countries"
                               highColor="#0f6364"
                               lowColor="#E6B24B"
-                              countryStrokeColor="#fff"
+                              countryStrokeColor="#eee"
                               defaultCountryFillColor="#fff"
                     />
                 </template>
