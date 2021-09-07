@@ -99,4 +99,10 @@
             }
         }
     }
+
+    @media only screen and (max-width: 960px) {
+        .about-container {
+            padding-right: 0;
+        }
+    }
 </style>

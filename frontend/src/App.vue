@@ -319,6 +319,8 @@
             margin-left: 0;
         }
 
+
+
        .p-menubar.p-menubar-mobile-active .p-menubar-root-list[role=menubar] {
             top: 90%;
             left: -50px;
