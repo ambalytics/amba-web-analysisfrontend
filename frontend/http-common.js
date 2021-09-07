@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://api-analysis.ambalytics.com/api",
-  headers: {
-    "Content-type": "application/json"
-  }
+    baseURL: process.env.VUE_APP_API_URL,
+    headers: {
+        "Content-type": "application/json"
+    }
 });

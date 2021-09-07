@@ -45,9 +45,7 @@
             }
         }, created() {
             console.log("Starting connection to WebSocket Server");
-            // var ws = new WebSocket("ws://localhost:8080/live");
-            this.connection = new WebSocket("wss://api-analysis.ambalytics.com/live");
-
+            this.connection = new WebSocket(process.env.VUE_APP_SOCKET_URL);
             let that = this;
             this.connection.onmessage = function(event) {
                 if (event.data) {
