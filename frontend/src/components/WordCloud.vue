@@ -126,6 +126,9 @@ export default {
             const wordCounts = this.data.map(
                 text => ({ ...text })
             );
+            wordCounts.forEach(w => {
+               w.text = w.text.startsWith('@') ? w.text : w.text.toUpperCase()
+            });
             d3.select(this.$el).selectAll('*').remove();
             const layout = cloud()
             .size([this.width, this.height])
@@ -147,7 +150,7 @@ export default {
         },
         end: function(words) {
             let _fill;
-            switch(this.coloring){
+            switch (this.coloring){
                 case "random":
                     _fill = (d, i) => this.fill(i);
                     break;

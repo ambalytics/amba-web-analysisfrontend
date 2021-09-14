@@ -312,6 +312,10 @@
         height: 100%;
     }
 
+    div.vue-world-map {
+        margin-bottom: 20px;
+    }
+
     @media only screen and (max-width: 960px) {
 
         .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {

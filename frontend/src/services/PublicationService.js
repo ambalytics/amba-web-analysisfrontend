@@ -7,7 +7,7 @@ class PublicationService {
     }
 
     get(id) {
-        return http.get(`/publication/get/${id}`);
+        return http.get(`/publication/get?doi=${id}`);
     }
 
     getCount() {
@@ -23,60 +23,60 @@ class PublicationService {
     }
 
     types(id = null) {
-        return id === null ? http.get("/stats/types") : http.get(`/stats/types?id=${id}`);
+        return id === null ? http.get("/stats/types") : http.get(`/stats/types?doi=${id}`);
     }
 
     words(id) {
-        return http.get(`/stats/words?id=${id}`);
+        return http.get(`/stats/words?doi=${id}`);
     }
 
     sources(id = null) {
-        return id === null ? http.get("/stats/sources") : http.get(`/stats/sources?id=${id}`);
+        return id === null ? http.get("/stats/sources") : http.get(`/stats/sources?doi=${id}`);
     }
 
     lang(id = null) {
-        return id === null ? http.get("/stats/lang") : http.get(`/stats/lang?id=${id}`);
+        return id === null ? http.get("/stats/lang") : http.get(`/stats/lang?doi=${id}`);
     }
 
 
     // authors(id = null) {
-    //     return id === null ? http.get("/stats/authors") : http.get(`/stats/authors?id=${id}`);
+    //     return id === null ? http.get("/stats/authors") : http.get(`/stats/authors?doi=${id}`);
     // }
 
     entities(id = null) {
-        return id === null ? http.get("/stats/entities") : http.get(`/stats/entities?id=${id}`);
+        return id === null ? http.get("/stats/entities") : http.get(`/stats/entities?doi=${id}`);
     }
 
     hashtags(id = null) {
-        return id === null ? http.get("/stats/hashtags") : http.get(`/stats/hashtags?id=${id}`);
+        return id === null ? http.get("/stats/hashtags") : http.get(`/stats/hashtags?doi=${id}`);
     }
 
     timeOfDay(id = null) {
-        return id === null ? http.get("/stats/dayhour") : http.get(`/stats/dayhour?id=${id}`);
+        return id === null ? http.get("/stats/dayhour") : http.get(`/stats/dayhour?doi=${id}`);
     }
 
     countries(id = null) {
-        return id === null ? http.get("/stats/locations") : http.get(`/stats/locations?id=${id}`);
+        return id === null ? http.get("/stats/locations") : http.get(`/stats/locations?doi=${id}`);
     }
 
     followers(id = null) {
-        return id === null ? http.get("/stats/followers") : http.get(`/stats/followers?id=${id}`);
+        return id === null ? http.get("/stats/followers") : http.get(`/stats/followers?doi=${id}`);
     }
 
     authorCount(id = null) {
-        return id === null ? http.get("/stats/authorcount") : http.get(`/stats/authorcount?id=${id}`);
+        return id === null ? http.get("/stats/authorcount") : http.get(`/stats/authorcount?doi=${id}`);
     }
 
     tweetCount(id = null) {
-        return id === null ? http.get("/stats/tweetcount") : http.get(`/stats/tweetcount?id=${id}`);
+        return id === null ? http.get("/stats/tweetcount") : http.get(`/stats/tweetcount?doi=${id}`);
     }
 
     scoreSum(id = null) {
-        return id === null ? http.get("/stats/scoresum") : http.get(`/stats/scoresum?id=${id}`);
+        return id === null ? http.get("/stats/scoresum") : http.get(`/stats/scoresum?doi=${id}`);
     }
 
     timeBinned(id = null) {
-        return id === null ? http.get("/stats/timebinned") : http.get(`/stats/timebinned?id=${id}`);
+        return id === null ? http.get("/stats/timebinned") : http.get(`/stats/timebinned?doi=${id}`);
     }
 }
 

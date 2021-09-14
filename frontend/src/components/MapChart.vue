@@ -47,6 +47,7 @@
     let scale = {
         min: 0,
         max: 0,
+        resolution: 100,
         barData: ["#fde2e2", "#d83737"]
     };
 
@@ -118,7 +119,7 @@
                 scale: scale,
                 position: position,
                 node: document.createElement("style"),
-                chromaScale: chroma.scale([this.$props.lowColor, this.$props.highColor])
+                chromaScale: chroma.scale(['#f7e5c2', this.$props.lowColor, this.$props.highColor]).correctLightness()
             };
         },
         methods: {
@@ -137,6 +138,7 @@
             },
             renderMapCSS() {
                 const baseCss = getBaseCss(this.$props);
+
                 const dynamicMapCssResult = getDynamicMapCss(
                     this.$props.countryData,
                     this.chromaScale,
@@ -145,16 +147,14 @@
                 );
                 this.scale.min = dynamicMapCssResult.min;
                 this.scale.max = dynamicMapCssResult.max;
-                let step = 1;
-                this.scale.barData = null;
-                this.scale.barData = [];
-                for (let i = this.scale.min; i <= this.scale.max; i += step) {
-                    const scaleValue = dynamicMapCssResult.colorScaleUnit * i;
-                    const hex = this.chromaScale(scaleValue).hex();
-                    console.log(i)
-                    console.log(hex)
-                    this.scale.barData.push(hex)
-                }
+
+                let barData = [];
+
+                let colors = this.chromaScale.colors(this.scale.resolution);
+                colors.forEach((e) => {
+                   barData.push(e)
+                });
+                this.scale.barData = barData;
                 // console.log(this.scale.barData);
                 this.$data.node.innerHTML = getCombinedCssString(baseCss, dynamicMapCssResult.css);
             }
@@ -196,6 +196,7 @@
 
     .scale {
         width: 30%;
+        max-width: 200px;
         font-family: "Courier New", monospace !important;
         font-size: 0.9em;
         display: grid;

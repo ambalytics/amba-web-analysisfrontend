@@ -46,7 +46,7 @@
                     Types
                 </template>
                 <template #content>
-                    <publication-donut-chart></publication-donut-chart>
+                    <publication-chart :rawData="topValues['types']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -57,7 +57,7 @@
                     Sources
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="sourceGetter"></publication-donut-chart>
+                    <publication-chart :rawData="topValues['sources']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -68,7 +68,7 @@
                     Languages
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="langGetter"></publication-donut-chart>
+                    <publication-chart :rawData="topValues['languages']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -79,7 +79,7 @@
                     Hashtags
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="hashtagsGetter"></publication-donut-chart>
+                    <publication-chart :show-others="false"  :rawData="topValues['hashtags']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -90,7 +90,7 @@
                     Time of Day
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="timeOfDayGetter"  title=" " type="line"></publication-donut-chart>
+                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -101,7 +101,7 @@
                     Entities
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="entitiesGetter"></publication-donut-chart>
+                    <publication-chart :show-others="false" :rawData="topValues['entities']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -128,7 +128,7 @@
                     Tweets over Time
                 </template>
                 <template #content>
-                    <publication-donut-chart height="200" title=" " :dateFormat="true" :getter="timeGetter" type="line"></publication-donut-chart>
+                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="tweetsOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -139,13 +139,14 @@
 
 <script>
 
-    import PublicationDonutChart from "../components/PublicationDonutChart";
+    import PublicationChart from "../components/PublicationChart";
     import PublicationService from "../services/PublicationService";
+    import StatService from "../services/StatService";
     import MapChart from "../components/MapChart";
 
     export default {
         name: 'Home',
-        components: {PublicationDonutChart, MapChart},
+        components: {PublicationChart, MapChart},
          data: () => ({
             fontSizeMapper: word => Math.log2(word.value * 10) * 10,
             countries: [],
@@ -158,6 +159,9 @@
             scoreSum: '-',
             totalFollowers: '-',
             a: 0,
+            topValues: [],
+            timeOfDayData: [],
+            tweetsOverTimeData: [],
         }), created() {
             // console.log('created');
             // fetch the data when the view is created and the data is
@@ -174,33 +178,12 @@
 
                 this.loading = true;
 
-                PublicationService.tweetCount()
+                StatService.numbers()
                     .then(response => {
-                        this.tweetCount = response.data[0]['count'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-                PublicationService.followers()
-                    .then(response => {
-                        this.totalFollowers = response.data[0]['sum'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-                PublicationService.authorCount()
-                    .then(response => {
-                        this.authorCount = response.data[0]['count'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-                PublicationService.scoreSum()
-                    .then(response => {
-                        this.scoreSum = response.data[0]['sum'];
+                        this.tweetCount = response.data['tweetCount']['count'];
+                        this.authorCount = response.data['authorCount']['count'];
+                        this.totalFollowers = response.data['followersReached']['sum'];
+                        this.scoreSum = response.data['totalScore']['sum'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -215,17 +198,36 @@
                         console.log(e);
                     });
 
-                PublicationService.countries()
+                PublicationService.timeBinned()
+                    .then(response => {
+                        this.tweetsOverTimeData = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                PublicationService.timeOfDay()
+                    .then(response => {
+                        this.timeOfDayData = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                StatService.top(['languages', 'types', 'sources', 'entities', 'hashtags', 'countries'])
                     .then(response => {
                         this.loading = false;
-                        // console.log('countries')
-                        let c = {}
-                        response.data.forEach((e) => {
+
+                        console.log(response.data);
+
+                        let c = {};
+                        response.data.countries.forEach((e) => {
                             c[e.authorLocation.toUpperCase()] = e.count
                         });
-                        // console.log(c)
                         this.countries = c;
-                        this.renderMap = true
+                        this.renderMap = true;
+
+                        this.topValues = response.data;
                     })
                     .catch(e => {
                         console.log(e);
@@ -236,24 +238,6 @@
                     console.log(e)
                 }
             },
-            timeGetter() {
-                return PublicationService.timeBinned()
-            },
-            sourceGetter() {
-                return PublicationService.sources()
-            },
-            langGetter() {
-                return PublicationService.lang()
-            },
-            timeOfDayGetter() {
-                return PublicationService.timeOfDay()
-            },
-            entitiesGetter() {
-                return PublicationService.entities()
-            },
-            hashtagsGetter() {
-                return PublicationService.hashtags()
-            }
         }
     }
 </script>

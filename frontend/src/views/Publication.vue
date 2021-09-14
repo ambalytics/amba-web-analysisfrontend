@@ -98,7 +98,7 @@
                     Entities
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="entitiesGetter"></publication-donut-chart>
+                    <publication-chart  :rawData="topValues['entities']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -137,7 +137,7 @@
                     Types
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="typeGetter"></publication-donut-chart>
+                    <publication-chart :rawData="topValues['types']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -148,7 +148,7 @@
                     Hashtags
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="hashtagsGetter"></publication-donut-chart>
+                    <publication-chart  :rawData="topValues['hashtags']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -159,7 +159,7 @@
                     Sources
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="sourceGetter"></publication-donut-chart>
+                    <publication-chart  :rawData="topValues['sources']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -170,7 +170,7 @@
                     Languages
                 </template>
                 <template #content>
-                    <publication-donut-chart :getter="langGetter"></publication-donut-chart>
+                    <publication-chart  :rawData="topValues['languages']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -181,7 +181,7 @@
                     Time of Day
                 </template>
                 <template #content>
-                    <publication-donut-chart :title="publication.doi" :getter="timeOfDayGetter" type="line"></publication-donut-chart>
+                    <publication-chart :title="publication.doi"  :rawData="timeOfDayData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -192,7 +192,7 @@
                     Tweets over Time
                 </template>
                 <template #content>
-                    <publication-donut-chart :title="publication.doi" :dateFormat="true" :getter="timeGetter" :growingData="true" type="line"></publication-donut-chart>
+                    <publication-chart :title="publication.doi" :dateFormat="true" :rawData="tweetsOverTimeData" :growingData="true" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -202,27 +202,30 @@
 
 <script>
 
-    import PublicationDonutChart from "../components/PublicationDonutChart";
+    import PublicationChart from "../components/PublicationChart";
     import PublicationService from "../services/PublicationService";
     import WordCloud from "../components/WordCloud";
     import MapChart from "../components/MapChart";
+    import StatService from "../services/StatService";
 
     export default {
         name: 'Publication',
-        components: {PublicationDonutChart, WordCloud, MapChart},
+        components: {PublicationChart, WordCloud, MapChart},
         data: () => ({
             publication: {},
-            fontSizeMapper: word => Math.log2(word.value * 10) * 10,
+            fontSizeMapper: word => Math.log2(word.value * 10) * 4,
             countries: [],
             data: [],
             words: [],
             render: false,
             renderMap: false,
-            loading: true,
             tweetCount: '-',
             authorCount: '-',
             scoreSum: '-',
             totalFollowers: '-',
+            topValues: [],
+            timeOfDayData: [],
+            tweetsOverTimeData: [],
         }), created() {
             // console.log('created');
             // fetch the data when the view is created and the data is
@@ -235,34 +238,9 @@
             },
         },
         methods: {
-            openTweet(event) {
-                // console.log(event.data.conversation_id);
-                window.open('https://twitter.com/pauljstorey/status/' + event.data.conversation_id, '_blank')
-            },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
-            },
-            typeGetter() {
-                return PublicationService.types(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            sourceGetter() {
-                return PublicationService.sources(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            langGetter() {
-                return PublicationService.lang(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            timeOfDayGetter() {
-                return PublicationService.timeOfDay(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            entitiesGetter() {
-                return PublicationService.entities(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            hashtagsGetter() {
-                return PublicationService.hashtags(this.$route.params.p + "/" + this.$route.params.s)
-            },
-            timeGetter() {
-                return PublicationService.timeBinned(this.$route.params.p + "/" + this.$route.params.s)
             },
             hover(e) {
                 if (!e) {
@@ -270,9 +248,6 @@
                 }
             },
             fetchData() {
-                // console.log('fetch data');
-
-                this.loading = true;
                 // todo check how many / can be in doi
                 PublicationService.get(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
@@ -287,107 +262,58 @@
                         console.log(e);
                     });
 
-                PublicationService.tweetCount(this.$route.params.p + "/" + this.$route.params.s)
+
+                StatService.numbers(null, this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.tweetCount = response.data[0]['count'];
+                        this.tweetCount = response.data['tweetCount']['count'];
+                        this.authorCount = response.data['authorCount']['count'];
+                        this.totalFollowers = response.data['followersReached']['sum'];
+                        this.scoreSum = response.data['totalScore']['sum'];
                     })
                     .catch(e => {
                         console.log(e);
                     });
 
-                PublicationService.followers(this.$route.params.p + "/" + this.$route.params.s)
+                PublicationService.timeBinned(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.totalFollowers = response.data[0]['sum'];
+                        this.tweetsOverTimeData = response.data;
                     })
                     .catch(e => {
                         console.log(e);
                     });
 
-                PublicationService.authorCount(this.$route.params.p + "/" + this.$route.params.s)
+                PublicationService.timeOfDay(this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.authorCount = response.data[0]['count'];
+                        this.timeOfDayData = response.data;
                     })
                     .catch(e => {
                         console.log(e);
                     });
 
-                PublicationService.scoreSum(this.$route.params.p + "/" + this.$route.params.s)
+                StatService.top(null, this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.scoreSum = response.data[0]['sum'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-                PublicationService.countries(this.$route.params.p + "/" + this.$route.params.s)
-                    .then(response => {
-                        this.loading = false;
-                        console.log('countries')
-                        let c = {}
-                        response.data.forEach((e) => {
+                        let c = {};
+                        response.data.countries.forEach((e) => {
                             c[e.authorLocation.toUpperCase()] = e.count
                         });
-                        console.log(c)
                         this.countries = c;
-                        this.renderMap = true
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                        this.renderMap = true;
 
-                PublicationService.words(this.$route.params.p + "/" + this.$route.params.s)
-                    .then(response => {
-                        this.loading = false;
-                        this.words = [];
-                        // console.log('words')
-                        // console.log(this.words)
-                        //
-                        // if (!this.words || this.words.length < 1)
-                        //     return [];
+                        this.topValues = response.data;
 
-                        // let occurences = this.words.reduce((allNames, name) => {
-                        //     if (name in allNames) {
-                        //         allNames[name]++;
-                        //     } else {
-                        //         allNames[name] = 1;
-                        //     }
-                        //     return allNames;
-                        // }, {});
-                        //
-                        // let occurencesCount = []
-                        //
-                        // for (var text in occurences) {
-                        //     let obj = {}
-                        //     obj.text = text;
-                        //     obj.value = occurences[text]
-                        //     occurencesCount.push(obj)
-                        // }
-                        let that = this;
-                        response.data.forEach((e) => {
-                            let obj = {}
+                        let words = [];
+                        response.data.words.forEach((e) => {
+                            let obj = {};
                             obj.text = e.value;
                             obj.value = e.count;
-                            that.words.push(obj)
+                            words.push(obj)
                         });
-                        // console.log(this.words);
-
-                        // console.log('words')
-                        // console.log(occurencesCount)
-                        // this.words = occurencesCount
-                        this.render = true
-                        // console.log(this.render)
-                        // console.log('render')
+                        this.words = words;
+                        this.render = true;
                     })
                     .catch(e => {
                         console.log(e);
                     });
-                   // console.log('chroma');
-                   // let chromaa = chroma.scale([this.$props.lowColor, this.$props.highColor]);
-                   // console.log(chromaa);
-                   // if (chromaa) {
-                   //     this.loading = true;
-                   //     console.log('sfa')
-                   // }
             },
         }
     }

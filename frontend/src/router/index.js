@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/trending',
         name: 'Trending',
-        show: false,
+        show: true,
         component: () => import(/* webpackChunkName: "about" */ '../views/Trending.vue')
     },{
         path: '/publications',
