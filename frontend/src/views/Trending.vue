@@ -32,9 +32,9 @@
                     {field: 'trending_score', header: 'Trending Score', sortable: false, class:"text-align-right amba", numberTemplate: true},
                     {field: 'score', header: 'Total Score', sortable: false, class:"text-align-right amba", numberTemplate: true},
                     {field: 'doi', header: 'DOI', sortable: false},
-                    {field: 'fieldsOfStudy', header: 'Fields Of Study', sortable: false},
+                    {field: 'fields_of_study', header: 'Fields Of Study', sortable: false},
                     {field: 'year', header: 'Year', sortable: false},
-                    {field: 'citationCount', header: 'Citation Count', sortable: false, class:"text-align-right", numberTemplate: true},
+                    {field: 'citation_count', header: 'Citation Count', sortable: false, class:"text-align-right", numberTemplate: true},
                 ],
                 pubData: [],
                 pubDataRaw: [],
@@ -138,10 +138,10 @@
                             publication.rank = element.rank;
                             publication.trending_score = Math.round(element.trending_score);
                             let fields = '';
-                            response.data.fieldsOfStudy.forEach(f => {
+                            response.data.fields_of_study.forEach(f => {
                                 fields += f.name + ', ';
                             });
-                            publication.fieldsOfStudy = fields.substr(0, fields.length-2);
+                            publication.fields_of_study = fields.substr(0, fields.length-2);
                             // publication.score = Math.round(publication.score);
 
                             let updated = false;

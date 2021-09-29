@@ -7,7 +7,7 @@
                     {{ publication.title }}
                 </template>
                 <template #content>
-                        {{ publication.abstract }}
+                    {{ publication.abstract }}
                 </template>
                 <template #footer>
                     <a class="doi" target="_blank" :href="realUrl">{{ publication.url }}</a>
@@ -24,7 +24,7 @@
                     <table class="info">
                         <tr>
                             <td><h4>Date:</h4></td>
-                            <td>{{ publication.pubDate }}</td>
+                            <td>{{ publication.pub_date }}</td>
                         </tr>
                         <tr>
                             <td><h4>Type:</h4></td>
@@ -45,8 +45,17 @@
 
                     <h4>Subjects:</h4>
                     <ul class="subjects">
-                        <li v-for="subject in publication.fieldsOfStudy" v-bind:key="subject.name">
+                        <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
                             {{ subject.name }}
+                        </li>
+                    </ul>
+
+
+                    <h4>Sources:</h4>
+                    <ul class="sources">
+                        <li v-for="subject in publication.sources" v-bind:key="subject.title" >
+                            <!--                            <a :href="subject.url">{{ subject.title }}</a>-->
+                            <a :href="subject.url">{{ subject.title }}</a>
                         </li>
                     </ul>
                 </template>
@@ -82,7 +91,8 @@
                     </div>
                     <div class="padding-left">
                         <h3>Average Tweets per Author</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round((tweetCount / authorCount) * 100) / 100) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round((tweetCount / authorCount) * 100) / 100)
+                            }}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Followers per Author</h3>
@@ -98,7 +108,7 @@
                     Entities
                 </template>
                 <template #content>
-                    <publication-chart  :rawData="topValues['entities']"></publication-chart>
+                    <publication-chart :rawData="topValues['entities']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -126,7 +136,8 @@
                     Words
                 </template>
                 <template #content>
-                    <word-cloud ref="worldCloud" v-if="render" :data="words" :fontSizeMapper="fontSizeMapper" ></word-cloud>
+                    <word-cloud ref="worldCloud" v-if="render" :data="words"
+                                :fontSizeMapper="fontSizeMapper"></word-cloud>
                 </template>
             </Card>
         </div>
@@ -148,7 +159,7 @@
                     Hashtags
                 </template>
                 <template #content>
-                    <publication-chart  :rawData="topValues['hashtags']"></publication-chart>
+                    <publication-chart :rawData="topValues['hashtags']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -156,10 +167,10 @@
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
-                    Sources
+                    Profile
                 </template>
                 <template #content>
-                    <publication-chart  :rawData="topValues['sources']"></publication-chart>
+                    <Chart type="radar" :data="chartData" :options="chartOptions"/>
                 </template>
             </Card>
         </div>
@@ -170,7 +181,7 @@
                     Languages
                 </template>
                 <template #content>
-                    <publication-chart  :rawData="topValues['languages']"></publication-chart>
+                    <publication-chart :rawData="topValues['languages']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -181,18 +192,21 @@
                     Time of Day
                 </template>
                 <template #content>
-                    <publication-chart :title="publication.doi"  :rawData="timeOfDayData" type="line"></publication-chart>
+                    <!--                    <publication-chart :title="publication.doi"  :rawData="timeOfDayData" type="line"></publication-chart>-->
+                    <publication-chart title=" " :dateFormat="true" :rawData="timeOfDayData"
+                                       type="line"></publication-chart>
                 </template>
             </Card>
         </div>
-        
+
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
                 <template #title>
                     Tweets over Time
                 </template>
                 <template #content>
-                    <publication-chart :title="publication.doi" :dateFormat="true" :rawData="tweetsOverTimeData" :growingData="true" type="line"></publication-chart>
+                    <publication-chart :title="publication.doi" :dateFormat="true" :rawData="tweetsOverTimeData"
+                                        type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -210,6 +224,7 @@
 
     export default {
         name: 'Publication',
+        inject: ['selectedTime'],
         components: {PublicationChart, WordCloud, MapChart},
         data: () => ({
             publication: {},
@@ -226,6 +241,53 @@
             topValues: [],
             timeOfDayData: [],
             tweetsOverTimeData: [],
+            chartData: {
+                labels: ['Score', 'Bot Percentage', 'Sentiment', 'Follower', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
+                datasets: [
+                    {
+                        label: 'average Publication',
+                        backgroundColor: 'rgba(179,181,198,0.2)',
+                        borderColor: 'rgba(179,181,198,1)',
+                        pointBackgroundColor: 'rgba(179,181,198,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(179,181,198,1)',
+                        data: [65, 59, 90, 81, 23, 56, 55, 40]
+                    },
+                    {
+                        label: 'this Publication',
+                        backgroundColor: 'rgba(255,99,132,0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        pointBackgroundColor: 'rgba(255,99,132,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255,99,132,1)',
+                        data: [28, 48, 40, 19, 96, 23, 27, 100]
+                    }
+                ]
+            },
+            chartOption: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#495057'
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        pointLabels: {
+                            color: '#495057',
+                        },
+                        grid: {
+                            color: '#ebedef',
+                        },
+                        angleLines: {
+                            color: '#ebedef'
+                        }
+                    }
+                }
+            }
         }), created() {
             // console.log('created');
             // fetch the data when the view is created and the data is
@@ -249,12 +311,13 @@
             },
             fetchData() {
                 // todo check how many / can be in doi
-                PublicationService.get(this.$route.params.p + "/" + this.$route.params.s)
+                PublicationService.get(this.$route.params.p + "/" + this.$route.params.s, this.selectedTime.duration)
                     .then(response => {
                         // console.log(response.data.data);
                         this.publication = response.data['publication'][0];
                         this.publication['authors'] = response.data['authors'];
-                        this.publication['fieldsOfStudy'] = response.data['fieldsOfStudy'];
+                        this.publication['fields_of_study'] = response.data['fields_of_study'];
+                        this.publication['sources'] = response.data['sources'];
                         this.publication.url = 'doi.org/' + this.publication['doi'];
                         // console.log(this.publication);
                     })
@@ -265,10 +328,10 @@
 
                 StatService.numbers(null, this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
-                        this.tweetCount = response.data['tweetCount']['count'];
-                        this.authorCount = response.data['authorCount']['count'];
-                        this.totalFollowers = response.data['followersReached']['sum'];
-                        this.scoreSum = response.data['totalScore']['sum'];
+                        this.tweetCount = response.data['tweetCount'];
+                        this.authorCount = response.data['authorCount'];
+                        this.totalFollowers = response.data['followersReached'];
+                        this.scoreSum = response.data['totalScore'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -292,9 +355,11 @@
 
                 StatService.top(null, this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
+                        console.log(response.data);
+
                         let c = {};
                         response.data.countries.forEach((e) => {
-                            c[e.authorLocation.toUpperCase()] = e.count
+                            c[e.location.toUpperCase()] = e.count
                         });
                         this.countries = c;
                         this.renderMap = true;
@@ -335,7 +400,7 @@
     }
 
     .publication_info_main {
-        .p-card-content{
+        .p-card-content {
             height: 550px;
             overflow-y: auto;
             text-align: justify;
@@ -368,31 +433,31 @@
 
     }
 
-        .scroller .p-card-content , .special-scrollbar {
+    .scroller .p-card-content, .special-scrollbar {
 
-            &::-webkit-scrollbar {
-              width: 8px;
-            }
-
-            /* Track */
-            &::-webkit-scrollbar-track {
-              background: #fff;
-            }
-
-            /* Handle */
-            &::-webkit-scrollbar-thumb {
-              background: $color-main;
-            }
-
-            /* Handle on hover */
-            &::-webkit-scrollbar-thumb:hover {
-              background: $color-main;
-            }
+        &::-webkit-scrollbar {
+            width: 8px;
         }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: $color-main;
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: $color-main;
+        }
+    }
 
 
     @-moz-document url-prefix('') {
-        .scroller .p-card-content , .special-scrollbar {
+        .scroller .p-card-content, .special-scrollbar {
             scrollbar-color: $color-main white !important;
             scrollbar-width: thin !important;
         }

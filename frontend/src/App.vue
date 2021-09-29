@@ -7,6 +7,14 @@
             </router-link>
         </div>
 
+        <div class="time-selection">
+            <SelectButton v-model="selectedTime" :options="dataTimeOptions" optionLabel="name" @click="changeDuration">
+                <template #option="slotProps">
+                    <i :class="slotProps.option.icon" style="margin-right: 5px"></i>
+                    <div>{{slotProps.option.name}}</div>
+                </template>
+            </SelectButton>
+        </div>
 
         <div class="header-text">ambalytics analysis streams</div>
 
@@ -27,6 +35,7 @@
 
 <script>
     export default {
+        inject: ['selectedTime'],
         created() {
             document.title = "ambalytics analysis streams";
             this.$router.options.routes.forEach(route => {
@@ -36,12 +45,43 @@
                     show: route.show,
                     icon: route.icon
                 })
-            })
+            });
             // console.log(this.items)
+            console.log(this.selectedTime)
+        },
+        mounted() {
+            if (this.$cookie.getCookie('duration')) {
+                this.dataTimeOptions.forEach((e) => {
+                    if (e.duration+"" === this.$cookie.getCookie('duration')) {
+                        this.selectedTime = e;
+                    }
+                });
+            }
         },
         data() {
             return {
-                items: []
+                items: [],
+                selectedTime: this.selectedTime,
+                dataTimeOptions: [{
+                    name: '6h',
+                    icon: "pi pi-fw pi-clock",
+                    duration: 3600 * 6
+                }, {
+                    name: '24h',
+                    icon: "pi pi-fw pi-clock",
+                    duration: 3600 * 24
+                }, {
+                    name: '7d',
+                    duration: 3600 * 24 * 7,
+                    icon: "pi pi-fw pi-clock",
+                }]
+            }
+        },
+        methods: {
+            changeDuration() {
+                console.log(this.selectedTime);
+                this.$cookie.setCookie('duration', this.selectedTime.duration);
+                console.log(this.$cookie.getCookie('duration'));
             }
         }
     }
@@ -73,17 +113,17 @@
         padding: 10px 40px 10px 10px !important
     }
 
-    th.text-align-right > .p-column-header-content > span.p-column-title  {
+    th.text-align-right > .p-column-header-content > span.p-column-title {
         display: inline-block !important;
         width: 100% !important;
         text-align: center !important;
     }
 
-    th.amba > .p-column-header-content > span.p-column-title  {
+    th.amba > .p-column-header-content > span.p-column-title {
         color: darken($color-main, 0.5) !important;
     }
 
-    .p-column-header-content > span.p-column-title  {
+    .p-column-header-content > span.p-column-title {
         font-weight: 700;
     }
 
@@ -108,7 +148,7 @@
         }
 
         .p-datatable-tbody > tr:nth-child(odd) {
-              background: rgba($color-main, 0.05)
+            background: rgba($color-main, 0.05)
         }
 
         .p-datatable-thead > tr > th {
@@ -124,7 +164,7 @@
 
     .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
         background: white !important;
-        box-shadow:inset 0 0 0 2px $color-main;
+        box-shadow: inset 0 0 0 2px $color-main;
         margin-left: 5px;
 
         .p-menuitem-text {
@@ -147,8 +187,10 @@
         }
 
     }
+
     .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
         background: rgba($color-main, 0.7) !important;
+
         .p-menuitem-text {
             color: white !important;
         }
@@ -275,6 +317,7 @@
             border-top: 1px solid #acacad;
         }
     }
+
     .stats {
 
         .p-card-content {;
@@ -291,9 +334,9 @@
             }
 
             h3 {
-               margin: 0.6em 0 0.2em 0.7em;
-               font-size: 1.2em;
-               width: 100%;
+                margin: 0.6em 0 0.2em 0.7em;
+                font-size: 1.2em;
+                width: 100%;
             }
 
             p.padding-left {
@@ -312,6 +355,41 @@
         height: 100%;
     }
 
+    .time-selection {
+
+        .p-selectbutton .p-button {
+            color: $color-main;
+            border: 2px solid $color-main;
+            font-weight: bold;
+        }
+
+        .p-selectbutton .p-button.p-highlight {
+            background: $color-main;
+            border-color: $color-main;
+            color: white;
+        }
+
+        .p-selectbutton .p-button:focus.p-highlight {
+            background: rgba($color-main, 0.9);
+            border-color: $color-main;
+        }
+
+        // selected hover
+        .p-selectbutton .p-button.p-highlight:hover {
+            background: rgba($color-main, 0.7);
+            border-color: $color-main;
+            color: white;
+        }
+
+        // unselected hover
+        .p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
+            background: rgba($color-main, 0.7);
+            border-color: $color-main;
+            color: white;
+        }
+    }
+
+
     div.vue-world-map {
         margin-bottom: 20px;
     }
@@ -324,8 +402,7 @@
         }
 
 
-
-       .p-menubar.p-menubar-mobile-active .p-menubar-root-list[role=menubar] {
+        .p-menubar.p-menubar-mobile-active .p-menubar-root-list[role=menubar] {
             top: 90%;
             left: -50px;
             min-width: max-content;

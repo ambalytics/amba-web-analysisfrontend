@@ -2,20 +2,25 @@ import http from "../../http-common";
 
 // https://www.bezkoder.com/vue-3-crud/
 class PublicationService {
+    getUrl(url, params) {
+        params.params['duration'] = 100;
+        return http.get('/publication/get', params);
+    }
+
     getAll() {
         return http.get("/publication");
     }
 
-    get(id) {
-        return http.get(`/publication/get?doi=${id}`);
+    get(id, duration) {
+        return http.get('/publication/get', { params: { doi: id, duration: duration } });
     }
 
     getCount() {
         return http.get('/publication/count');
     }
 
-    top(limit) {
-        return http.get(`/publication/top?limit=${limit}`);
+    top(offset, limit, sort, order, search) {
+        return http.get(`/publication/trending?offset=${offset}&limit=${limit}&sort=${sort}&order=${order}&search=${search}`);
     }
 
     twitter(doi) {
@@ -52,7 +57,8 @@ class PublicationService {
     }
 
     timeOfDay(id = null) {
-        return id === null ? http.get("/stats/dayhour") : http.get(`/stats/dayhour?doi=${id}`);
+        return id === null ? http.get("/stats/timebinned?sum=false") : http.get(`/stats/timebinned?sum=false&doi=${id}`);
+        // return id === null ? http.get("/stats/dayhour") : http.get(`/stats/dayhour?doi=${id}`);
     }
 
     countries(id = null) {

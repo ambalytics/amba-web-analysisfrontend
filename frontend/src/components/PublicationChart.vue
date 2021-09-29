@@ -1,4 +1,9 @@
 <template>
+    <div class="time-options" v-if="dateTimeOptions">
+        <span v-for="(subject, index) in dataTimeOptions" v-bind:key="subject.name" @click="changeTimeOptions(subject.duration)" v-bind:class="{ active: dateTimeRange === index }">
+            {{ subject.name }}
+        </span>
+    </div>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
 </template>
 
@@ -40,6 +45,14 @@
                 type: Boolean,
                 default: true
             },
+            dateTimeOptions: {
+                type: Boolean,
+                default: true
+            },
+            dateTimeRange: {
+                type: Number,
+                default: 0
+            },
         },
         data: () => ({
             loaded: false,
@@ -57,6 +70,11 @@
                     }
                 }
             }
+        },
+        methods: {
+          changeTimeOptions(duration) {
+              console.log(duration)
+          }
         },
         watch: {
             rawData: function(val) {
@@ -85,7 +103,7 @@
                             }
 
                             if (this.dateFormat) {
-                                let date = new Date(Date.UTC(e.year, e.month, e.day, e.hour, 0, 0));
+                                let date = new Date(e.time);
                                 const options = {hour: '2-digit', minute: '2-digit'};
                                 label.push(date.toLocaleTimeString('de-DE', options))
                             } else {
@@ -145,3 +163,30 @@
         }
     }
 </script>
+
+<style lang="scss">
+    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+
+    .time-options {
+        display: flex;
+        font-size: 0.9em;
+        padding-left: 10px;
+        position: relative;
+        top: -50px;
+        right: -320px;
+        color: $color-main;
+
+        span.active {
+            text-decoration: underline;
+        }
+
+        span::after {
+            content: '|';
+            padding: 10px;
+        }
+
+        span:last-of-type::after {
+            content: none;
+        }
+    }
+</style>

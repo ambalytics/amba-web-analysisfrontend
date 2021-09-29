@@ -35,7 +35,7 @@ class EventService {
     top(fields=null, doi=null, limit=20, minPercentage=0.5) {
         // Example: /stats/top?fields=languages&fields=words&fields=types&fields=sources&fields=entities&fields=hashtags&fields=countries&limit=10&min_percentage=1
         if (fields === null) {
-            fields = ['languages', 'words', 'types', 'sources', 'entities', 'hashtags', 'countries'];
+            fields = ['languages', 'words', 'types', 'entities', 'hashtags', 'countries'];
         }
 
         let first = true;

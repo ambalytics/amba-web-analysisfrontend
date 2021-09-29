@@ -90,7 +90,8 @@
                     Time of Day
                 </template>
                 <template #content>
-                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>
+<!--                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>-->
+                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="timeOfDayData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -180,10 +181,10 @@
 
                 StatService.numbers()
                     .then(response => {
-                        this.tweetCount = response.data['tweetCount']['count'];
-                        this.authorCount = response.data['authorCount']['count'];
-                        this.totalFollowers = response.data['followersReached']['sum'];
-                        this.scoreSum = response.data['totalScore']['sum'];
+                        this.tweetCount = response.data['tweetCount'];
+                        this.authorCount = response.data['authorCount'];
+                        this.totalFollowers = response.data['followersReached'];
+                        this.scoreSum = response.data['totalScore'];
                     })
                     .catch(e => {
                         console.log(e);
@@ -214,7 +215,7 @@
                         console.log(e);
                     });
 
-                StatService.top(['languages', 'types', 'sources', 'entities', 'hashtags', 'countries'])
+                StatService.top(['languages', 'types', 'entities', 'hashtags', 'countries'])
                     .then(response => {
                         this.loading = false;
 
@@ -222,7 +223,7 @@
 
                         let c = {};
                         response.data.countries.forEach((e) => {
-                            c[e.authorLocation.toUpperCase()] = e.count
+                            c[e.location.toUpperCase()] = e.count
                         });
                         this.countries = c;
                         this.renderMap = true;
