@@ -12,8 +12,8 @@
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
                     <div class="padding-left">
-                        <h3>Tweet Author Count</h3>
-                        <p class="padding-left">{{ localeNumber(authorCount) }}</p>
+                        <h3>Publication Count</h3>
+                        <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
                     <div class="padding-left">
                         <h3>Total Followers Reached</h3>
@@ -22,20 +22,36 @@
                     <!-- total score, average score -->
                     <div class="padding-left">
                         <h3>Average Score per Tweet</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount)) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left">
-                        <h3>Average Tweets per Author</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round((tweetCount / authorCount) * 100) / 100) }}</p>
+                        <h3>Average Sentiment</h3>
+                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 1000) / 1000) }}</p>
                     </div>
                     <div class="padding-left">
-                        <h3>Average Followers per Author</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(totalFollowers / authorCount)) }}</p>
+                        <h3>Average Contains Abstract</h3>
+                        <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 100000) / 1000) }}%</p>
                     </div>
                     <div class="padding-left">
-                        <h3>Publication Count</h3>
-                        <p class="padding-left">{{ localeNumber(pubCount)}}</p>
+                        <h3>Average Exclamations</h3>
+                        <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
+                    <div class="padding-left">
+                        <h3>Average Questions</h3>
+                        <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
+                    </div>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card>
+                <template #title>
+                    Newest Tweet
+                </template>
+                <template #content>
+                  <AmbaTweet>
+                  </AmbaTweet>
                 </template>
             </Card>
         </div>
@@ -43,10 +59,10 @@
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
-                    Types
+                    Tweet Type
                 </template>
                 <template #content>
-                    <publication-chart :rawData="topValues['types']"></publication-chart>
+                    <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -57,7 +73,7 @@
                     Sources
                 </template>
                 <template #content>
-                    <publication-chart :rawData="topValues['sources']"></publication-chart>
+                    <publication-chart :rawData="topValues['source']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -68,7 +84,7 @@
                     Languages
                 </template>
                 <template #content>
-                    <publication-chart :rawData="topValues['languages']"></publication-chart>
+                    <publication-chart :rawData="topValues['lang']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -79,22 +95,22 @@
                     Hashtags
                 </template>
                 <template #content>
-                    <publication-chart :show-others="false"  :rawData="topValues['hashtags']"></publication-chart>
+                    <publication-chart :show-others="false"  :rawData="topValues['hashtag']"></publication-chart>
                 </template>
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card>
-                <template #title>
-                    Time of Day
-                </template>
-                <template #content>
-<!--                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>-->
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="timeOfDayData" type="line"></publication-chart>
-                </template>
-            </Card>
-        </div>
+<!--        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">-->
+<!--            <Card>-->
+<!--                <template #title>-->
+<!--                    Time of Day-->
+<!--                </template>-->
+<!--                <template #content>-->
+<!--&lt;!&ndash;                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>&ndash;&gt;-->
+<!--                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="timeOfDayData" type="line"></publication-chart>-->
+<!--                </template>-->
+<!--            </Card>-->
+<!--        </div>-->
 
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
@@ -102,7 +118,7 @@
                     Entities
                 </template>
                 <template #content>
-                    <publication-chart :show-others="false" :rawData="topValues['entities']"></publication-chart>
+                    <publication-chart :show-others="false" :rawData="topValues['entity']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -123,16 +139,28 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card class="big-chart">
+         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
+            <Card>
                 <template #title>
-                    Tweets over Time
+                    Words
                 </template>
                 <template #content>
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="tweetsOverTimeData" type="line"></publication-chart>
+                    <word-cloud ref="worldCloud" v-if="renderCloud" :data="words"
+                                :fontSizeMapper="fontSizeMapper"></word-cloud>
                 </template>
             </Card>
         </div>
+
+<!--        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">-->
+<!--            <Card class="big-chart">-->
+<!--                <template #title>-->
+<!--                    Tweets over Time-->
+<!--                </template>-->
+<!--                <template #content>-->
+<!--                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="tweetsOverTimeData" type="line"></publication-chart>-->
+<!--                </template>-->
+<!--            </Card>-->
+<!--        </div>-->
 
 
     </div>
@@ -141,24 +169,31 @@
 <script>
 
     import PublicationChart from "../components/PublicationChart";
-    import PublicationService from "../services/PublicationService";
+    // import PublicationService from "../services/PublicationService";
+    import AmbaTweet from "../components/AmbaTweet"
     import StatService from "../services/StatService";
     import MapChart from "../components/MapChart";
+    import WordCloud from "../components/WordCloud";
 
     export default {
         name: 'Home',
-        components: {PublicationChart, MapChart},
+        components: {PublicationChart, MapChart, AmbaTweet, WordCloud},
          data: () => ({
-            fontSizeMapper: word => Math.log2(word.value * 10) * 10,
+            fontSizeMapper: word => Math.log2(word.value * 10) * 4,
             countries: [],
+            words: [],
             render: false,
             renderMap: false,
+            renderCloud: false,
             loading: true,
             pubCount: '-',
             tweetCount: '-',
-            authorCount: '-',
             scoreSum: '-',
             totalFollowers: '-',
+            sentiment: '-',
+            containsAbstract: '-',
+            questions: '-',
+            exclamations: '-',
             a: 0,
             topValues: [],
             timeOfDayData: [],
@@ -181,54 +216,80 @@
 
                 StatService.numbers()
                     .then(response => {
-                        this.tweetCount = response.data['tweetCount'];
-                        this.authorCount = response.data['authorCount'];
-                        this.totalFollowers = response.data['followersReached'];
-                        this.scoreSum = response.data['totalScore'];
+                        // 'bot_rating', 'contains_abstract_raw', 'exclamations', 'followers', 'length', 'questions', 'score', 'sentiment_raw', 'count'
+                        this.tweetCount = response.data['count'];
+                        this.totalFollowers = response.data['followers'];
+                        this.scoreSum = response.data['score'];
+                        this.containsAbstract = response.data['contains_abstract_raw'];
+                        this.sentiment = response.data['sentiment_raw'];
+                        this.pubCount = response.data['pub_count'];
+                        this.questions = response.data['questions'];
+                        this.exclamations = response.data['exclamations'];
+                        console.log(response)
                     })
                     .catch(e => {
                         console.log(e);
                     });
 
-                PublicationService.getCount()
-                    .then(response => {
-                        // console.log('count')
-                        this.pubCount = response.data['count'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                // PublicationService.getCount()
+                //     .then(response => {
+                //         // console.log('count')
+                //         this.pubCount = response.data['count'];
+                //     })
+                //     .catch(e => {
+                //         console.log(e);
+                //     });
 
-                PublicationService.timeBinned()
-                    .then(response => {
-                        this.tweetsOverTimeData = response.data;
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                // PublicationService.timeBinned()
+                //     .then(response => {
+                //         this.tweetsOverTimeData = response.data;
+                //     })
+                //     .catch(e => {
+                //         console.log(e);
+                //     });
+                //
+                // PublicationService.timeOfDay()
+                //     .then(response => {
+                //         this.timeOfDayData = response.data;
+                //     })
+                //     .catch(e => {
+                //         console.log(e);
+                //     });
 
-                PublicationService.timeOfDay()
-                    .then(response => {
-                        this.timeOfDayData = response.data;
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-
-                StatService.top(['languages', 'types', 'entities', 'hashtags', 'countries'])
+                StatService.top()
                     .then(response => {
                         this.loading = false;
 
-                        console.log(response.data);
+                        // console.log(response.data);
 
                         let c = {};
-                        response.data.countries.forEach((e) => {
-                            c[e.location.toUpperCase()] = e.count
+                        response.data.location.forEach((e) => {
+                            c[e.value.toUpperCase()] = e.count
                         });
-                        this.countries = c;
+                        this.countries = c; // todo countries with no limit
                         this.renderMap = true;
 
+                        let words = [];
+                        response.data.word.forEach((e) => {
+                            let obj = {};
+                            obj.text = e.value;
+                            obj.value = e.count;
+                            words.push(obj)
+                        });
+                        this.words = words;
+                        console.log(words);
+
+                        this.renderCloud = true;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
+                StatService.percentages()
+                    .then(response => {
+                        this.loading = false;
                         this.topValues = response.data;
+                        this.render = true;
                     })
                     .catch(e => {
                         console.log(e);
@@ -250,4 +311,5 @@
             color: #fff;
         }
     }
+
 </style>

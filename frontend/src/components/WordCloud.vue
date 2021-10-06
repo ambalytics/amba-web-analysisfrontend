@@ -32,6 +32,7 @@ export default {
                 let annotation = word.target.textContent;
                 if (annotation.startsWith('@')) {
                     // remove @
+                    // add css pointer for cursor todo
                     window.open("https://twitter.com/" + annotation, '_blank');
                 }
             },

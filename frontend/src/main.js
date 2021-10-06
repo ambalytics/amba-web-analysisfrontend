@@ -7,6 +7,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import 'primeflex/primeflex.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
+import Tooltip from 'primevue/tooltip';
 // import 'primevue/resources/themes/md-light-indigo/theme.css';
 
 import DataTable from 'primevue/datatable';
@@ -38,5 +39,6 @@ app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('InputText', InputText);
 app.component('SelectButton', SelectButton);
+app.directive('tooltip', Tooltip);
 
 app.mount('#app');

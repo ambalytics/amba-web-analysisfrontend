@@ -1,86 +1,68 @@
 import http from "../../http-common";
 
 class EventService {
-    numbers(fields=null, doi=null) {
+    numbers(fields = null, doi = null) {
         // Example: /stats/numbers?fields=tweetCount&fields=followersReached&fields=authorCount&fields=totalScore
         if (fields === null) {
-            fields = ['tweetCount', 'followersReached', 'authorCount', 'totalScore'];
+            fields = ['bot_rating', 'contains_abstract_raw', 'exclamations', 'followers', 'length', 'questions', 'score', 'sentiment_raw', 'count', 'pub_count'];
         }
 
-        let first = true;
-        let paramString = '';
-        fields.forEach(f => {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'fields=' + f;
+        let params = new URLSearchParams();
+        fields.forEach((e) => {
+            params.append("fields", e);
         });
 
-        if (doi !== null) {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'doi=' + doi;
+        if (doi) {
+            params.append("doi", doi);
         }
-
-        return http.get("/stats/numbers" + paramString);
+        return http.get('/stats/numbers', {params: params});
     }
 
-    top(fields=null, doi=null, limit=20, minPercentage=0.5) {
-        // Example: /stats/top?fields=languages&fields=words&fields=types&fields=sources&fields=entities&fields=hashtags&fields=countries&limit=10&min_percentage=1
+    newestTweet(doi, limit=1) {
+        if (doi) {
+            return http.get('/stats/tweets', {params: {limit: limit, doi: doi}});
+        } else {
+            return http.get('/stats/tweets', {params: {limit: limit}});
+        }
+    }
+
+    profileData(doi, duration) {
+        return http.get('/stats/profile', {params: {doi: doi, duration: duration}});
+    }
+
+    top(fields = null, doi = null, limit = 100) {
         if (fields === null) {
-            fields = ['languages', 'words', 'types', 'entities', 'hashtags', 'countries'];
+            fields = ['word', 'location'];
         }
 
-        let first = true;
-        let paramString = '';
-        fields.forEach(f => {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'fields=' + f;
+       let params = new URLSearchParams();
+        params.append("limit", limit);
+        fields.forEach((e) => {
+            params.append("fields", e);
         });
-
-        if (doi !== null) {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'doi=' + doi;
+        if (doi) {
+            params.append("doi", doi);
         }
 
-        if (limit !== null) {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'limit=' + limit;
+        return http.get("/stats/top", {params: params});
+    }
+
+    percentages(fields = null, doi = null, limit = 12, minPercentage = 0.6) {
+        if (fields === null) {
+            fields = ['lang', 'tweet_type', 'entity', 'hashtag', 'source'];
         }
 
-        if (minPercentage !== null) {
-           if (first) {
-               paramString += '?';
-               first = false;
-           } else {
-               paramString += '&';
-           }
-           paramString += 'min_percentage=' + minPercentage;
+       let params = new URLSearchParams();
+        params.append("limit", limit);
+        params.append("minPercentage", minPercentage);
+        fields.forEach((e) => {
+            params.append("fields", e);
+        });
+        if (doi) {
+            params.append("doi", doi);
         }
 
-        return http.get("/stats/top" + paramString);
+        return http.get("/stats/top/percentages", {params: params});
     }
 }
 

@@ -19,8 +19,8 @@ class PublicationService {
         return http.get('/publication/count');
     }
 
-    top(offset, limit, sort, order, search) {
-        return http.get(`/publication/trending?offset=${offset}&limit=${limit}&sort=${sort}&order=${order}&search=${search}`);
+    top(offset, limit, sort, order, search, duration) {
+        return http.get(`/publication/trending?offset=${offset}&limit=${limit}&sort=${sort}&order=${order}&duration=${duration}&search=${search}`);
     }
 
     twitter(doi) {

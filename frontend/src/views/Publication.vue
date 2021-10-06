@@ -24,11 +24,11 @@
                     <table class="info">
                         <tr>
                             <td><h4>Date:</h4></td>
-                            <td>{{ publication.pub_date }}</td>
+                            <td>{{ dateFormat(publication.pub_date) }}</td>
                         </tr>
                         <tr>
                             <td><h4>Type:</h4></td>
-                            <td>{{ publication.type }}</td>
+                            <td>{{ typeString(publication.type) }}</td>
                         </tr>
                         <tr>
                             <td><h4>Publisher:</h4></td>
@@ -53,9 +53,9 @@
 
                     <h4>Sources:</h4>
                     <ul class="sources">
-                        <li v-for="subject in publication.sources" v-bind:key="subject.title" >
-                            <!--                            <a :href="subject.url">{{ subject.title }}</a>-->
-                            <a :href="subject.url">{{ subject.title }}</a>
+                        <li v-for="subject in publication.sources" v-bind:key="subject.title"
+                            v-bind:class="{ hidden: subject.title === 'DB' }">
+                            <a class="source-link" :href="subject.url">{{ subject.title }}</a>
                         </li>
                     </ul>
                 </template>
@@ -170,7 +170,8 @@
                     Profile
                 </template>
                 <template #content>
-                    <Chart type="radar" :data="chartData" :options="chartOptions"/>
+                    <publication-chart title=" " :rawData="profileData"
+                                       type="radar"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -206,7 +207,7 @@
                 </template>
                 <template #content>
                     <publication-chart :title="publication.doi" :dateFormat="true" :rawData="tweetsOverTimeData"
-                                        type="line"></publication-chart>
+                                       type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -228,7 +229,7 @@
         components: {PublicationChart, WordCloud, MapChart},
         data: () => ({
             publication: {},
-            fontSizeMapper: word => Math.log2(word.value * 10) * 4,
+            fontSizeMapper: word => Math.log2(word.value * 4) * 4,
             countries: [],
             data: [],
             words: [],
@@ -241,53 +242,7 @@
             topValues: [],
             timeOfDayData: [],
             tweetsOverTimeData: [],
-            chartData: {
-                labels: ['Score', 'Bot Percentage', 'Sentiment', 'Follower', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
-                datasets: [
-                    {
-                        label: 'average Publication',
-                        backgroundColor: 'rgba(179,181,198,0.2)',
-                        borderColor: 'rgba(179,181,198,1)',
-                        pointBackgroundColor: 'rgba(179,181,198,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(179,181,198,1)',
-                        data: [65, 59, 90, 81, 23, 56, 55, 40]
-                    },
-                    {
-                        label: 'this Publication',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        pointBackgroundColor: 'rgba(255,99,132,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [28, 48, 40, 19, 96, 23, 27, 100]
-                    }
-                ]
-            },
-            chartOption: {
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#495057'
-                        }
-                    }
-                },
-                scales: {
-                    r: {
-                        pointLabels: {
-                            color: '#495057',
-                        },
-                        grid: {
-                            color: '#ebedef',
-                        },
-                        angleLines: {
-                            color: '#ebedef'
-                        }
-                    }
-                }
-            }
+            profileData: [],
         }), created() {
             // console.log('created');
             // fetch the data when the view is created and the data is
@@ -297,7 +252,7 @@
         computed: {
             realUrl: function () {
                 return 'http://' + this.publication.url
-            },
+            }
         },
         methods: {
             localeNumber: function (x) {
@@ -353,6 +308,14 @@
                         console.log(e);
                     });
 
+                StatService.profileData(this.$route.params.p + "/" + this.$route.params.s, 21600)
+                    .then(response => {
+                        this.profileData = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+
                 StatService.top(null, this.$route.params.p + "/" + this.$route.params.s)
                     .then(response => {
                         console.log(response.data);
@@ -379,6 +342,22 @@
                     .catch(e => {
                         console.log(e);
                     });
+            },
+            typeString: function (type) {
+                if (type) {
+                    let s = type.replace('_', ' ').toLowerCase().split(' ');
+                    for (let i = 0; i < s.length; i++) {
+                        s[i] = s[i].charAt(0).toUpperCase() + s[i].substring(1);
+                    }
+                    return s.join(' ');
+                }
+            },
+            dateFormat: function (date) {
+                if (date) {
+                    date = new Date(date);
+                    console.log(date);
+                    return date.toLocaleDateString();
+                }
             },
         }
     }
@@ -455,6 +434,14 @@
         }
     }
 
+    .source-link {
+        color: $color-main;
+        text-decoration: none;
+    }
+
+    .hidden {
+        display: none;
+    }
 
     @-moz-document url-prefix('') {
         .scroller .p-card-content, .special-scrollbar {

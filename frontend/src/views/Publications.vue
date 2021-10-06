@@ -5,7 +5,7 @@
     </div>
     <DataTable :value="data" dataKey="doi" :paginator="true" :rows="10" :rowHover="true" :lazy="true"
                :loading="loading" :rowsPerPageOptions="[10]" :autoLayout="true" sort-order="2" :totalRecords="totalRecords"
-               @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
+               @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score" style="width: 140vw"
                @row-click="rowClick($event)">
         <template #empty>
             No Publications found.
@@ -36,18 +36,22 @@
                     {field: 'year', header: 'Year', sortable: true, numberTemplate:false},
                     {field: 'citation_count', header: 'Citation Count', sortable: true, class:"text-align-right", numberTemplate: true},
                     {field: 'score', header: 'Score', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    {field: 'projected_change', header: 'projected_change', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'projected_change', header: 'Projected Change', sortable: true, class:"text-align-right amba", numberTemplate: true},
                     {field: 'count', header: 'Tweet Count', sortable: true, class:"text-align-right  amba", numberTemplate: true},
                     {field: 'sum_follower', header: 'Follower reached', sortable: true, class:"text-align-right amba", numberTemplate: true},
                     {field: 'median_sentiment', header: 'Median Sentiment', sortable: true, class:"text-align-right amba", numberTemplate: true},
                     {field: 'abstract_difference', header: 'Abstract Difference', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    // {field: 'tweet_author_diversity', header: 'tweet_author_diversity', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    // {field: 'lan_diversity', header: 'lan_diversity', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    // {field: 'location_diversity', header: 'location_diversity', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    {field: 'median_age', header: 'median_age', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    {field: 'median_length', header: 'median_length', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    {field: 'avg_questions', header: 'avg_questions', sortable: true, class:"text-align-right amba", numberTemplate: true},
-                    {field: 'avg_exclamations', header: 'avg_exclamations', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'median_age', header: 'median Age', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'median_length', header: 'median Length', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'mean_questions', header: 'mean Questions', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'mean_exclamations', header: 'mean Exclamations', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'mean_bot_rating', header: 'mean Bot Rating', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'trending', header: 'trending', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'ema', header: 'ema', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'kama', header: 'kama', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'ker', header: 'ker', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'mean_score', header: 'mean Score', sortable: true, class:"text-align-right amba", numberTemplate: true},
+                    {field: 'stddev', header: 'stddev', sortable: true, class:"text-align-right amba", numberTemplate: true},
                 ],
                 lazyParams: {},
                 data: [],
@@ -90,7 +94,7 @@
                 this.error = this.post = null
                 this.loading = true;
                 console.log(this.lazyParams);
-                PublicationService.top(this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder === 2 ? 'asc' : 'desc', this.searchWord)
+                PublicationService.top(this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder === 2 ? 'asc' : 'desc', this.searchWord, this.$cookie.getCookie('duration'))
                     .then(response => {
                         // console.log(response.data.data);
                         this.data = response.data
@@ -111,3 +115,11 @@
         }
     }
 </script>
+
+<style>
+
+    .p-datatable-table {
+        transform: scale(0.7);
+        transform-origin: top left;
+    }
+</style>
