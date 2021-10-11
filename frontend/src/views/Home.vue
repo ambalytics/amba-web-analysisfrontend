@@ -297,7 +297,7 @@
                 StatService.progressValue(this.selectedPubField, 5, this.duration)
                     .then(response => {
                         this.pubsOverTimeData = response.data.results;
-                        this.renderPublicationChart = true;
+                        this.renderPublicationChart = this.pubsOverTimeData.length !== 0;
                     })
                     .catch(e => {
                         this.renderPublicationChart = false;
@@ -309,7 +309,7 @@
                 StatService.progressTrending(this.selectedTrendField, 5, this.duration)
                     .then(response => {
                         this.trendOverTimeData = response.data.results;
-                        this.renderTrendingChart = true;
+                        this.renderTrendingChart = this.trendOverTimeData.length !== 0;
                         console.log(this.trendOverTimeData);
                     })
                     .catch(e => {
