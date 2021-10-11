@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config';
-import { VueCookieNext } from 'vue-cookie-next'
 
 import 'primeflex/primeflex.css';
 import 'primevue/resources/primevue.min.css';
@@ -27,7 +26,6 @@ app.provide('selectedTime', {
                     icon: "pi pi-fw pi-clock",
                     duration: 3600 * 6
                 });
-app.use(VueCookieNext);
 app.use(router);
 
 app.use(PrimeVue);
