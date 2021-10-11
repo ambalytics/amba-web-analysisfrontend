@@ -26,11 +26,11 @@
                     </div>
                     <div class="padding-left">
                         <h3>Average Sentiment</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 1000) / 1000) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Contains Abstract</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 100000) / 1000) }}%</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left">
                         <h3>Average Exclamations</h3>
@@ -39,6 +39,10 @@
                     <div class="padding-left">
                         <h3>Average Questions</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
+                    </div>
+                    <div class="padding-left">
+                        <h3>Tweet Author Count</h3>
+                        <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
                     </div>
                 </template>
             </Card>
@@ -50,8 +54,26 @@
                     Newest Tweet
                 </template>
                 <template #content>
-                  <AmbaTweet>
-                  </AmbaTweet>
+                    <AmbaTweet>
+                    </AmbaTweet>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Trending
+                </template>
+                <template #content>
+                    <div v-for="item in trendingItems" :key="item.label" class="trending-items">
+                        <h4><i style="margin-right: 5px;" :class="item.icon"></i>{{ item.label }}</h4>
+                        <DataTable :value="item.data" :autoLayout="true" @row-click="rowClick($event, item.label)">
+                            <Column class="amba rank" field="trending_ranking" header="Rank"></Column>
+                            <Column v-if="item.label === 'Publication'" field="title" header="Title"></Column>
+                            <Column v-if="item.label !== 'Publication'" field="name" header="Name"></Column>
+                        </DataTable>
+                    </div>
                 </template>
             </Card>
         </div>
@@ -63,17 +85,6 @@
                 </template>
                 <template #content>
                     <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Sources
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['source']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -95,22 +106,10 @@
                     Hashtags
                 </template>
                 <template #content>
-                    <publication-chart :show-others="false"  :rawData="topValues['hashtag']"></publication-chart>
+                    <publication-chart :show-others="false" :rawData="topValues['hashtag']"></publication-chart>
                 </template>
             </Card>
         </div>
-
-<!--        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">-->
-<!--            <Card>-->
-<!--                <template #title>-->
-<!--                    Time of Day-->
-<!--                </template>-->
-<!--                <template #content>-->
-<!--&lt;!&ndash;                    <publication-chart :rawData="timeOfDayData" title=" " type="line"></publication-chart>&ndash;&gt;-->
-<!--                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="timeOfDayData" type="line"></publication-chart>-->
-<!--                </template>-->
-<!--            </Card>-->
-<!--        </div>-->
 
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
@@ -135,33 +134,64 @@
                               countryStrokeColor="#eee"
                               defaultCountryFillColor="#fff"
                     />
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
                 </template>
             </Card>
         </div>
 
-         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
             <Card>
                 <template #title>
                     Words
                 </template>
                 <template #content>
-                    <word-cloud ref="worldCloud" v-if="renderCloud" :data="words"
-                                :fontSizeMapper="fontSizeMapper"></word-cloud>
+                    <word-cloud v-if="renderCloud" ref="worldCloud" :data="words"></word-cloud>
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
                 </template>
             </Card>
         </div>
 
-<!--        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">-->
-<!--            <Card class="big-chart">-->
-<!--                <template #title>-->
-<!--                    Tweets over Time-->
-<!--                </template>-->
-<!--                <template #content>-->
-<!--                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="tweetsOverTimeData" type="line"></publication-chart>-->
-<!--                </template>-->
-<!--            </Card>-->
-<!--        </div>-->
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card class="big-chart">
+                <template #title>
+                    Publications over Time
+                </template>
+                <template #content>
+                    <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
+                              optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
+                    <br>
+                    <publication-chart v-if="renderPublicationChart" :height="200" title=" " :dateFormat="true"
+                                       :rawData="pubsOverTimeData"
+                                       type="line"></publication-chart>
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
+                </template>
+            </Card>
+        </div>
 
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card class="big-chart">
+                <template #title>
+                    Trending
+                </template>
+                <template #content>
+                    <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
+                              optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
+                    <br>
+                    <publication-chart v-if="renderTrendingChart" :height="200" title=" " :dateFormat="true"
+                                       :rawData="trendOverTimeData"
+                                       type="line"></publication-chart>
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
+                </template>
+            </Card>
+        </div>
 
     </div>
 </template>
@@ -169,23 +199,39 @@
 <script>
 
     import PublicationChart from "../components/PublicationChart";
-    // import PublicationService from "../services/PublicationService";
+    import PublicationService from "../services/PublicationService";
+    import AuthorService from "../services/AuthorService";
+    import FieldOfStudy from "../services/FieldOfStudyService";
     import AmbaTweet from "../components/AmbaTweet"
     import StatService from "../services/StatService";
     import MapChart from "../components/MapChart";
     import WordCloud from "../components/WordCloud";
 
+
     export default {
         name: 'Home',
         components: {PublicationChart, MapChart, AmbaTweet, WordCloud},
-         data: () => ({
-            fontSizeMapper: word => Math.log2(word.value * 10) * 4,
+        beforeRouteUpdate(to, from) {
+            if (to.query.time !== from.query.time) {
+                if (this.$route.query.time !== undefined) {
+                    this.duration = to.query.time;
+                    this.fetchData();
+                } else {
+                    this.duration = 'currently';
+                    this.fetchData();
+                }
+            }
+        },
+        data: () => ({
+            duration: "currently",
+            // fontSizeMapper: word => word.value / 100,
             countries: [],
             words: [],
             render: false,
             renderMap: false,
             renderCloud: false,
-            loading: true,
+            renderTrendingChart: true,
+            renderPublicationChart: true,
             pubCount: '-',
             tweetCount: '-',
             scoreSum: '-',
@@ -194,104 +240,205 @@
             containsAbstract: '-',
             questions: '-',
             exclamations: '-',
+            tweetAuthorCount: '-',
             a: 0,
             topValues: [],
-            timeOfDayData: [],
-            tweetsOverTimeData: [],
+            trendOverTimeData: [],
+            selectedTrendField: 'score',
+            trendFields: [
+                {label: 'Score', value: 'score'},
+                {label: 'Count', value: 'count'},
+                {label: 'Sentiment', value: 'median_sentiment'},
+                {label: 'Followers', value: 'sum_follower'},
+                {label: 'Contains Abstract', value: 'abstract_difference'},
+                {label: 'Median Age', value: 'median_age'},
+                {label: 'Length', value: 'median_length'},
+                {label: 'Questions', value: 'mean_questions'},
+                {label: 'Exclamations', value: 'mean_exclamations'},
+                {label: 'Bot Rating', value: 'mean_bot_rating'},
+                {label: 'Projected Change', value: 'projected_change'},
+                {label: 'Trending Value', value: 'trending'},
+                {label: 'ema', value: 'ema'},
+                {label: 'kama', value: 'kama'},
+                {label: 'ker', value: 'ker'},
+                {label: 'Mean Score', value: 'mean_score'},
+                {label: 'stddev', value: 'stddev'},
+            ],
+            pubsOverTimeData: [],
+            selectedPubField: 'score',
+            pubFields: [
+                {label: 'Bot Rating', value: 'bot_rating'},
+                {label: 'Contains Abstract', value: 'contains_abstract_raw'},
+                {label: 'Exclamations', value: 'exclamations'},
+                {label: 'Followers', value: 'followers'},
+                {label: 'Length', value: 'length'},
+                {label: 'Questions', value: 'questions'},
+                {label: 'Score', value: 'score'},
+                {label: 'Sentiment', value: 'sentiment_raw'},
+                {label: 'Count', value: 'count'},
+            ],
+            trendingItems: [
+                {label: 'Publication', data: [], icon: 'pi pi-fw pi-book'},
+                {label: 'Author', data: [], icon: 'pi pi-fw pi-user'},
+                {label: 'Field of Study', data: [], icon: 'pi pi-fw pi-sitemap'},
+            ]
         }), created() {
-            // console.log('created');
-            // fetch the data when the view is created and the data is
-            // already being observed
-            this.fetchData()
+            if (this.$route.query.time !== undefined) {
+                this.duration = this.$route.query.time;
+            }
+            this.fetchData();
         },
         methods: {
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
             },
-            fetchData() {
-                // console.log('fetch data');
-
-                this.loading = true;
-
-                StatService.numbers()
+            loadPubsProgress() {
+                StatService.progressValue(this.selectedPubField, 5, this.duration)
                     .then(response => {
-                        // 'bot_rating', 'contains_abstract_raw', 'exclamations', 'followers', 'length', 'questions', 'score', 'sentiment_raw', 'count'
-                        this.tweetCount = response.data['count'];
-                        this.totalFollowers = response.data['followers'];
-                        this.scoreSum = response.data['score'];
-                        this.containsAbstract = response.data['contains_abstract_raw'];
-                        this.sentiment = response.data['sentiment_raw'];
-                        this.pubCount = response.data['pub_count'];
-                        this.questions = response.data['questions'];
-                        this.exclamations = response.data['exclamations'];
-                        console.log(response)
+                        this.pubsOverTimeData = response.data.results;
+                        this.renderPublicationChart = true;
+                    })
+                    .catch(e => {
+                        this.renderPublicationChart = false;
+                        this.pubsOverTimeData = [];
+                        console.log(e);
+                    });
+            },
+            loadTrendingProgress() {
+                StatService.progressTrending(this.selectedTrendField, 5, this.duration)
+                    .then(response => {
+                        this.trendOverTimeData = response.data.results;
+                        this.renderTrendingChart = true;
+                        console.log(this.trendOverTimeData);
+                    })
+                    .catch(e => {
+                        this.renderTrendingChart = false;
+                        this.trendOverTimeData = [];
+                        console.log(e);
+                    });
+            },
+            loadTrendingItems() {
+                PublicationService.trending(this.duration, 0, 3)
+                    .then(response => {
+                        this.trendingItems[0].data = response.data.results;
                     })
                     .catch(e => {
                         console.log(e);
+                        this.trendingItems[0].data = []
                     });
 
-                // PublicationService.getCount()
-                //     .then(response => {
-                //         // console.log('count')
-                //         this.pubCount = response.data['count'];
-                //     })
-                //     .catch(e => {
-                //         console.log(e);
-                //     });
+                AuthorService.trending(this.duration, 0, 3)
+                    .then(response => {
+                        this.trendingItems[1].data = response.data.results;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.trendingItems[1].data = []
+                    });
 
-                // PublicationService.timeBinned()
-                //     .then(response => {
-                //         this.tweetsOverTimeData = response.data;
-                //     })
-                //     .catch(e => {
-                //         console.log(e);
-                //     });
-                //
-                // PublicationService.timeOfDay()
-                //     .then(response => {
-                //         this.timeOfDayData = response.data;
-                //     })
-                //     .catch(e => {
-                //         console.log(e);
-                //     });
+                FieldOfStudy.trending(this.duration, 0, 3)
+                    .then(response => {
+                        this.trendingItems[2].data = response.data.results;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.trendingItems[2].data = []
+                    });
+            },
+            rowClick(event, extra) {
+                if (event.data.doi) {
+                    let routeData = this.$router.resolve('/publication/' + event.data.doi);
+                    window.open(routeData.href, '_blank');
+                }
+
+                if (event.data.id) {
+                    let routeData = this.$router.resolve('/fieldOfStudy/' + event.data.id);
+                    if (extra === "Author") {
+                        routeData = this.$router.resolve('/author/' + event.data.id);
+                    }
+                    window.open(routeData.href, '_blank');
+                }
+            },
+            fetchData() {
+                this.loadTrendingItems();
+
+                StatService.numbers(this.duration)
+                    .then(response => {
+                        // 'bot_rating', 'contains_abstract_raw', 'exclamations', 'followers', 'length', 'questions', 'score', 'sentiment_raw', 'count'
+                        this.tweetCount = response.data.results['count'];
+                        this.totalFollowers = response.data.results['followers'];
+                        this.scoreSum = response.data.results['score'];
+                        this.containsAbstract = response.data.results['contains_abstract_raw'];
+                        this.sentiment = response.data.results['sentiment_raw'];
+                        this.pubCount = response.data.results['pub_count'];
+                        this.questions = response.data.results['questions'];
+                        this.exclamations = response.data.results['exclamations'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.tweetCount = '-';
+                        this.totalFollowers = '-';
+                        this.scoreSum = '-';
+                        this.containsAbstract = '-';
+                        this.sentiment = '-';
+                        this.pubCount = '-';
+                        this.questions = '-';
+                        this.exclamations = '-';
+                    });
+
+                this.loadPubsProgress();
+                this.loadTrendingProgress();
 
                 StatService.top()
                     .then(response => {
-                        this.loading = false;
-
-                        // console.log(response.data);
-
-                        let c = {};
-                        response.data.location.forEach((e) => {
-                            c[e.value.toUpperCase()] = e.count
-                        });
-                        this.countries = c; // todo countries with no limit
-                        this.renderMap = true;
-
                         let words = [];
-                        response.data.word.forEach((e) => {
+                        response.data.results.word.forEach((e) => {
                             let obj = {};
                             obj.text = e.value;
                             obj.value = e.count;
                             words.push(obj)
                         });
                         this.words = words;
-                        console.log(words);
-
                         this.renderCloud = true;
+                    })
+                    .catch(e => {
+                        this.renderCloud = false;
+                        console.log(e);
+                    });
+
+                StatService.top(['location'], null, 1000)
+                    .then(response => {
+                        let c = {};
+                        response.data.results.location.forEach((e) => {
+                            c[e.value.toUpperCase()] = e.count
+                        });
+                        this.countries = c;
+                        this.renderMap = true;
+                    })
+                    .catch(e => {
+                        this.renderMap = false;
+                        console.log(e);
+                    });
+
+
+                StatService.percentages()
+                    .then(response => {
+                        this.loading = false;
+                        this.topValues = response.data.results;
+                        this.render = true;
                     })
                     .catch(e => {
                         console.log(e);
                     });
 
-                StatService.percentages()
+                StatService.tweetAuthorCount('publications')
                     .then(response => {
-                        this.loading = false;
-                        this.topValues = response.data;
-                        this.render = true;
+                        // console.log(response);
+                        this.tweetAuthorCount = response.data.results[0].count;
                     })
                     .catch(e => {
+                        this.tweetAuthorCount = '-';
                         console.log(e);
                     });
             },
@@ -305,11 +452,25 @@
 </script>
 
 <style lang="scss">
-    .big-chart {
-        .p-card-content, .p-card-body {
-            height: 100%;
-            color: #fff;
+    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+
+    .trending-items {
+        h4 {
+            color: $color-main;
+            margin: 35px 0 10px 0;
+        }
+
+        .p-datatable {
+            margin: 5px;
+        }
+
+        .p-datatable .p-datatable-thead > tr > th {
+            padding: 10px;
+
+            &.rank > div {
+                display: flex;
+                justify-content: center;
+            }
         }
     }
-
 </style>

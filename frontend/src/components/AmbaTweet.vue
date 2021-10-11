@@ -1,7 +1,8 @@
 <template>
     <div class="amba-tweet">
-        <i class="pi pi-refresh" @click="loadNewestTweet" style="cursor: pointer; position: absolute; right: -10px; top: -65px;"></i>
-        <div class="rendered-tweet">
+        <i class="pi pi-refresh" @click="loadNewestTweet"
+           style="cursor: pointer; position: absolute; right: -10px; top: -65px;"></i>
+        <div class="rendered-tweet special-scrollbar">
             <Tweet
                     v-if="tweetId !== ''"
                     :tweet-id="tweetId"
@@ -19,70 +20,76 @@
                 </template>
 
                 <template v-slot:error>
-                  <span>Sorry, that tweet can't be loaded.</span>
+                    <span>Sorry, that tweet can't be loaded.</span>
                 </template>
             </Tweet>
         </div>
 
         <div class="processed-data">
-            <router-link :to="pubUrl" class="link">
+            <router-link v-if="!doi_in" :to="pubUrl" class="link">
                 <h3 class="title">{{ title }}</h3>
                 <i class="pi pi-link">{{ doi }}</i>
             </router-link>
-            <div class="authors">
+            <div v-if="!doi_in" class="authors">
                 {{ authors }}
-            <div class="abstract">
-                {{ abstract }}
+                <div class="abstract special-scrollbar">
+                    {{ abstract }}
+                </div>
             </div>
+            <div v-else>
+                <h3>Processed Data</h3>
             </div>
             <div class="values">
-                <div >
+                <div>
                     <h3>Score</h3>
-                    <p >{{ localeNumber(score) }}</p>
+                    <p>{{ localeNumber(score) }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Bot Rating</h3>
-                    <p >{{ formatBot(bot_rating) }}</p>
+                    <p>{{ formatBot(bot_rating) }}</p>
                 </div>
-                <div >
-                    <h3>Sentiment <i style="font-size: 0.9em;" class="pi pi-question-circle" v-tooltip="'Sentiment can vary from negative (-1) to positive (+1)'"></i></h3>
-                    <p >{{ localeNumber(sentiment_raw) }}</p>
+                <div>
+                    <h3>Sentiment <i style="font-size: 0.9em;" class="pi pi-question-circle"
+                                     v-tooltip="'Sentiment can vary from negative (-1) to positive (+1)'"></i></h3>
+                    <p>{{ localeNumber(sentiment_raw) }}</p>
                 </div>
-                <div >
-                    <h3>Contains Abstract <i style="font-size: 0.9em;" class="pi pi-question-circle" v-tooltip="'Between 50 and 85% is good, much more and it\'s just the abstract, less and it will have little to do with the publication.'"></i></h3>
-                    <p >{{ localeNumber(contains_abstract_raw * 100) }}%</p>
+                <div>
+                    <h3>Contains Abstract <i style="font-size: 0.9em;" class="pi pi-question-circle"
+                                             v-tooltip="'Between 50 and 85% is good, much more and it\'s just the abstract, less and it will have little to do with the publication.'"></i>
+                    </h3>
+                    <p>{{ localeNumber(contains_abstract_raw * 100) }}%</p>
                 </div>
-                <div >
+                <div>
                     <h3>Question Mark Count</h3>
-                    <p >{{ localeNumber(question_mark_count) }}</p>
+                    <p>{{ localeNumber(question_mark_count) }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Exclamation Mark Count</h3>
-                    <p >{{ localeNumber(exclamation_mark_count) }}</p>
+                    <p>{{ localeNumber(exclamation_mark_count) }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Length</h3>
-                    <p >{{ localeNumber(length) }}</p>
+                    <p>{{ localeNumber(length) }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Followers</h3>
-                    <p >{{ localeNumber(followers) }}</p>
+                    <p>{{ localeNumber(followers) }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Language</h3>
-                    <p >{{ lang }}</p>
+                    <p>{{ lang }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Location</h3>
-                    <p >{{ location }}</p>
+                    <p>{{ location }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Source</h3>
-                    <p >{{ source }}</p>
+                    <p>{{ source }}</p>
                 </div>
-                <div >
+                <div>
                     <h3>Type</h3>
-                    <p >{{ subj_type }}</p>
+                    <p>{{ subj_type }}</p>
                 </div>
                 <div>
                     <h3>Entities</h3>
@@ -100,6 +107,7 @@
 <script>
     import Tweet from "./Tweet";
     import StatService from "../services/StatService";
+    // import FieldOfStudyService from "../services/FieldOfStudyService";
 
     export default {
         name: "AmbaTweet",
@@ -111,6 +119,15 @@
         },
         props: {
             doi_in: {
+                type: String,
+                required: false
+            },
+            mode: {
+                type: String,
+                required: false,
+                default: 'publication'
+            },
+            id_in: {
                 type: String,
                 required: false
             },
@@ -140,7 +157,7 @@
                 exclamation_mark_count: "",
                 length: "",
                 authors: "",
-                entities: []
+                entities: [],
             }
         },
         created() {
@@ -149,21 +166,21 @@
         methods: {
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
-                return x.toLocaleString('de-De');
+                return x.toLocaleString();  //'de-De'
             },
             localeTime: function (x) {
                 let d = new Date(x + 'Z');
-                return d.toLocaleString('de-De');
+                return d.toLocaleString(); // 'de-De'
             },
             formatBot: function (x) {
                 if (x === 10) return 'no Bot';
                 return 'Bot'
             },
             loadNewestTweet() {
-                StatService.newestTweet(this.doi_in)
+                StatService.newestTweet(this.mode, this.doi_in, this.id_in)
                     .then(r => {
-                        let response = r.data[0];
-                        console.log(response);
+                        // console.log(r);
+                        let response = r.data.results[0];
                         this.title = response['title'];
                         this.doi = response['doi'];
                         this.abstract = response['abstract'];
@@ -195,7 +212,6 @@
                     .catch(e => {
                         console.log(e);
                     });
-
             }
         }
     }
@@ -208,6 +224,7 @@
         display: flex;
         color: $color-main;
         position: relative;
+        flex-wrap: wrap;
 
         .rendered-tweet {
             flex-grow: 0;
@@ -225,6 +242,7 @@
             flex-grow: 1;
             padding: 10px;
             margin-left: 10px;
+            width: 450px;
 
             .link {
                 color: $color-main;

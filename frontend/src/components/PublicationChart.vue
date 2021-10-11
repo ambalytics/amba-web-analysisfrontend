@@ -1,10 +1,4 @@
 <template>
-    <div class="time-options" v-if="dateTimeOptions">
-        <span v-for="(subject, index) in dataTimeOptions" v-bind:key="subject.name"
-              @click="changeTimeOptions(subject.duration)" v-bind:class="{ active: dateTimeRange === index }">
-            {{ subject.name }}
-        </span>
-    </div>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
 </template>
 
@@ -46,14 +40,6 @@
                 type: Boolean,
                 default: true
             },
-            dateTimeOptions: {
-                type: Boolean,
-                default: true
-            },
-            dateTimeRange: {
-                type: Number,
-                default: 0
-            },
         },
         data: () => ({
             loaded: false,
@@ -65,9 +51,14 @@
             };
 
             if (this.type === "line") {
-                this.options['scales'] = {
-                    y: {
-                        min: 0
+                this.options = {
+                    hover: {
+                        mode: 'dataset'
+                    },
+                    plugins: {
+                        legend: {
+                            onClick: this.onLineLegendClick
+                        }
                     }
                 }
             }
@@ -99,13 +90,21 @@
             }
         },
         methods: {
-            changeTimeOptions(duration) {
-                console.log(duration)
-            },
             mapProfileRange: function (number, minIn, maxIn, minOut, maxOut) {
                 let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
-                console.log([minIn, maxIn, number, r]);
+                // console.log([minIn, maxIn, number, r]);
                 return r;
+            },
+            onLineLegendClick(e, legendItem, legend) {
+                let index = legendItem.datasetIndex;
+
+                let ci = legend.chart;
+                [
+                    ci.getDatasetMeta(0)
+                ].forEach(function (meta) {
+                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                });
+                ci.update();
             }
         },
         watch: {
@@ -122,8 +121,8 @@
                             this.mapProfileRange(val['publication']['median_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
                             this.mapProfileRange(val['publication']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
-                            this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_follower'], val['max']['sum_follower'], 0, 100),
-                            this.mapProfileRange(1 - val['publication']['median_abstract'],  1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
+                            this.mapProfileRange(1 - val['publication']['median_abstract'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
@@ -133,7 +132,7 @@
                             this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
                             this.mapProfileRange(val['avg']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
-                            this.mapProfileRange(val['avg']['sum_follower'], val['min']['sum_follower'], val['max']['sum_follower'], 0, 100),
+                            this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
                             this.mapProfileRange(1 - val['avg']['abstract_difference'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
@@ -170,35 +169,23 @@
                             ]
                         };
 
-                    } else {
-
-
+                    } else if (this.type === "doughnut") {
                         val.forEach(e => {
                             if (e.value !== "total") {
-                                // console.log(total)
+
                                 if (e.count) {
                                     total += e.count;
                                 } else if (e.total) {
                                     total += e.total
                                 }
-                                if (this.growingData) {
-                                    data.push(total);
-                                } else {
-                                    if (e.count) {
-                                        data.push(e.count);
-                                    } else if (e.total) {
-                                        data.push(e.total);
-                                    }
+
+                                if (e.count) {
+                                    data.push(e.count);
+                                } else if (e.total) {
+                                    data.push(e.total);
                                 }
 
-                                if (this.dateFormat) {
-                                    let date = new Date(e.time);
-                                    const options = {hour: '2-digit', minute: '2-digit'};
-                                    label.push(date.toLocaleTimeString('de-DE', options))
-                                } else {
-                                    // todo hour shift to local time for time of day
-                                    label.push(e.value);
-                                }
+                                label.push(e.value);
                             } else {
                                 if (e.count) {
                                     rest = e.count;
@@ -206,7 +193,7 @@
                                     rest = e.total;
                                 }
                             }
-                            // label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
+
                         });
 
                         if (rest > 0 && rest - total > 0 && this.showOthers) {
@@ -226,22 +213,69 @@
                             label: this.title,
                             backgroundColor: colors,
                             borderColor: '#555',
-                            borderWidth: 2,
-                            hoverOffset: 4,
+                            borderWidth: 3,
+                            hoverOffset: 10,
                             data: data,
                         }];
 
-                        if (this.type === "line") {
-                            dt = [{
-                                label: this.title,
-                                backgroundColor: '#0F6364',
-                                borderColor: '#555',
-                                fill: true,
-                                borderWidth: 2,
-                                hoverOffset: 4,
-                                data: data,
-                            }];
+                        this.loaded = true;
+                        this.chartData = {
+                            labels: label,
+                            datasets: dt
+                        };
+                    } else {
+                        let label = [];
+                        let dt = [];
+
+                        let colors = [];
+                        let colorPallet = ['#E6B24B', '#67002E', '#0F6364'];
+                        if (val.length === 1) {
+                            colors.push(colorPallet[2]);
+                        } else if (val.length === 1) {
+                            colors.push(colorPallet[2]);
+                        } else {
+                            let c = chroma.scale(colorPallet);
+                            for (let i = 0; i < val.length; i++) {
+                                colors.push(c(i / (val.length - 1)).hex())
+                            }
                         }
+
+                        val.forEach((e, i) => {
+                            // publication level
+
+                            let data = [];
+                            e.data.forEach(t => {
+                                let date = new Date(t.time);
+                                let options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                                label.push(date.toLocaleTimeString('de-DE', options));
+                                data.push({
+                                    x: date.toLocaleTimeString('de-DE', options),
+                                    y: t.value
+                                });
+                            });
+
+                            dt.push({
+                                label: e.doi,
+                                backgroundColor: colors[i] + "30",
+                                hoverBackgroundColor: colors[i] + "AA",
+                                borderColor: colors[i],
+                                fill: true,
+                                borderWidth: 3,
+                                hoverBorderWidth: 5,
+                                data: data,
+                                pointRadius: 2,
+                                pointHoverRadius: 2,
+                                pointHoverBorderWidth: 5,
+                                order: colors.length - 1 - i,
+                                tension: 0.2
+                            });
+                        });
+
+                        // remove duplicates and sort
+                        let set = new Set(label);
+                        label = Array.from(set);
+                        label.sort();
+
                         this.loaded = true;
                         this.chartData = {
                             labels: label,
@@ -253,30 +287,3 @@
         }
     }
 </script>
-
-<style lang="scss">
-    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
-
-    .time-options {
-        display: flex;
-        font-size: 0.9em;
-        padding-left: 10px;
-        position: relative;
-        top: -50px;
-        right: -320px;
-        color: $color-main;
-
-        span.active {
-            text-decoration: underline;
-        }
-
-        span::after {
-            content: '|';
-            padding: 10px;
-        }
-
-        span:last-of-type::after {
-            content: none;
-        }
-    }
-</style>

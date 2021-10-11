@@ -8,8 +8,6 @@ import 'primeflex/primeflex.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import Tooltip from 'primevue/tooltip';
-// import 'primevue/resources/themes/md-light-indigo/theme.css';
-
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
@@ -18,6 +16,8 @@ import Card from 'primevue/card';
 import Chart from 'primevue/chart';
 import InputText from 'primevue/inputtext';
 import SelectButton from 'primevue/selectbutton';
+import Dropdown from 'primevue/dropdown';
+import TabMenu from 'primevue/tabmenu';
 
 
 const app = createApp(App);
@@ -39,6 +39,10 @@ app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('InputText', InputText);
 app.component('SelectButton', SelectButton);
+app.component('Dropdown', Dropdown);
+app.component('TabMenu', TabMenu);
+
+
 app.directive('tooltip', Tooltip);
 
 app.mount('#app');

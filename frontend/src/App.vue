@@ -8,12 +8,9 @@
         </div>
 
         <div class="time-selection">
-            <SelectButton v-model="selectedTime" :options="dataTimeOptions" optionLabel="name" @click="changeDuration">
-                <template #option="slotProps">
-                    <i :class="slotProps.option.icon" style="margin-right: 5px"></i>
-                    <div>{{slotProps.option.name}}</div>
-                </template>
-            </SelectButton>
+            <i class="pi pi-fw pi-clock" style="margin-right: 5px"></i>
+            <Dropdown v-model="selectedTime" :options="dataTimeOptions" optionLabel="label" @change="changeDuration  ">
+            </Dropdown>
         </div>
 
         <div class="header-text">ambalytics analysis streams</div>
@@ -35,9 +32,21 @@
 
 <script>
     export default {
-        inject: ['selectedTime'],
         created() {
             document.title = "ambalytics analysis streams";
+
+            this.$router.isReady().then(() => {
+                if (this.$route.query.time !== undefined) {
+                    this.dataTimeOptions.forEach((e) => {
+                        if (e.duration + "" === this.$route.query.time) {
+                            this.selectedTime = e;
+                        }
+                    });
+                } else {
+                    this.selectedTime = this.dataTimeOptions[0];
+                }
+            });
+
             this.$router.options.routes.forEach(route => {
                 this.items.push({
                     label: route.name,
@@ -46,42 +55,33 @@
                     icon: route.icon
                 })
             });
-            // console.log(this.items)
-            console.log(this.selectedTime)
-        },
-        mounted() {
-            if (this.$cookie.getCookie('duration')) {
-                this.dataTimeOptions.forEach((e) => {
-                    if (e.duration+"" === this.$cookie.getCookie('duration')) {
-                        this.selectedTime = e;
-                    }
-                });
-            }
         },
         data() {
             return {
                 items: [],
-                selectedTime: this.selectedTime,
                 dataTimeOptions: [{
-                    name: '6h',
-                    icon: "pi pi-fw pi-clock",
-                    duration: 3600 * 6
+                    label: 'currently',
+                    duration: 'currently'
                 }, {
-                    name: '24h',
-                    icon: "pi pi-fw pi-clock",
-                    duration: 3600 * 24
+                    label: 'today',
+                    duration: 'today'
                 }, {
-                    name: '7d',
-                    duration: 3600 * 24 * 7,
-                    icon: "pi pi-fw pi-clock",
-                }]
+                    label: 'week',
+                    duration: 'week',
+                }, {
+                    label: 'month',
+                    duration: 'month',
+                }, {
+                    label: 'year',
+                    duration: 'year',
+                }],
+                selectedTime: null,
             }
         },
         methods: {
             changeDuration() {
-                console.log(this.selectedTime);
-                this.$cookie.setCookie('duration', this.selectedTime.duration);
-                console.log(this.$cookie.getCookie('duration'));
+                console.log(this.selectedTime.duration);
+                this.$router.push({path: this.$route.path, query: {time: this.selectedTime.duration}});
             }
         }
     }
@@ -93,57 +93,66 @@
 <style lang="scss">
     @import './assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
 
-    /*.text-align-right {*/
-    /*    text-align: center !important;*/
-    /*    padding-right: 3rem !important;*/
-    /*}*/
-
-    /*.wrapper {*/
-    /*    width: 70px;*/
-    /*}*/
-
-    td > .wrapper {
-        text-align: right;
-        /*border: 2px dotted blue;*/
-        /*padding: 5px 35% 5px 5px;*/
-        display: inline-block;
-        min-width: 100%;
-        font-weight: 700;
-        font-family: 'Courier New', monospace !important;
-        padding: 10px 40px 10px 10px !important
+    .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+        background: rgba($color-main, 0.2) !important;
     }
 
-    th.text-align-right > .p-column-header-content > span.p-column-title {
-        display: inline-block !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    th.amba > .p-column-header-content > span.p-column-title {
-        color: darken($color-main, 0.5) !important;
-    }
-
-    .p-column-header-content > span.p-column-title {
-        font-weight: 700;
-    }
-
-    th.text-align-right {
-        text-align: center;
-    }
-
-    td.text-align-right {
-        /*border: 2px solid red !important;*/
-        /*text-align: right !important;*/
-
-        /*min-width: 150px !important;*/
-        /*padding: 10px 2.5% 10px 20px !important;*/
+    .p-datatable.big-table {
+        th:nth-child(1), td:nth-child(1) {
+            width: 60px;
+        }
+        th:nth-child(2), td:nth-child(2) {
+            width: 350px;
+        }
     }
 
     table.p-datatable-table {
-        /*border: 1px solid #aaa;*/
+
+        .p-datatable-tbody > tr > td {
+            padding: 10px;
+
+            &.rank {
+                width: 40px;
+                text-align: center;
+                font-size: 1.5em;
+                font-weight: bold;
+            }
+        }
+
+        td > .wrapper {
+            font-size: 0.95em;
+            text-align: right;
+            display: inline-block;
+            min-width: 100%;
+            font-weight: 700;
+            font-family: 'Courier New', monospace !important;
+            padding: 10px 40px 10px 10px !important
+        }
+
+        th {
+            font-size: 0.9em;
+        }
+
+        th.text-align-right > .p-column-header-content > span.p-column-title {
+            display: inline-block !important;
+            width: 100% !important;
+            text-align: center !important;
+        }
+
+        th.amba > .p-column-header-content > span.p-column-title {
+            color: darken($color-main, 0.5) !important;
+        }
+
+        th.text-align-right {
+            text-align: center;
+        }
+
+        .p-column-header-content > span.p-column-title {
+            font-weight: 700;
+        }
+
         .p-datatable-tbody > tr > td {
             text-align: left;
-            /*border-right: 1px solid #ccc;*/
             border-bottom: none;
         }
 
@@ -154,6 +163,24 @@
         .p-datatable-thead > tr > th {
             border-bottom: 1px solid #ccc;
         }
+    }
+
+    .p-input-icon-left, .p-input-icon-right {
+        position: absolute !important;
+        right: 0;
+        top: -3em;
+
+        input {
+            width: 300px;
+        }
+
+        .pi-search {
+            cursor: pointer;
+        }
+    }
+
+    .table-card div.p-card-content {
+        position: relative !important;
     }
 
     td.amba {
@@ -195,10 +222,6 @@
             color: white !important;
         }
 
-    }
-
-    .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
-        background: rgba($color-main, 0.2) !important;
     }
 
     .p-card-title {
@@ -356,42 +379,84 @@
     }
 
     .time-selection {
+        display: flex;
+        align-items: center;
 
-        .p-selectbutton .p-button {
-            color: $color-main;
-            border: 2px solid $color-main;
-            font-weight: bold;
+        .p-dropdown-label {
+            color: white;
+            padding: 10px;
         }
 
-        .p-selectbutton .p-button.p-highlight {
+        span.p-dropdown-trigger-icon.pi.pi-chevron-down {
+            color: white;
+        }
+
+        div.p-dropdown {
             background: $color-main;
-            border-color: $color-main;
-            color: white;
+            font-weight: bold;
+            border: 2px solid $color-main;
         }
 
-        .p-selectbutton .p-button:focus.p-highlight {
-            background: rgba($color-main, 0.9);
-            border-color: $color-main;
-        }
-
-        // selected hover
-        .p-selectbutton .p-button.p-highlight:hover {
-            background: rgba($color-main, 0.7);
-            border-color: $color-main;
-            color: white;
-        }
-
-        // unselected hover
-        .p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
-            background: rgba($color-main, 0.7);
-            border-color: $color-main;
-            color: white;
+        .pi-clock {
+            font-size: 1.4em;
+            color: $color-main !important;
         }
     }
 
 
     div.vue-world-map {
         margin-bottom: 20px;
+    }
+
+    .big-chart {
+        .p-card-content, .p-card-body {
+            height: 100%;
+            color: #fff;
+            position: relative;
+        }
+
+        .p-dropdown {
+            position: absolute;
+            right: 0;
+            width: 150px;
+            top: -40px;
+        }
+    }
+
+    .no-data {
+        height: 100%;
+        width: 100%;
+        color: darkgrey;
+    }
+
+
+    .scroller .p-card-content, .special-scrollbar {
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: $color-main;
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: $color-main;
+        }
+    }
+
+    @-moz-document url-prefix('') {
+        .scroller .p-card-content, .special-scrollbar {
+            scrollbar-color: $color-main white !important;
+            scrollbar-width: thin !important;
+        }
     }
 
     @media only screen and (max-width: 960px) {
