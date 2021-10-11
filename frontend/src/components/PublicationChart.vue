@@ -1,63 +1,289 @@
+<template>
+    <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
+</template>
+
 <script>
-    import { Bar } from 'vue-chartjs'
-    import EventService from "../services/EventService";
+    import chroma from 'chroma-js';
 
     export default {
-        extends: Bar,
-       data: () => ({
-            chartdata: {
-                labels: ['January', 'February'],
-                datasets: [
-                    {
-                        label: 'Data One',
-                        backgroundColor: '#f87979',
-                        data: [40, 20]
-                    }
-                ]
+        name: 'PublicationChart',
+        props: {
+            type: {
+                type: String,
+                default: "doughnut"
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
+            id: {
+                type: String,
+                default: null
+            },
+            rawData: {
+                type: Array,
+                default: null
+            },
+            dateFormat: {
+                type: Boolean,
+                default: false
+            },
+            title: {
+                type: String,
+                default: 'unknown'
+            },
+            growingData: {
+                type: Boolean,
+                default: false
+            },
+            height: {
+                type: Number,
+                default: 150
+            },
+            showOthers: {
+                type: Boolean,
+                default: true
+            },
+        },
+        data: () => ({
+            loaded: false,
+            chartData: null,
         }),
         mounted() {
-            // console.log('created');
-            // fetch the data when the view is created and the data is
-            // already being observed
-            this.fetchData()
+            this.options = {
+                responsive: true,
+            };
+
+            if (this.type === "line") {
+                this.options = {
+                    hover: {
+                        mode: 'dataset'
+                    },
+                    plugins: {
+                        legend: {
+                            onClick: this.onLineLegendClick
+                        }
+                    }
+                }
+            }
+
+            if (this.type === "radar") {
+                this.options = {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#495057'
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            pointLabels: {
+                                color: '#495057',
+                            },
+                            grid: {
+                                color: '#ebedef',
+                            },
+                            angleLines: {
+                                color: '#ebedef'
+                            }
+                        }
+                    }
+                }
+            }
         },
         methods: {
-            fetchData() {
-                // console.log('fetch data');
-                this.error = this.post = null
-                this.loading = true
-
-                EventService.forPublication("2419563916")
-                    .then(response => {
-                        // console.log(response.data.data);
-
-                        let data = [];
-                        let label = [];
-                        response.data.data[0].forEach(e => {
-                            data.push(e.total);
-                            label.push(e._id.h + 'h ' + e._id.d + '.' + e._id.m);
-                        });
-                        this.chartdata = {
-                            labels: label,
-                            datasets: [{
-                                label: '10.1134/S1560354716060058',
-                                backgroundColor: '#f87979',
-                                data: data,
-                            }],
-                        };
-                        // console.log(this.chartdata);
-
-                        this.renderChart(this.chartdata, this.options)
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+            mapProfileRange: function (number, minIn, maxIn, minOut, maxOut) {
+                let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
+                // console.log([minIn, maxIn, number, r]);
+                return r;
             },
+            onLineLegendClick(e, legendItem, legend) {
+                let index = legendItem.datasetIndex;
+
+                let ci = legend.chart;
+                [
+                    ci.getDatasetMeta(0)
+                ].forEach(function (meta) {
+                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                });
+                ci.update();
+            }
+        },
+        watch: {
+            rawData: function (val) {
+                let data = [];
+                let label = [];
+                let rest = 0;
+                let total = 0;
+
+                if (val) {
+                    if (this.type === "radar") {
+
+                        let data_this = [
+                            this.mapProfileRange(val['publication']['median_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
+                            this.mapProfileRange(val['publication']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
+                            this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
+                            this.mapProfileRange(1 - val['publication']['median_abstract'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
+                        ];
+
+                        let data_avg = [
+                            this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
+                            this.mapProfileRange(val['avg']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
+                            this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
+                            this.mapProfileRange(1 - val['avg']['abstract_difference'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
+                            this.mapProfileRange(val['avg']['median_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
+                        ];
+
+                        console.log(data_this);
+                        console.log(data_avg);
+
+                        this.loaded = true;
+                        this.chartData = {
+                            labels: ['Score', 'Bot Percentage', 'Sentiment', 'Follower', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
+                            datasets: [
+                                {
+                                    label: 'average Publication',
+                                    backgroundColor: 'rgba(179,181,198,0.2)',
+                                    borderColor: 'rgba(179,181,198,1)',
+                                    pointBackgroundColor: 'rgba(179,181,198,1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(179,181,198,1)',
+                                    data: data_avg
+                                },
+                                {
+                                    label: val['publication']['doi'],
+                                    backgroundColor: 'rgba(15,99,100,0.2)',
+                                    borderColor: 'rgba(15,99,100,1)',
+                                    pointBackgroundColor: 'rgba(15,99,100,1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(15,99,100,1)',
+                                    data: data_this
+                                }
+                            ]
+                        };
+
+                    } else if (this.type === "doughnut") {
+                        val.forEach(e => {
+                            if (e.value !== "total") {
+
+                                if (e.count) {
+                                    total += e.count;
+                                } else if (e.total) {
+                                    total += e.total
+                                }
+
+                                if (e.count) {
+                                    data.push(e.count);
+                                } else if (e.total) {
+                                    data.push(e.total);
+                                }
+
+                                label.push(e.value);
+                            } else {
+                                if (e.count) {
+                                    rest = e.count;
+                                } else if (e.total) {
+                                    rest = e.total;
+                                }
+                            }
+
+                        });
+
+                        if (rest > 0 && rest - total > 0 && this.showOthers) {
+                            data.push(rest - total);
+                            label.push('Others');
+                        }
+
+                        let colors = [];
+                        let c = chroma.scale(['#0F6364', '#67002E', '#E6B24B']);
+                        for (let i = 0; i < data.length; i++) {
+                            colors.push(c(i / (data.length - 1)).hex())
+                        }
+                        // console.log(response.data.length);
+                        // console.log(colors);
+
+                        let dt = [{
+                            label: this.title,
+                            backgroundColor: colors,
+                            borderColor: '#555',
+                            borderWidth: 3,
+                            hoverOffset: 10,
+                            data: data,
+                        }];
+
+                        this.loaded = true;
+                        this.chartData = {
+                            labels: label,
+                            datasets: dt
+                        };
+                    } else {
+                        let label = [];
+                        let dt = [];
+
+                        let colors = [];
+                        let colorPallet = ['#E6B24B', '#67002E', '#0F6364'];
+                        if (val.length === 1) {
+                            colors.push(colorPallet[2]);
+                        } else if (val.length === 1) {
+                            colors.push(colorPallet[2]);
+                        } else {
+                            let c = chroma.scale(colorPallet);
+                            for (let i = 0; i < val.length; i++) {
+                                colors.push(c(i / (val.length - 1)).hex())
+                            }
+                        }
+
+                        val.forEach((e, i) => {
+                            // publication level
+
+                            let data = [];
+                            e.data.forEach(t => {
+                                let date = new Date(t.time);
+                                let options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                                label.push(date.toLocaleTimeString('de-DE', options));
+                                data.push({
+                                    x: date.toLocaleTimeString('de-DE', options),
+                                    y: t.value
+                                });
+                            });
+
+                            dt.push({
+                                label: e.doi,
+                                backgroundColor: colors[i] + "30",
+                                hoverBackgroundColor: colors[i] + "AA",
+                                borderColor: colors[i],
+                                fill: true,
+                                borderWidth: 3,
+                                hoverBorderWidth: 5,
+                                data: data,
+                                pointRadius: 2,
+                                pointHoverRadius: 2,
+                                pointHoverBorderWidth: 5,
+                                order: colors.length - 1 - i,
+                                tension: 0.2
+                            });
+                        });
+
+                        // remove duplicates and sort
+                        let set = new Set(label);
+                        label = Array.from(set);
+                        label.sort();
+
+                        this.loaded = true;
+                        this.chartData = {
+                            labels: label,
+                            datasets: dt
+                        };
+                    }
+                }
+            }
         }
     }
-</script>s
+</script>

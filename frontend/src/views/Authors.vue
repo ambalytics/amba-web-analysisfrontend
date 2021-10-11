@@ -1,8 +1,8 @@
-<template>
+Publications.vue<template>
     <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
         <Card class="table-card">
             <template #title>
-                Trending Publications
+                Trending Authors
             </template>
             <template #content>
                 <div class="p-input-icon-left">
@@ -15,10 +15,10 @@
                            @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
                            @row-click="rowClick($event)">
                     <template #empty>
-                        No Publications found.
+                        No Authors found.
                     </template>
                     <template #loading>
-                        Loading Publications data. Please wait.
+                        Loading Authors data. Please wait.
                     </template>
                     <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
                             :key="col.field" :class="col.class">
@@ -33,11 +33,10 @@
 </template>
 
 <script>
-    // top publications
-    import PublicationService from "../services/PublicationService";
+    import AuthorService from "../services/AuthorService";
 
     export default {
-        name: 'Publications',
+        name: 'Authors',
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
                 if (this.$route.query.time !== undefined) {
@@ -54,12 +53,10 @@
                 duration: "currently",
                 columns: [
                     {field: 'trending_ranking', header: 'Rank', sortable: false, numberTemplate: false, class: "amba rank"},
-                    {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
-                    // {field: 'doi', header: 'DOI', sortable: false, numberTemplate: false},
-                    {field: 'year', header: 'Year', sortable: true, numberTemplate: true, noLocale: true},
+                    {field: 'name', header: 'Name', sortable: false, numberTemplate: false},
                     {
-                        field: 'citation_count',
-                        header: 'Citation Count',
+                        field: 'pub_count',
+                        header: 'Publication Count',
                         sortable: true,
                         class: "text-align-right",
                         numberTemplate: true
@@ -208,7 +205,7 @@
                 this.fetchData();
             },
             rowClick(event) {
-                this.$router.push('/publication/' + event.data.doi)
+                this.$router.push('/author/' + event.data.id)
             },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
@@ -218,7 +215,7 @@
                 this.error = this.post = null;
                 this.loading = true;
                 console.log(this.lazyParams.sortOrder);
-                PublicationService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
+                AuthorService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;
                         this.data.forEach(element => {

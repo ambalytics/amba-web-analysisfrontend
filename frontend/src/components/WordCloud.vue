@@ -21,10 +21,6 @@ export default {
             required: true,
             ro: null,
         },
-        fontSizeMapper: {
-            type: Function,
-            required: true,
-        },
         onWordClick: {
             type: Function,
             default: (word) => {
@@ -32,7 +28,11 @@ export default {
                 let annotation = word.target.textContent;
                 if (annotation.startsWith('@')) {
                     // remove @
+                    // add css pointer for cursor todo
                     window.open("https://twitter.com/" + annotation, '_blank');
+                } else {
+                    // window.open("https://translate.google.com/?sl=auto&tl=en&text=" + annotation, '_blank');
+                    window.open("https://twitter.com/search?q=" + annotation, '_blank');
                 }
             },
         },
@@ -107,25 +107,43 @@ export default {
         }
     },
     methods: {
+        fontSizeMapper: function (word) {
+            let max = 0;
+            let min = 10000;
+            this.data.forEach((e) => {
+                if (e.value > max) {
+                    max = e.value;
+                } else if (e.value < min) {
+                    min = e.value;
+                }
+            });
+            let maxOut = 150;
+            let minOut = 20;
+            let r = (word.value - min) * (maxOut - minOut) / (max - min) + minOut;
+            return r;
+        },
         onResize () {
-            // console.log(this.$refs.wordCloud.offsetHeight);
-            // console.log(this.$refs.wordCloud.offsetWidth);
-            let wrapperHeight = this.$refs.wordCloud.offsetHeight;
-            let wrapperWidth = this.$refs.wordCloud.offsetWidth;
-            let dh = wrapperHeight / this.height;
-            let dw = wrapperWidth / this.width;
-            let r = 1;
-            if (dh > dw) {
-                r = dw;
-            } else {
-                r = dh;
+            if (this.$refs && this.$refs.wordCloud) {
+                let wrapperHeight = this.$refs.wordCloud.offsetHeight;
+                let wrapperWidth = this.$refs.wordCloud.offsetWidth;
+                let dh = wrapperHeight / this.height;
+                let dw = wrapperWidth / this.width;
+                let r = 1;
+                if (dh > dw) {
+                    r = dw;
+                } else {
+                    r = dh;
+                }
+                this.style = 'transform: scale(' + r + ');';
             }
-            this.style = 'transform: scale(' + r + ');';
         },
         createCanvas: function() {
             const wordCounts = this.data.map(
                 text => ({ ...text })
             );
+            wordCounts.forEach(w => {
+               w.text = w.text.startsWith('@') ? w.text : w.text.toUpperCase()
+            });
             d3.select(this.$el).selectAll('*').remove();
             const layout = cloud()
             .size([this.width, this.height])
@@ -139,15 +157,15 @@ export default {
 
 
 
-            if(this.colors)
-                this.fill = d3.scaleOrdinal().range(this.colors)
+            if (this.colors)
+                this.fill = d3.scaleOrdinal().range(this.colors);
             else
-                this.fill = d3.scaleOrdinal(d3.schemeCategory10)
+                this.fill = d3.scaleOrdinal(d3.schemeCategory10);
             layout.start();
         },
         end: function(words) {
             let _fill;
-            switch(this.coloring){
+            switch (this.coloring){
                 case "random":
                     _fill = (d, i) => this.fill(i);
                     break;

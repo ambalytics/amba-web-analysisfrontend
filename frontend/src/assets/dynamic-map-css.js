@@ -44,13 +44,13 @@ export const getBaseCss = ({ defaultCountryFillColor, countryStrokeColor, legend
 
 export const getDynamicMapCss = (countryData, chromaScale, highColor, chromaScaleOn) => {
   const { min, max } = getMaxAndMinCountryDataValues(countryData);
-  const colorScaleUnit = getColorScaleUnit(min, max);
+  const colorScaleUnit = getColorScaleUnit(Math.log(min), Math.log(max));
   const css = [];
   Object.keys(countryData).forEach((key) => {
     if (key === 'unknown') return;
 
-    const value = countryData[key];
-    const scaleValue = colorScaleUnit * (value - min);
+    const value = Math.log(countryData[key]);
+    const scaleValue = colorScaleUnit * (value - Math.log(min));
     const hex = chromaScale(scaleValue).hex();
     css.push(`.vue-world-map #${key} { fill: ${chromaScaleOn ? hex : highColor}; }`);
   });
