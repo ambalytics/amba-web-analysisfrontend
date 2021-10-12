@@ -24,7 +24,7 @@
                     <table class="info">
                         <tr>
                             <td><h4>Date:</h4></td>
-                            <td>{{ dateFormat(publication.pub_date) }}</td>
+                            <td>{{ !!publication.pub_date ? dateFormat(publication.pub_date) : publication.year }}</td>
                         </tr>
                         <tr>
                             <td><h4>Type:</h4></td>
@@ -39,14 +39,18 @@
                     <h4>Authors:</h4>
                     <ul class="authors special-scrollbar">
                         <li v-for="author in publication.authors" v-bind:key="author.name">
-                            {{ author.name }}
+                            <router-link :to="{ name: 'author', params: { id: author.id }}" class="source-link">
+                                {{ author.name }}
+                            </router-link>
                         </li>
                     </ul>
 
                     <h4>Subjects:</h4>
                     <ul class="subjects">
                         <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
-                            {{ subject.name }}
+                            <router-link :to="{ name: 'author', params: { id: subject.id }}" class="source-link">
+                                {{ subject.name }}
+                            </router-link>
                         </li>
                     </ul>
 
@@ -55,7 +59,7 @@
                     <ul class="sources">
                         <li v-for="subject in publication.sources" v-bind:key="subject.title"
                             v-bind:class="{ hidden: subject.title === 'DB' }">
-                            <a class="source-link" :href="subject.url">{{ subject.title }}</a>
+                            <a class="source-link" target="_blank" :href="subject.url">{{ subject.title }}</a>
                         </li>
                     </ul>
                 </template>
@@ -67,41 +71,41 @@
                 <template #title>
                     Stats
                 </template>
-                <template #content>
-                    <div class="padding-left">
-                        <h3>Tweet Count</h3>
+                   <template #content>
+                    <div class="padding-left" v-if="!isNaN(tweetCount)">
+                        <h3><time-tooltip/>Tweet Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Publication Count</h3>
+                    <div class="padding-left" v-if="!isNaN(pubCount)">
+                        <h3><time-tooltip/>Publication Count</h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Total Followers Reached</h3>
+                    <div class="padding-left" v-if="!isNaN(totalFollowers)">
+                        <h3><time-tooltip/>Total Followers Reached</h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left">
-                        <h3>Average Score per Tweet</h3>
+                    <div class="padding-left" v-if="!isNaN(scoreSum)">
+                        <h3><time-tooltip/>Average Score per Tweet</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Sentiment</h3>
+                    <div class="padding-left" v-if="!isNaN(sentiment)">
+                        <h3><time-tooltip/>Average Sentiment</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Contains Abstract</h3>
+                    <div class="padding-left" v-if="!isNaN(containsAbstract)">
+                        <h3><time-tooltip/>Average Contains Abstract</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Exclamations</h3>
+                    <div class="padding-left" v-if="!isNaN(exclamations)">
+                        <h3><time-tooltip/>Average Exclamations</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Questions</h3>
+                    <div class="padding-left" v-if="!isNaN(questions)">
+                        <h3><time-tooltip/>Average Questions</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
+                    <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
                         <h3>Tweet Author Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
                     </div>
@@ -243,13 +247,14 @@
     import MapChart from "../components/MapChart";
     import StatService from "../services/StatService";
     import AmbaTweet from "../components/AmbaTweet";
+    import TimeTooltip from "../components/TimeTooltip";
 
     export default {
         name: 'Publication',
-        components: {PublicationChart, WordCloud, MapChart, AmbaTweet},
+        components: {PublicationChart, WordCloud, MapChart, AmbaTweet, TimeTooltip},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
-                if (this.$route.query.time !== undefined) {
+                if (to.query.time !== undefined) {
                     this.duration = to.query.time;
                 } else {
                     this.duration = 'currently';
@@ -265,10 +270,15 @@
             words: [],
             renderCloud: false,
             renderMap: false,
+            pubCount: '-',
             tweetCount: '-',
-            authorCount: '-',
             scoreSum: '-',
             totalFollowers: '-',
+            sentiment: '-',
+            containsAbstract: '-',
+            questions: '-',
+            exclamations: '-',
+            tweetAuthorCount: '-',
             topValues: [],
             profileData: [],
             pubOverTimeData: [],
@@ -483,11 +493,6 @@
             overflow-y: auto;
         }
 
-    }
-
-    .source-link {
-        color: $color-main;
-        text-decoration: none;
     }
 
     .hidden {

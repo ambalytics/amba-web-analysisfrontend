@@ -1,5 +1,8 @@
 <template>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
+    <div v-else class="no-data">
+        - no data available -
+    </div>
 </template>
 
 <script>
@@ -114,7 +117,8 @@
                 let rest = 0;
                 let total = 0;
 
-                if (val) {
+                this.loaded = false;
+                if (val && val.length > 0) {
                     if (this.type === "radar") {
 
                         let data_this = [
@@ -246,7 +250,13 @@
                             let data = [];
                             e.data.forEach(t => {
                                 let date = new Date(t.time);
-                                let options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                                let options = {
+                                    year: '2-digit',
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                };
                                 label.push(date.toLocaleTimeString('de-DE', options));
                                 data.push({
                                     x: date.toLocaleTimeString('de-DE', options),
@@ -282,6 +292,8 @@
                             datasets: dt
                         };
                     }
+                } else {
+                    this.loaded = false;
                 }
             }
         }

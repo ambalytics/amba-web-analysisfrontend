@@ -8,7 +8,9 @@
             <div class="about-line">Twitter Data from <a href="https://twitter.com/" target="_blank"><img
                     src="../assets/twitter-logo.svg"></a></div>
             <div class="about-line">Publication Data from <a href="https://crossref.org/" target="_blank"><img
-                    src="../assets/crossref-logo.svg"></a></div>
+                    src="../assets/crossref-logo.svg"></a><a href="https://develop.openaire.eu/overview.html" target="_blank"><img
+                    src="../assets/open-aire-logo.png"></a><a href="https://www.semanticscholar.org/product/api" target="_blank"><img
+                    src="../assets/semantic_scholar-logo.svg"></a></div>
             <div class="about-line">Source Code<a href="https://github.com/ambalytics" target="_blank"><img
                     src="../assets/repo.png"></a></div>
             <div class="about-line"><a href="https://github.com/lukasjesche" target="_blank"><img class="logo" src="../assets/logo_lj.png">Lukas Jesche</a>License <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a></div>
@@ -55,12 +57,14 @@
 
         .about {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             justify-content: center;
 
             .about-line {
-                margin: 1em 0;
-                width: 550px;
+                border-radius: 5px;
+                border: 3px solid $color-main;
+                margin: 1em 1em;
+                min-width: 600px;
                 font-weight: bold;
                 font-size: 35px;
                 line-height: 50px;
@@ -72,8 +76,7 @@
                 font-variant: small-caps;
                 letter-spacing: -2.5px;
                 font-family: 'Lato', sans-serif;
-
-                align-items: baseline;
+                align-items: center;
 
                 &:last-of-type {
                     border-top: 2px solid $color-main;

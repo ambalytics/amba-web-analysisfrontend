@@ -2,7 +2,7 @@ Publications.vue<template>
     <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
         <Card class="table-card">
             <template #title>
-                Trending Fields of Study
+                 <time-tooltip/>Trending Fields of Study
             </template>
             <template #content>
                 <div class="p-input-icon-left">
@@ -34,12 +34,14 @@ Publications.vue<template>
 
 <script>
     import FieldOfStudyService from "../services/FieldOfStudyService";
+    import TimeTooltip from "../components/TimeTooltip";
 
     export default {
         name: 'FieldsOfStudy',
+        components: {TimeTooltip},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
-                if (this.$route.query.time !== undefined) {
+                if (to.query.time !== undefined) {
                     this.duration = to.query.time;
                     this.fetchData();
                 } else {

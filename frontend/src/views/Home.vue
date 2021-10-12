@@ -6,41 +6,41 @@
                 <template #title>
                     Stats
                 </template>
-                <template #content>
-                    <div class="padding-left">
-                        <h3>Tweet Count</h3>
+               <template #content>
+                    <div class="padding-left" v-if="!isNaN(tweetCount)">
+                        <h3><time-tooltip/>Tweet Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Publication Count</h3>
+                    <div class="padding-left" v-if="!isNaN(pubCount)">
+                        <h3><time-tooltip/>Publication Count</h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Total Followers Reached</h3>
+                    <div class="padding-left" v-if="!isNaN(totalFollowers)">
+                        <h3><time-tooltip/>Total Followers Reached</h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left">
-                        <h3>Average Score per Tweet</h3>
+                    <div class="padding-left" v-if="!isNaN(scoreSum)">
+                        <h3><time-tooltip/>Average Score per Tweet</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Sentiment</h3>
+                    <div class="padding-left" v-if="!isNaN(sentiment)">
+                        <h3><time-tooltip/>Average Sentiment</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Contains Abstract</h3>
+                    <div class="padding-left" v-if="!isNaN(containsAbstract)">
+                        <h3><time-tooltip/>Average Contains Abstract</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Exclamations</h3>
+                    <div class="padding-left" v-if="!isNaN(exclamations)">
+                        <h3><time-tooltip/>Average Exclamations</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Questions</h3>
+                    <div class="padding-left" v-if="!isNaN(questions)">
+                        <h3><time-tooltip/>Average Questions</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
+                    <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
                         <h3>Tweet Author Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
                     </div>
@@ -63,7 +63,7 @@
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
-                    Trending
+                    <time-tooltip/>Trending
                 </template>
                 <template #content>
                     <div v-for="item in trendingItems" :key="item.label" class="trending-items">
@@ -158,18 +158,13 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Publications over Time
+                    <time-tooltip/>Top 5 Publications over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="200" title=" " :dateFormat="true"
-                                       :rawData="pubsOverTimeData"
-                                       type="line"></publication-chart>
-                    <div v-else class="no-data">
-                        - no data available -
-                    </div>
+                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -177,18 +172,13 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Trending
+                    <time-tooltip/>Top 5 Trending over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart v-if="renderTrendingChart" :height="200" title=" " :dateFormat="true"
-                                       :rawData="trendOverTimeData"
-                                       type="line"></publication-chart>
-                    <div v-else class="no-data">
-                        - no data available -
-                    </div>
+                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -201,19 +191,20 @@
     import PublicationChart from "../components/PublicationChart";
     import PublicationService from "../services/PublicationService";
     import AuthorService from "../services/AuthorService";
+    import LanguageDecode from "../helper/LanguageDecode";
     import FieldOfStudy from "../services/FieldOfStudyService";
     import AmbaTweet from "../components/AmbaTweet"
     import StatService from "../services/StatService";
     import MapChart from "../components/MapChart";
     import WordCloud from "../components/WordCloud";
-
+    import TimeTooltip from "../components/TimeTooltip";
 
     export default {
         name: 'Home',
-        components: {PublicationChart, MapChart, AmbaTweet, WordCloud},
+        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
-                if (this.$route.query.time !== undefined) {
+                if (to.query.time !== undefined) {
                     this.duration = to.query.time;
                     this.fetchData();
                 } else {
@@ -230,8 +221,6 @@
             render: false,
             renderMap: false,
             renderCloud: false,
-            renderTrendingChart: true,
-            renderPublicationChart: true,
             pubCount: '-',
             tweetCount: '-',
             scoreSum: '-',
@@ -297,10 +286,8 @@
                 StatService.progressValue(this.selectedPubField, 5, this.duration)
                     .then(response => {
                         this.pubsOverTimeData = response.data.results;
-                        this.renderPublicationChart = this.pubsOverTimeData.length !== 0;
                     })
                     .catch(e => {
-                        this.renderPublicationChart = false;
                         this.pubsOverTimeData = [];
                         console.log(e);
                     });
@@ -309,11 +296,8 @@
                 StatService.progressTrending(this.selectedTrendField, 5, this.duration)
                     .then(response => {
                         this.trendOverTimeData = response.data.results;
-                        this.renderTrendingChart = this.trendOverTimeData.length !== 0;
-                        console.log(this.trendOverTimeData);
                     })
                     .catch(e => {
-                        this.renderTrendingChart = false;
                         this.trendOverTimeData = [];
                         console.log(e);
                     });
@@ -425,7 +409,18 @@
                 StatService.percentages()
                     .then(response => {
                         this.loading = false;
+
+                        let lang = response.data.results.lang.map(e => {
+                            return {
+                                count: e.count,
+                                p: e.p,
+                                value: LanguageDecode.decode(e.value)
+                            }
+                        });
+
                         this.topValues = response.data.results;
+                        this.topValues.lang = lang;
+
                         this.render = true;
                     })
                     .catch(e => {
