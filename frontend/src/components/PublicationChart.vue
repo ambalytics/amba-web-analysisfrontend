@@ -118,7 +118,8 @@
                 let total = 0;
 
                 this.loaded = false;
-                if (val && val.length > 0) {
+
+                if (val && (val.length > 0 || this.type === "radar")) {
                     if (this.type === "radar") {
 
                         let data_this = [
@@ -142,9 +143,6 @@
                             this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['avg']['median_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
                         ];
-
-                        console.log(data_this);
-                        console.log(data_avg);
 
                         this.loaded = true;
                         this.chartData = {
@@ -218,7 +216,7 @@
                             backgroundColor: colors,
                             borderColor: '#555',
                             borderWidth: 3,
-                            hoverOffset: 10,
+                            hoverOffset: -15,
                             data: data,
                         }];
 
