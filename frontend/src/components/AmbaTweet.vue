@@ -231,6 +231,7 @@
         color: $color-main;
         position: relative;
         flex-wrap: wrap;
+        row-gap: 30px;
 
         .reload-button {
             cursor: pointer;

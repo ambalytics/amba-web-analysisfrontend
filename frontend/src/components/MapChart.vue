@@ -152,7 +152,7 @@
 
                 let colors = this.chromaScale.colors(this.scale.resolution);
                 colors.forEach((e) => {
-                   barData.push(e)
+                    barData.push(e)
                 });
                 this.scale.barData = barData;
                 // console.log(this.scale.barData);
@@ -180,18 +180,25 @@
         width: max-content;
         background: #fff;
         overflow: auto;
-        border: 1px solid;
+        border: 3px solid #0F6364 !important;
         position: absolute;
     }
 
     .vue-map-legend-header {
         padding: 10px 15px;
+        color: #0F6364;
     }
 
     .vue-map-legend-content {
         padding: 10px 15px;
-        background: #dadbda8f;
-        border-top: 1px solid #acacad;
+        background: white !important;
+        border-top: 2px solid #0F6364;
+        text-align: end;
+    }
+
+    .vue-map-legend-content > span {
+        font-weight: bold;
+        color: #0F6364 !important;
     }
 
     .scale {

@@ -208,6 +208,10 @@ export default {
     .wordCloud {
         text {
             cursor: pointer;
+
+            &:hover {
+                font-weight: bold;
+            }
         }
     }
 

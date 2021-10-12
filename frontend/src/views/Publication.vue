@@ -213,7 +213,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="100" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderPublicationChart" :height="150" title=" " :dateFormat="true"
                                        :rawData="pubOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">
@@ -414,6 +414,7 @@
                     })
                     .catch(e => {
                         console.log(e);
+                        this.profileData = ['ds']
                     });
 
                 StatService.tweetAuthorCount('publication', this.$route.params.p)
