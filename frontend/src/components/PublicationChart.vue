@@ -159,7 +159,7 @@
                                     data: data_avg
                                 },
                                 {
-                                    label: val['publication']['doi'],
+                                    label: (typeof val['publication']['doi'] === 'string' || val['publication']['doi'] instanceof String) ? val['publication']['doi'] : val['publication']['doi']['name'],
                                     backgroundColor: 'rgba(15,99,100,0.2)',
                                     borderColor: 'rgba(15,99,100,1)',
                                     pointBackgroundColor: 'rgba(15,99,100,1)',
