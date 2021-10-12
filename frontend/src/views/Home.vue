@@ -464,6 +464,14 @@
             margin: 5px;
         }
 
+        .p-datatable .p-datatable-tbody > tr {
+            cursor: pointer;
+
+            &:hover {
+                background: rgba($color-main, 0.2);
+            }
+        }
+
         .p-datatable .p-datatable-thead > tr > th {
             padding: 10px;
 

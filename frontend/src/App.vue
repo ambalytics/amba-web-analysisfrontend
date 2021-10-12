@@ -95,6 +95,7 @@
 
     .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
         background: rgba($color-main, 0.2) !important;
+        cursor: pointer;
     }
 
     .p-datatable.big-table {

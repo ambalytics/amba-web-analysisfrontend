@@ -201,3 +201,15 @@ export default {
     }
  }
 </script>
+
+<style lang="scss">
+    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+
+    .wordCloud {
+        text {
+            cursor: pointer;
+        }
+    }
+
+
+</style>

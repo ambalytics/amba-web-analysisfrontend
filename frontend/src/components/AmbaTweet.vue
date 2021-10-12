@@ -1,7 +1,6 @@
 <template>
     <div class="amba-tweet">
-        <i class="pi pi-refresh" @click="loadNewestTweet"
-           style="cursor: pointer; position: absolute; right: -10px; top: -65px;"></i>
+        <i class="pi pi-refresh reload-button" @click="loadNewestTweet"></i>
         <div class="rendered-tweet special-scrollbar">
             <Tweet
                     v-if="tweetId !== ''"
@@ -226,6 +225,18 @@
         position: relative;
         flex-wrap: wrap;
 
+        .reload-button {
+            cursor: pointer;
+            position: absolute;
+            right: -15px;
+            top: -70px;
+            padding: 5px;
+
+            &:hover {
+                background: rgba($color-main, 0.2);
+            }
+        }
+
         .rendered-tweet {
             flex-grow: 0;
             width: 450px;
@@ -248,6 +259,10 @@
                 color: $color-main;
                 text-decoration: none;
                 margin-bottom: 40px;
+
+                &:hover {
+                    background: rgba($color-main, 0.2);
+                }
 
                 .title {
                     color: $color-main;
