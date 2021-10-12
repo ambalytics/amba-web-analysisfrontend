@@ -8,7 +8,7 @@
         </div>
 
         <div class="time-selection">
-            <i class="pi pi-fw pi-clock" style="margin-right: 5px"></i>
+            <time-tooltip :text="'Here you can choose yout time selection.'"/>
             <Dropdown v-model="selectedTime" :options="dataTimeOptions" optionLabel="label" @change="changeDuration  ">
             </Dropdown>
         </div>
@@ -31,7 +31,10 @@
 
 
 <script>
+    import TimeTooltip from "./components/TimeTooltip";
+
     export default {
+        components: {TimeTooltip},
         created() {
             document.title = "ambalytics analysis streams";
 
@@ -49,7 +52,7 @@
 
             this.$router.options.routes.forEach(route => {
                 this.items.push({
-                    label: route.name,
+                    label: route.label,
                     to: route.path,
                     show: route.show,
                     icon: route.icon
@@ -102,6 +105,7 @@
         th:nth-child(1), td:nth-child(1) {
             width: 60px;
         }
+
         th:nth-child(2), td:nth-child(2) {
             width: 350px;
         }
@@ -458,6 +462,21 @@
             scrollbar-color: $color-main white !important;
             scrollbar-width: thin !important;
         }
+    }
+
+    .source-link {
+        color: $color-main;
+        text-decoration: none;
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(1.4);
+        }
+    }
+
+    .pi.pi-question-circle:hover {
+        cursor: pointer;
+        color: $color-main;
     }
 
     @media only screen and (max-width: 960px) {

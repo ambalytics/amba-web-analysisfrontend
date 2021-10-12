@@ -3,7 +3,7 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Trending
+                    <time-tooltip/>Trending
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
@@ -25,40 +25,40 @@
                     Stats
                 </template>
                 <template #content>
-                    <div class="padding-left">
-                        <h3>Tweet Count</h3>
+                    <div class="padding-left" v-if="!isNaN(tweetCount)">
+                        <h3><time-tooltip/>Tweet Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Publication Count</h3>
+                    <div class="padding-left" v-if="!isNaN(pubCount)">
+                        <h3><time-tooltip/>Publication Count</h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Total Followers Reached</h3>
+                    <div class="padding-left" v-if="!isNaN(totalFollowers)">
+                        <h3><time-tooltip/>Total Followers Reached</h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left">
-                        <h3>Average Score per Tweet</h3>
+                    <div class="padding-left" v-if="!isNaN(scoreSum)">
+                        <h3><time-tooltip/>Average Score per Tweet</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Sentiment</h3>
+                    <div class="padding-left" v-if="!isNaN(sentiment)">
+                        <h3><time-tooltip/>Average Sentiment</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Contains Abstract</h3>
+                    <div class="padding-left" v-if="!isNaN(containsAbstract)">
+                        <h3><time-tooltip/>Average Contains Abstract</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Exclamations</h3>
+                    <div class="padding-left" v-if="!isNaN(exclamations)">
+                        <h3><time-tooltip/>Average Exclamations</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
-                        <h3>Average Questions</h3>
+                    <div class="padding-left" v-if="!isNaN(questions)">
+                        <h3><time-tooltip/>Average Questions</h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left">
+                    <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
                         <h3>Tweet Author Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
                     </div>
@@ -191,13 +191,14 @@
     import AmbaTweet from "../components/AmbaTweet";
     import WordCloud from "../components/WordCloud";
     import StatService from "../services/StatService";
+    import TimeTooltip from "../components/TimeTooltip";
 
     export default {
         name: 'Publications',
-        components: {PublicationChart, MapChart, AmbaTweet, WordCloud},
+        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
-                if (this.$route.query.time !== undefined) {
+                if (to.query.time !== undefined) {
                     this.duration = to.query.time;
                     this.fetchData();
                 } else {
@@ -219,7 +220,7 @@
                         class: "amba rank"
                     },
                     {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
-                    {field: 'year', header: 'Year', sortable: true, numberTemplate: true, noLocale: true},
+                    {field: 'pub_date', header: 'Date', sortable: true, numberTemplate: true, noLocale: true},
                     {
                         field: 'citation_count',
                         header: 'Citation Count',
@@ -472,6 +473,12 @@
                             element.length_avg = Math.round(element.length_avg);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
                             this.totalRecords = element.total_count;
+                            if (!element.pub_date) {
+                                element.pub_date = element.year;
+                            } else {
+                                let d = new Date(element.pub_date);
+                                element.pub_date = d.toLocaleDateString();
+                            }
                         });
                         this.loading = false
                     })
