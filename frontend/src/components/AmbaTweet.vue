@@ -35,9 +35,9 @@
                                 {{ author.name }},
                     </router-link>
                 </span>
-                <div class="abstract special-scrollbar">
-                    {{ abstract }}
-                </div>
+<!--                <div class="abstract special-scrollbar">-->
+<!--                    {{ abstract }}-->
+<!--                </div>-->
             </div>
             <div v-else>
                 <h3>Processed Data</h3>
