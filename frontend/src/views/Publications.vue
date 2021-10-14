@@ -215,6 +215,7 @@
             },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
+                x = Math.round(x * 100) / 100;
                 return x.toLocaleString(); // 'de-De'
             },
             fetchData() {
