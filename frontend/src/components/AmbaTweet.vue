@@ -316,6 +316,7 @@
                 align-content: center;
                 column-gap: 10px;
                 row-gap: 10px;
+                margin-top: 10px;
 
                 div {
                     border-radius: 5px;

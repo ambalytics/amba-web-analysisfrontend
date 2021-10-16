@@ -164,7 +164,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -178,7 +178,7 @@
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -237,11 +237,11 @@
             trendFields: [
                 {label: 'Score', value: 'score'},
                 {label: 'Count', value: 'count'},
-                {label: 'Sentiment', value: 'median_sentiment'},
+                {label: 'Sentiment', value: 'mean_sentiment'},
                 {label: 'Followers', value: 'sum_follower'},
                 {label: 'Contains Abstract', value: 'abstract_difference'},
-                {label: 'Median Age', value: 'median_age'},
-                {label: 'Length', value: 'median_length'},
+                {label: 'Mean Age', value: 'mean_age'},
+                {label: 'Length', value: 'mean_length'},
                 {label: 'Questions', value: 'mean_questions'},
                 {label: 'Exclamations', value: 'mean_exclamations'},
                 {label: 'Bot Rating', value: 'mean_bot_rating'},

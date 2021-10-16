@@ -96,8 +96,8 @@
                         numberTemplate: true
                     },
                     {
-                        field: 'median_sentiment',
-                        header: 'Median Sentiment',
+                        field: 'mean_sentiment',
+                        header: 'Mean Sentiment',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true
@@ -110,15 +110,15 @@
                         numberTemplate: true
                     },
                     {
-                        field: 'median_age',
-                        header: 'median Age',
+                        field: 'mean_age',
+                        header: 'mean Age',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true
                     },
                     {
-                        field: 'median_length',
-                        header: 'median Length',
+                        field: 'mean_length',
+                        header: 'mean Length',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true

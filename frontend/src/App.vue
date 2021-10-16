@@ -492,5 +492,73 @@
             left: -50px;
             min-width: max-content;
         }
+
+        .header-text {
+            display: none;
+        }
+
+        .amba-tweet {
+            .processed-data {
+                width: 100%;
+
+                .values {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+            }
+
+            .rendered-tweet {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 100% !important;
+            }
+        }
+
+        tr > td > span.p-column-title {
+            display: block;
+            font-weight: bold !important;
+            align-self: start;
+            margin: -15px 5px 0 0;
+        }
+
+        .wordCloud {
+            height: 200px !important;
+        }
+
+        .amba.rank {
+            margin-top: 10px;
+        }
+
+        .p-input-icon-left {
+            position: relative !important;
+            right: initial !important;
+            top: initial !important;
+            margin-bottom: 10px;
+        }
+        .p-input-icon-right {
+            position: relative !important;
+            right: initial !important;
+            top: initial !important;
+        }
+
+        table.p-datatable-table td > .wrapper {
+            min-width: 10%;
+            padding: 10px !important;
+        }
+
+        .publication_info_main .p-card-content {
+            height: fit-content;
+        }
+
+        .about-container .about .about-line {
+            height: fit-content !important;
+            min-width: 100px !important;
+            margin: 0.3em !important;
+            flex-direction: column !important;
+            width: 80vw !important;
+        }
+
+        .p-chart {
+            height: 400px;
+        }
     }
 </style>
