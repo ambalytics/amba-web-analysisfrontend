@@ -55,6 +55,8 @@
 
             if (this.type === "line") {
                 this.options = {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     hover: {
                         mode: 'dataset'
                     },
@@ -69,6 +71,7 @@
             if (this.type === "radar") {
                 this.options = {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             labels: {
@@ -123,25 +126,25 @@
                     if (this.type === "radar") {
 
                         let data_this = [
-                            this.mapProfileRange(val['publication']['median_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['publication']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
                             this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
-                            this.mapProfileRange(1 - val['publication']['median_abstract'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(1 - val['publication']['mean_abstract'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
                         ];
 
                         let data_avg = [
                             this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['avg']['median_sentiment'], val['min']['median_sentiment'], val['max']['median_sentiment'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
                             this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
                             this.mapProfileRange(1 - val['avg']['abstract_difference'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
-                            this.mapProfileRange(val['avg']['median_length'], val['min']['median_length'], val['max']['median_length'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
                         ];
 
                         this.loaded = true;

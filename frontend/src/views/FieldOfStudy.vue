@@ -257,8 +257,8 @@
                         numberTemplate: true
                     },
                     {
-                        field: 'median_sentiment',
-                        header: 'Median Sentiment',
+                        field: 'mean_sentiment',
+                        header: 'Mean Sentiment',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true
@@ -271,15 +271,15 @@
                         numberTemplate: true
                     },
                     {
-                        field: 'median_age',
-                        header: 'median Age',
+                        field: 'mean_age',
+                        header: 'mean Age',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true
                     },
                     {
-                        field: 'median_length',
-                        header: 'median Length',
+                        field: 'mean_length',
+                        header: 'mean Length',
                         sortable: true,
                         class: "text-align-right amba",
                         numberTemplate: true
@@ -361,11 +361,11 @@
                 trendFields: [
                     {label: 'Score', value: 'score'},
                     {label: 'Count', value: 'count'},
-                    {label: 'Sentiment', value: 'median_sentiment'},
+                    {label: 'Sentiment', value: 'mean_sentiment'},
                     {label: 'Followers', value: 'sum_follower'},
                     {label: 'Contains Abstract', value: 'abstract_difference'},
-                    {label: 'Median Age', value: 'median_age'},
-                    {label: 'Length', value: 'median_length'},
+                    {label: 'Mean Age', value: 'mean_age'},
+                    {label: 'Length', value: 'mean_length'},
                     {label: 'Questions', value: 'mean_questions'},
                     {label: 'Exclamations', value: 'mean_exclamations'},
                     {label: 'Bot Rating', value: 'mean_bot_rating'},

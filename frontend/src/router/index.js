@@ -39,7 +39,7 @@ const routes = [
         label: 'Fields of Study',
         name: 'fieldsOfStudy',
         show: true,
-        component: () => import(/* webpackChunkName: "FieldsOfStudy" */ '../views/FieldsOfScience')
+        component: () => import(/* webpackChunkName: "FieldsOfStudy" */ '../views/FieldsOfStudy')
     }, {
         path: '/fieldOfStudy/:id',
         label: 'Field of Study',

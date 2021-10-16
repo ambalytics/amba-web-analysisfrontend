@@ -77,38 +77,62 @@
                 <template #title>
                     Stats
                 </template>
-                   <template #content>
+                <template #content>
                     <div class="padding-left" v-if="!isNaN(tweetCount)">
-                        <h3><time-tooltip/>Tweet Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Tweet Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(pubCount)">
-                        <h3><time-tooltip/>Publication Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Publication Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(totalFollowers)">
-                        <h3><time-tooltip/>Total Followers Reached</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Total Followers Reached
+                        </h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
                     <div class="padding-left" v-if="!isNaN(scoreSum)">
-                        <h3><time-tooltip/>Average Score per Tweet</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Score per Tweet
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(sentiment)">
-                        <h3><time-tooltip/>Average Sentiment</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Sentiment
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(containsAbstract)">
-                        <h3><time-tooltip/>Average Contains Abstract</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Contains Abstract
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(exclamations)">
-                        <h3><time-tooltip/>Average Exclamations</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Exclamations
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(questions)">
-                        <h3><time-tooltip/>Average Questions</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Questions
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
