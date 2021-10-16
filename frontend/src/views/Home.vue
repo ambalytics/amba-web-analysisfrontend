@@ -164,7 +164,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -178,7 +178,7 @@
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart :height="200" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
                 </template>
             </Card>
         </div>

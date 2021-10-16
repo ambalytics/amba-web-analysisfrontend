@@ -9,7 +9,7 @@
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart v-if="renderTrendingChart" :height="200" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderTrendingChart" :height="600" title=" " :dateFormat="true"
                                        :rawData="trendOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">
@@ -72,7 +72,7 @@
                     Profile
                 </template>
                 <template #content>
-                    <publication-chart title=" " :rawData="profileData"
+                    <publication-chart title=" " :rawData="profileData" :height="500"
                                        type="radar"></publication-chart>
                 </template>
             </Card>
@@ -136,7 +136,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="200" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderPublicationChart" :height="600" title=" " :dateFormat="true"
                                        :rawData="pubsOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">

@@ -150,7 +150,7 @@
                     Profile
                 </template>
                 <template #content>
-                    <publication-chart title=" " :rawData="profileData"
+                    <publication-chart title=" " :rawData="profileData" :height="500"
                                        type="radar"></publication-chart>
                 </template>
             </Card>
@@ -243,7 +243,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="150" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderPublicationChart" :height="600" title=" " :dateFormat="true"
                                        :rawData="pubOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">
