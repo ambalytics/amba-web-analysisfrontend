@@ -332,16 +332,13 @@
             },
             rowClick(event, extra) {
                 if (event.data.doi) {
-                    let routeData = this.$router.resolve('/publication/' + event.data.doi);
-                    window.open(routeData.href, '_blank');
-                }
-
-                if (event.data.id) {
-                    let routeData = this.$router.resolve('/fieldOfStudy/' + event.data.id);
+                    this.$router.push('/publication/' + event.data.doi)
+                } else if (event.data.id) {
                     if (extra === "Author") {
-                        routeData = this.$router.resolve('/author/' + event.data.id);
+                        this.$router.push('/author/' + event.data.id)
+                    } else {
+                        this.$router.push('/fieldOfStudy/' + event.data.id)
                     }
-                    window.open(routeData.href, '_blank');
                 }
             },
             fetchData() {

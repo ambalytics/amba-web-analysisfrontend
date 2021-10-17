@@ -31,11 +31,23 @@ class StatService {
         return http.get('/stats/progress/value', {params: params});
     }
 
-    progressTrending(field = null, n = 5, duration = "currently") {
+    progressTrending(field = null, n = 5, duration = "currently", dois) {
         if (field === null) {
             field = 'score'
         }
-        return http.get('/stats/progress/trending', {params: {n: n, duration: duration, field: field}});
+
+        let params = new URLSearchParams();
+        params.append("n", n);
+        params.append("duration", duration);
+        params.append("field", field);
+
+        if (dois) {
+            dois.forEach(d => {
+               params.append("dois", d);
+            });
+        }
+
+        return http.get('/stats/progress/trending', {params: params});
     }
 
     newestTweet(mode, doi, id) {
