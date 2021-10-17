@@ -10,7 +10,7 @@
 <!--                    {{ publication.abstract }}-->
 <!--                </template>-->
 <!--                <template #footer>-->
-                    <div style="float:right; width: max-content">
+                    <div style="float:right;">
                         <span style="float:left; font-size: 0.7rem; margin: 0px 5px 0 0; text-align: center;">more information:</span><br>
                         <a class="doi" target="_blank" :href="realUrl"><i style="font-size: 0.8em; margin-right: 3px"
                                                                           class="pi pi-external-link"></i>{{

@@ -2,18 +2,42 @@
     <h2>About <span>ambalytics analysis streams</span><a href="https://github.com/ambalytics" target="_blank"><img
             src="../assets/logo.png"></a></h2>
     <div class="about-container">
+        <div class="help">
+            <img src="../assets/easy_explanation.png">
+            <div>
+                <h3>What we do</h3>
+                <p>When someone publishes a tweet containing an URL linked to a publication we collect this tweet and
+                    link it to it's publication. <br>
+                    Furthermore we than process the tweet to extract features like sentiment or user following. This
+                    allows us to give a value to the tweet called score.
+                    A higher score means that this tweet is of higher value than one with a lower score. Using these
+                    scores we than aggregate the data over a period of time. <br>
+                    This allows us to rank publications over a period of time using our trending algorithm.<br>
+                    The periods of time are:
+                    <br>&nbsp; &nbsp;-&nbsp; currently (last 6h)
+                    <br>&nbsp; &nbsp;-&nbsp; today (last 24h)
+                    <br>&nbsp; &nbsp;-&nbsp; week (last 7 days)
+                    <br>&nbsp; &nbsp;-&nbsp; month (last 30 days)
+                    <br>&nbsp; &nbsp;-&nbsp; year (last 365 days)
+                </p>
+            </div>
+        </div>
         <div class="about">
             <div class="about-line">powered by <a href="https://ambalytics.com/" target="_blank"><img
                     style="margin-bottom: -10px" src="../assets/amba-logo.png"></a></div>
             <div class="about-line">Twitter Data from <a href="https://twitter.com/" target="_blank"><img
                     src="../assets/twitter-logo.svg"></a></div>
             <div class="about-line">Publication Data from <a href="https://crossref.org/" target="_blank"><img
-                    src="../assets/crossref-logo.svg"></a><a href="https://develop.openaire.eu/overview.html" target="_blank"><img
-                    src="../assets/open-aire-logo.png"></a><a href="https://www.semanticscholar.org/product/api" target="_blank"><img
+                    src="../assets/crossref-logo.svg"></a><a href="https://develop.openaire.eu/overview.html"
+                                                             target="_blank"><img
+                    src="../assets/open-aire-logo.png"></a><a href="https://www.semanticscholar.org/product/api"
+                                                              target="_blank"><img
                     src="../assets/semantic_scholar-logo.svg"></a></div>
             <div class="about-line">Source Code<a href="https://github.com/ambalytics" target="_blank"><img
                     src="../assets/repo.png"></a></div>
-            <div class="about-line"><a href="https://github.com/lukasjesche" target="_blank"><img class="logo" src="../assets/logo_lj.png">Lukas Jesche</a>License <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a></div>
+            <div class="about-line"><a href="https://github.com/lukasjesche" target="_blank"><img class="logo"
+                                                                                                  src="../assets/logo_lj.png">Lukas
+                Jesche</a>License <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a></div>
         </div>
     </div>
 </template>
@@ -49,6 +73,37 @@
             margin-bottom: -5px;
         }
     }
+
+    .help {
+        display: flex;
+        border: 3px solid $color-main;
+        border-radius: 5px;
+        margin: 30px 0 0 200px;
+    }
+
+    .help > img {
+        height: 500px;
+    }
+
+    .help > div {
+        width: 300px;
+        padding: 10px;
+    }
+
+    .help > div > p {
+        padding: 10px 5px;
+        margin: 0;
+        text-align: justify;
+        text-justify: inter-word;
+        line-height: 1.2em;
+    }
+
+
+    .help > div > h3 {
+        margin: 0;
+        color: $color-main;
+    }
+
 
     .about-container {
         display: flex;
@@ -94,6 +149,7 @@
                     height: 50px;
                     width: auto;
                 }
+
                 .logo {
                     margin-bottom: -13px;
                     margin-right: 15px;
@@ -106,6 +162,10 @@
     @media only screen and (max-width: 960px) {
         .about-container {
             padding-right: 0;
+            flex-wrap: wrap;
+        }
+        .help {
+            margin: 0;
         }
     }
 </style>
