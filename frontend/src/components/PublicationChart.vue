@@ -60,11 +60,6 @@
                     hover: {
                         mode: 'dataset'
                     },
-                    plugins: {
-                        legend: {
-                            onClick: this.onLineLegendClick
-                        }
-                    }
                 }
             }
 
@@ -100,17 +95,6 @@
                 let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
                 // console.log([minIn, maxIn, number, r]);
                 return r;
-            },
-            onLineLegendClick(e, legendItem, legend) {
-                let index = legendItem.datasetIndex;
-
-                let ci = legend.chart;
-                [
-                    ci.getDatasetMeta(0)
-                ].forEach(function (meta) {
-                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
-                });
-                ci.update();
             }
         },
         watch: {
