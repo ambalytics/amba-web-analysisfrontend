@@ -2,15 +2,32 @@
     <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
         <Card class="table-card">
             <template #title>
-                <time-tooltip/>Trending Publications
+                <time-tooltip/>
+                Trending Publications
+            </template>
+            <template #content>
+                <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
+                          optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
+                <br>
+                <publication-chart :height="600" title=" " :dateFormat="true" :rawData="trendOverTimeData"
+                                   type="line"></publication-chart>
+            </template>
+        </Card>
+    </div>
+    <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
+        <Card class="table-card">
+            <template #title>
+                <time-tooltip/>
+                Trending Publications
             </template>
             <template #content>
                 <div class="p-input-icon-left">
                     <i class="pi pi-search" @click="fetchData"/>
                     <InputText v-model="searchWord" placeholder="Keyword Search" @keydown="search"/>
                 </div>
-                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true" :lazy="true"
-                           :loading="loading" :rowsPerPageOptions="[10, 20, 50]" :sort-order="-1"
+                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true"
+                           :lazy="true"
+                           :loading="loading" :rowsPerPageOptions="[10, 20]" :sort-order="-1"
                            :totalRecords="totalRecords" class="big-table"
                            @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
                            @row-click="rowClick($event)">
@@ -23,7 +40,9 @@
                     <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
                             :key="col.field" :class="col.class">
                         <template v-if="col.numberTemplate" #body="slotProps">
-                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] : localeNumber(slotProps.data[col.field]) }}</div>
+                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
+                                localeNumber(slotProps.data[col.field]) }}
+                            </div>
                         </template>
                     </Column>
                 </DataTable>
@@ -36,10 +55,12 @@
     // top publications
     import PublicationService from "../services/PublicationService";
     import TimeTooltip from "../components/TimeTooltip";
+    import PublicationChart from "../components/PublicationChart";
+    import StatService from "../services/StatService";
 
     export default {
         name: 'Publications',
-        components: {TimeTooltip},
+        components: {TimeTooltip, PublicationChart},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
                 if (to.query.time !== undefined) {
@@ -54,8 +75,15 @@
         data() {
             return {
                 duration: "currently",
+                trendOverTimeData: [],
                 columns: [
-                    {field: 'trending_ranking', header: 'Rank', sortable: false, numberTemplate: false, class: "amba rank"},
+                    {
+                        field: 'trending_ranking',
+                        header: 'Rank',
+                        sortable: false,
+                        numberTemplate: false,
+                        class: "amba rank"
+                    },
                     {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
                     // {field: 'doi', header: 'DOI', sortable: false, numberTemplate: false},
                     {field: 'pub_date', header: 'Date', sortable: true, numberTemplate: true, noLocale: true},
@@ -180,6 +208,27 @@
                 loading: true,
                 searchWord: '',
                 totalRecords: 0,
+                selectedTrendField: 'score',
+                trendFields: [
+                    {label: 'Score', value: 'score'},
+                    {label: 'Count', value: 'count'},
+                    {label: 'Sentiment', value: 'mean_sentiment'},
+                    {label: 'Followers', value: 'sum_follower'},
+                    {label: 'Contains Abstract', value: 'abstract_difference'},
+                    {label: 'Mean Age', value: 'mean_age'},
+                    {label: 'Length', value: 'mean_length'},
+                    {label: 'Questions', value: 'mean_questions'},
+                    {label: 'Exclamations', value: 'mean_exclamations'},
+                    {label: 'Bot Rating', value: 'mean_bot_rating'},
+                    {label: 'Projected Change', value: 'projected_change'},
+                    {label: 'Trending Value', value: 'trending'},
+                    {label: 'ema', value: 'ema'},
+                    {label: 'kama', value: 'kama'},
+                    {label: 'ker', value: 'ker'},
+                    {label: 'Mean Score', value: 'mean_score'},
+                    {label: 'stddev', value: 'stddev'},
+                ],
+                dois: []
             }
         },
         created() {
@@ -218,6 +267,16 @@
                 x = Math.round(x * 100) / 100;
                 return x.toLocaleString(); // 'de-De'
             },
+            loadTrendingProgress() {
+                StatService.progressTrending(this.selectedTrendField, this.lazyParams.rows, this.duration, this.dois)
+                    .then(response => {
+                        this.trendOverTimeData = response.data.results;
+                    })
+                    .catch(e => {
+                        this.trendOverTimeData = [];
+                        console.log(e);
+                    });
+            },
             fetchData() {
                 this.error = this.post = null;
                 this.loading = true;
@@ -225,7 +284,9 @@
                 PublicationService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;
+                        let dois = [];
                         this.data.forEach(element => {
+                            dois.push(element.doi);
                             element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
@@ -237,7 +298,9 @@
                                 element.pub_date = d.toLocaleDateString();
                             }
                         });
-                        this.loading = false
+                        this.dois = dois;
+                        this.loading = false;
+                        this.loadTrendingProgress();
                     })
                     .catch(e => {
                         this.data = [];

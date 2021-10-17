@@ -435,7 +435,7 @@
     }
 
 
-    .scroller .p-card-content, .special-scrollbar {
+    .body {
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -458,7 +458,7 @@
     }
 
     @-moz-document url-prefix('') {
-        .scroller .p-card-content, .special-scrollbar {
+        body {
             scrollbar-color: $color-main white !important;
             scrollbar-width: thin !important;
         }
