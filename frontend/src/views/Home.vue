@@ -6,38 +6,62 @@
                 <template #title>
                     Stats
                 </template>
-               <template #content>
+                <template #content>
                     <div class="padding-left" v-if="!isNaN(tweetCount)">
-                        <h3><time-tooltip/>Tweet Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Tweet Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(pubCount)">
-                        <h3><time-tooltip/>Publication Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Publication Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(totalFollowers)">
-                        <h3><time-tooltip/>Total Followers Reached</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Total Followers Reached
+                        </h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
                     <div class="padding-left" v-if="!isNaN(scoreSum)">
-                        <h3><time-tooltip/>Average Score per Tweet</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Score per Tweet
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(sentiment)">
-                        <h3><time-tooltip/>Average Sentiment</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Sentiment
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(containsAbstract)">
-                        <h3><time-tooltip/>Average Contains Abstract</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Contains Abstract
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(exclamations)">
-                        <h3><time-tooltip/>Average Exclamations</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Exclamations
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(questions)">
-                        <h3><time-tooltip/>Average Questions</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Questions
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
@@ -63,7 +87,8 @@
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card>
                 <template #title>
-                    <time-tooltip/>Trending
+                    <time-tooltip/>
+                    Trending
                 </template>
                 <template #content>
                     <div v-for="item in trendingItems" :key="item.label" class="trending-items">
@@ -158,13 +183,15 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    <time-tooltip/>Top 5 Publications over Time
+                    <time-tooltip/>
+                    Top 5 Publications over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="pubsOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="pubsOverTimeData"
+                                       type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -172,13 +199,15 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    <time-tooltip/>Top 5 Trending over Time
+                    <time-tooltip/>
+                    Top 5 Trending over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="trendOverTimeData" type="line"></publication-chart>
+                    <publication-chart :height="600" title=" " :dateFormat="true" :rawData="trendOverTimeData"
+                                       type="line"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -371,58 +400,63 @@
                 this.loadPubsProgress();
                 this.loadTrendingProgress();
 
-                StatService.top()
-                    .then(response => {
-                        let words = [];
-                        response.data.results.word.forEach((e) => {
-                            let obj = {};
-                            obj.text = e.value;
-                            obj.value = e.count;
-                            words.push(obj)
+                if (!this.renderCloud) {
+                    StatService.top()
+                        .then(response => {
+                            let words = [];
+                            response.data.results.word.forEach((e) => {
+                                let obj = {};
+                                obj.text = e.value;
+                                obj.value = e.count;
+                                words.push(obj)
+                            });
+                            this.words = words;
+                            this.renderCloud = true;
+                        })
+                        .catch(e => {
+                            this.renderCloud = false;
+                            console.log(e);
                         });
-                        this.words = words;
-                        this.renderCloud = true;
-                    })
-                    .catch(e => {
-                        this.renderCloud = false;
-                        console.log(e);
-                    });
+                }
 
-                StatService.top(['location'], null, 1000)
-                    .then(response => {
-                        let c = {};
-                        response.data.results.location.forEach((e) => {
-                            c[e.value.toUpperCase()] = e.count
+                if (!this.renderMap) {
+                    StatService.top(['location'], null, 1000)
+                        .then(response => {
+                            let c = {};
+                            response.data.results.location.forEach((e) => {
+                                c[e.value.toUpperCase()] = e.count
+                            });
+                            this.countries = c;
+                            this.renderMap = true;
+                        })
+                        .catch(e => {
+                            this.renderMap = false;
+                            console.log(e);
                         });
-                        this.countries = c;
-                        this.renderMap = true;
-                    })
-                    .catch(e => {
-                        this.renderMap = false;
-                        console.log(e);
-                    });
+                }
 
+                if (!this.render) {
+                    StatService.percentages()
+                        .then(response => {
+                            this.loading = false;
 
-                StatService.percentages()
-                    .then(response => {
-                        this.loading = false;
+                            let lang = response.data.results.lang.map(e => {
+                                return {
+                                    count: e.count,
+                                    p: e.p,
+                                    value: LanguageDecode.decode(e.value)
+                                }
+                            });
 
-                        let lang = response.data.results.lang.map(e => {
-                            return {
-                                count: e.count,
-                                p: e.p,
-                                value: LanguageDecode.decode(e.value)
-                            }
+                            this.topValues = response.data.results;
+                            this.topValues.lang = lang;
+
+                            this.render = true;
+                        })
+                        .catch(e => {
+                            console.log(e);
                         });
-
-                        this.topValues = response.data.results;
-                        this.topValues.lang = lang;
-
-                        this.render = true;
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                }
 
                 StatService.tweetAuthorCount('publications')
                     .then(response => {
