@@ -343,7 +343,7 @@
         },
         methods: {
             localeNumber: function (x) {
-                if (isNaN(x)) return '-';
+                if (!x || isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
             },
             hover(e) {
