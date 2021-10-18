@@ -372,7 +372,7 @@
                         this.publication['fields_of_study'] = response.data.results['fields_of_study'];
                         this.publication['sources'] = response.data.results['sources'];
                         this.publication.url = 'doi.org/' + this.publication['doi'];
-                        this.trendingRank = response.data.results['trendingRank'];
+                        this.trendingRank = response.data.results['trending_ranking'];
 
                         if (!LicenseCheck.showLicense(this.publication.license)) {
                             this.publication.abstract = false;
