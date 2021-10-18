@@ -35,9 +35,13 @@
                                 {{ author.name }},
                     </router-link>
                 </span>
-<!--                <div class="abstract special-scrollbar">-->
-<!--                    {{ abstract }}-->
-<!--                </div>-->
+                <div class="license">
+                    <a v-if="license && abstract" target="_blank" :href="license"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>License</a>
+                    <a target="_blank" :href="'http://doi.org/' + doi"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>More</a>
+                </div>
+                <div v-if="license && abstract" class="abstract special-scrollbar">
+                    {{ abstract }}
+                </div>
             </div>
             <div v-else>
                 <h3>Processed Data</h3>
@@ -113,6 +117,7 @@
     import LanguageDecode from "../helper/LanguageDecode";
     import LocationDecode from "../helper/LocationDecode";
     // import FieldOfStudyService from "../services/FieldOfStudyService";
+    import LicenseCheck from "../helper/LicenseCheck";
 
     export default {
         name: "AmbaTweet",
@@ -163,6 +168,7 @@
                 length: "",
                 authors: "",
                 entities: [],
+                license: null
             }
         },
         created() {
@@ -184,11 +190,16 @@
             loadNewestTweet() {
                 StatService.newestTweet(this.mode, this.doi_in, this.id_in)
                     .then(r => {
-                        // console.log(r);
                         let response = r.data.results[0].data;
                         this.title = response['title'];
                         this.doi = response['doi'];
-                        this.abstract = response['abstract'];
+                        if (LicenseCheck.showLicense(response['license'])) {
+                            this.abstract = response['abstract'];
+                            this.license = response['license'];
+                        } else {
+                            this.abstract = false;
+                            this.license = false;
+                        }
                         this.tweetId = response['sub_id'];
                         this.created_at = response['created_at'];
                         this.score = response['score'];
@@ -302,11 +313,27 @@
                 font-size: 0.8em;
             }
 
+            .license {
+                margin: 10px 0 0 0;
+                display: flex;
+                justify-content: space-between;
+
+                a {
+                    font-size: 0.9em;
+                    text-decoration: none;
+                    color: $color-main;
+
+                    &:hover {
+                        color: black;
+                    }
+                }
+            }
+
             .abstract {
                 font-size: 1.2em;
                 max-height: 200px;
                 overflow-y: auto;
-                margin: 20px 0 30px 0;
+                margin: 5px 0 15px 0;
             }
 
             .values {

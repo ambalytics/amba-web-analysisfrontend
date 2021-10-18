@@ -561,4 +561,17 @@
             height: 400px;
         }
     }
+
+    .license {
+        a {
+            font-size: 0.9em;
+            text-decoration: none;
+            color: $color-main;
+
+            &:hover {
+                color: black;
+            }
+        }
+    }
+
 </style>
