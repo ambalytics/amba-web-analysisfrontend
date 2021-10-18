@@ -7,11 +7,15 @@
                     {{ publication.title }}
                 </template>
                 <template #content>
-<!--                    {{ publication.abstract }}-->
-<!--                </template>-->
-<!--                <template #footer>-->
-                    <div style="float:right;">
-                        <span style="float:left; font-size: 0.7rem; margin: 0px 5px 0 0; text-align: center;">more information:</span><br>
+                    <div class="license" style="margin-bottom: 5px;">
+                        <a v-if="publication.license && publication.abstract"
+                           target="_blank" :href="publication.license"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>License</a>
+                    </div>
+                    <div v-if="publication.license && publication.abstract" class="abstract special-scrollbar">
+                        {{ publication.abstract }}
+                    </div>
+                    <div style="float:right; padding-top: 20px;">
+                        <span style="float:left; font-size: 0.7rem; margin: 20px 5px 0 0; text-align: center;">more information:</span><br>
                         <a class="doi" target="_blank" :href="realUrl"><i style="font-size: 0.8em; margin-right: 3px"
                                                                           class="pi pi-external-link"></i>{{
                             publication.url
@@ -78,19 +82,19 @@
                     Stats
                 </template>
                 <template #content>
+                    <div class="padding-left" v-if="!isNaN(trendingRank)">
+                        <h3>
+                            <time-tooltip/>
+                            Trending Rank
+                        </h3>
+                        <p class="padding-left">{{ localeNumber(trendingRank)}}</p>
+                    </div>
                     <div class="padding-left" v-if="!isNaN(tweetCount)">
                         <h3>
                             <time-tooltip/>
                             Tweet Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
-                    </div>
-                    <div class="padding-left" v-if="!isNaN(pubCount)">
-                        <h3>
-                            <time-tooltip/>
-                            Publication Count
-                        </h3>
-                        <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(totalFollowers)">
                         <h3>
@@ -278,6 +282,7 @@
     import StatService from "../services/StatService";
     import AmbaTweet from "../components/AmbaTweet";
     import TimeTooltip from "../components/TimeTooltip";
+    import LicenseCheck from "../helper/LicenseCheck";
 
     export default {
         name: 'Publication',
@@ -300,7 +305,6 @@
             words: [],
             renderCloud: false,
             renderMap: false,
-            pubCount: '-',
             tweetCount: '-',
             scoreSum: '-',
             totalFollowers: '-',
@@ -314,6 +318,7 @@
             pubOverTimeData: [],
             renderPublicationChart: true,
             selectedPubField: 'score',
+            trendingRank: '-',
             pubFields: [
                 {label: 'Bot Rating', value: 'bot_rating'},
                 {label: 'Contains Abstract', value: 'contains_abstract_raw'},
@@ -367,6 +372,12 @@
                         this.publication['fields_of_study'] = response.data.results['fields_of_study'];
                         this.publication['sources'] = response.data.results['sources'];
                         this.publication.url = 'doi.org/' + this.publication['doi'];
+                        this.trendingRank = response.data.results['trendingRank'];
+
+                        if (!LicenseCheck.showLicense(this.publication.license)) {
+                            this.publication.abstract = false;
+                            this.publication.license = false;
+                        }
                         // console.log(this.publication);
                     })
                     .catch(e => {
@@ -381,7 +392,6 @@
                         this.scoreSum = response.data.results['score'];
                         this.containsAbstract = response.data.results['contains_abstract_raw'];
                         this.sentiment = response.data.results['sentiment_raw'];
-                        this.pubCount = response.data.results['pub_count'];
                         this.questions = response.data.results['questions'];
                         this.exclamations = response.data.results['exclamations'];
                     })
@@ -392,7 +402,6 @@
                         this.scoreSum = '-';
                         this.containsAbstract = '-';
                         this.sentiment = '-';
-                        this.pubCount = '-';
                         this.questions = '-';
                         this.exclamations = '-';
                     });
@@ -493,8 +502,8 @@
     }
 
     .publication_info_main {
-        .p-card-content {
-            height: 550px;
+        .abstract {
+            height: 620px;
             overflow-y: auto;
             text-align: justify;
             padding-right: 10px;
