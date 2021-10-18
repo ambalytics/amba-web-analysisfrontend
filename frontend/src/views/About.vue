@@ -6,12 +6,12 @@
             <img src="../assets/easy_explanation.png">
             <div>
                 <h3>What we do</h3>
-                <p>When someone publishes a tweet containing an URL linked to a publication we collect this tweet and
-                    link it to it's publication. <br>
-                    Furthermore we than process the tweet to extract features like sentiment or user following. This
-                    allows us to give a value to the tweet called score.
-                    A higher score means that this tweet is of higher value than one with a lower score. Using these
-                    scores we than aggregate the data over a period of time. <br>
+                <p>When someone publishes a tweet containing a URL linked to a publication, we collect this tweet and
+                    link it to its publication.<br>
+                    Furthermore, we then process the tweet to extract features like sentiment or user following. This
+                    allows us to give a value to the tweet called score. A higher score means that this tweet is of
+                    higher value than one with a lower score. Using these scores, we then aggregate the data over a
+                    period of time.<br>
                     This allows us to rank publications over a period of time using our trending algorithm.<br>
                     The periods of time are:
                     <br>&nbsp; &nbsp;-&nbsp; currently (last 6h)
