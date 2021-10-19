@@ -9,7 +9,7 @@ Publications.vue
             <template #content>
                 <div class="p-input-icon-left">
                     <i class="pi pi-search" @click="fetchData"/>
-                    <InputText v-model="searchWord" placeholder="Keyword Search" @keydown="search"/>
+                    <InputText v-model="searchWord" placeholder="Name Search" @keydown="search"/>
                 </div>
                 <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true"
                            :lazy="true"
@@ -83,96 +83,80 @@ Publications.vue
                         field: 'score',
                         header: 'Score',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio1",
                         numberTemplate: true
-                    },
-                    {
-                        field: 'projected_change',
-                        header: 'Projected Change',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'the expected score change to the next window using Holt-Winters forecasting',
-                        classHelp: 'negative-margin-left'
-                    },
-                    {
-                        field: 'count',
-                        header: 'Tweet Count',
-                        sortable: true,
-                        class: "text-align-right  amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'sum_followers',
-                        header: 'Follower reached',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_sentiment',
-                        header: 'Mean Sentiment',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'abstract_difference',
-                        header: 'Abstract Difference',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_age',
-                        header: 'mean Age',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'in hours'
-                    },
-                    {
-                        field: 'mean_length',
-                        header: 'mean Length',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_questions',
-                        header: 'mean "?"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_exclamations',
-                        header: 'mean "!"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_bot_rating',
-                        header: 'mean Bot Rating',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'higher is better'
                     },
                     {
                         field: 'trending',
                         header: 'trending',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio1",
                         numberTemplate: true,
                         help: 'slope of the mann kendall yue wang modification trending result'
                     },
                     {
+                        field: 'count',
+                        header: 'Tweet Count',
+                        sortable: true,
+                        class: "text-align-right  amba prio1",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'sum_followers',
+                        header: 'Followers reached',
+                        sortable: true,
+                        class: "text-align-right wider amba prio2",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'mean_sentiment',
+                        header: 'Mean Sentiment',
+                        sortable: true,
+                        class: "text-align-right amba prio2",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'abstract_difference',
+                        header: 'Abstract Difference',
+                        sortable: true,
+                        class: "text-align-right amba prio2",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'mean_age',
+                        header: 'mean Age',
+                        sortable: true,
+                        class: "text-align-right amba prio2",
+                        numberTemplate: true,
+                        help: 'in hours'
+                    },
+                    {
+                        field: 'projected_change',
+                        header: 'Projected Change',
+                        sortable: true,
+                        class: "text-align-right amba prio2",
+                        numberTemplate: true,
+                        help: 'the expected score change to the next window using Holt-Winters forecasting',
+                        classHelp: 'negative-margin-left'
+                    },
+                    {
+                        field: 'mean_bot_rating',
+                        header: 'mean Bot Rating',
+                        sortable: true,
+                        class: "text-align-right amba prio2",
+                        numberTemplate: true,
+                        help: 'higher is better'
+                    },
+
+                    {
                         field: 'ema',
                         header: 'ema',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio3",
                         numberTemplate: true,
                         help: 'exponential moving average'
                     },
@@ -180,25 +164,56 @@ Publications.vue
                         field: 'kama',
                         header: 'kama',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio3",
                         numberTemplate: true,
                         help: 'Kaufman’s Adaptive Moving Average'
                     },
-                    {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true},
+                    {
+                        field: 'ker',
+                        header: 'ker',
+                        sortable: true,
+                        class: "text-align-right amba prio3",
+                        numberTemplate: true,
+                        help: 'Kaufman’s Efficiency Ratio'
+                    },
                     {
                         field: 'mean_score',
                         header: 'mean Score',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio3",
                         numberTemplate: true
                     },
                     {
                         field: 'stddev',
                         header: 'stddev',
                         sortable: true,
-                        class: "text-align-right amba",
+                        class: "text-align-right amba prio3",
                         numberTemplate: true,
                         help: 'standard deviation of non-null records'
+                    },
+                    {
+                        field: 'mean_length',
+                        header: 'mean Length',
+                        sortable: true,
+                        class: "text-align-right amba prio4",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'mean_questions',
+                        header: 'mean "?"',
+                        sortable: true,
+                        class: "text-align-right amba prio4",
+                        numberTemplate: true,
+                        help: false
+                    },
+                    {
+                        field: 'mean_exclamations',
+                        header: 'mean "!"',
+                        sortable: true,
+                        class: "text-align-right amba prio4",
+                        numberTemplate: true,
+                        help: false
                     },
                 ],
                 lazyParams: {},

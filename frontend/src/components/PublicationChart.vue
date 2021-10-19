@@ -60,6 +60,58 @@
                     hover: {
                         mode: 'dataset'
                     },
+                    plugins: {
+                        events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+                        legend: {
+                            onClick: (evt, item, legend) => {
+                                // console.log(evt);
+                                // console.log(item);
+                                // console.log(legend);
+                                const chart = legend.chart;
+                                // const chartArea = chart.chartArea;
+                                // console.log(chart.getDatasetMeta(item.datasetIndex).data[0].options.borderWidth);
+
+                                if (chart.getDatasetMeta(item.datasetIndex).data[0].options.borderWidth > 3) {
+                                    this.$router.push('/publication/' + item.text)
+                                }
+
+                                chart.setActiveElements([{
+                                    datasetIndex: item.datasetIndex,
+                                    index: 0
+                                }]);
+
+                                // const tooltip = chart.tooltip;
+                                // tooltip.setActiveElements([{
+                                //     datasetIndex: item.datasetIndex,
+                                //     index: 0,
+                                // }], {
+                                //     x: (chartArea.left + chartArea.right) / 2,
+                                //     y: (chartArea.top + chartArea.bottom) / 2,
+                                // });
+
+                                // var meta = c.getDatasetMeta(0),
+                                //     rect = c.canvas.getBoundingClientRect(),
+                                //     point = meta.data[item.datasetIndex].getCenterPoint(),
+                                //     evt1 = new MouseEvent('mousemove', {
+                                //         clientX: rect.left + point.x,
+                                //         clientY: rect.top + point.y
+                                //     }),
+                                //     node = c.canvas;
+                                // console.log(evt1);
+                                // node.dispatchEvent(evt1);
+                                // item.element = null
+                                // chart.updateHoverStyle(
+                                //     [item],
+                                //     'dataset', true);
+
+
+                                // console.log([item.element, item.datasetIndex, item.index])
+
+                                chart.render();
+                                // chart.update();
+                            },
+                        },
+                    }
                 }
             }
 
@@ -83,7 +135,8 @@
                                 color: '#ebedef',
                             },
                             angleLines: {
-                                color: '#ebedef'
+                                color: ['#0F6364', '#67002E', '#67002E', '#E6B24B', '#E6B24B', '#E6B24B', '#E6B24B', '#E6B24B'],
+                                lineWidth: 2
                             }
                         }
                     }
@@ -108,13 +161,13 @@
 
                 if (val && (val.length > 0 || this.type === "radar")) {
                     if (this.type === "radar") {
-
+                        val = val[0];
                         let data_this = [
                             this.mapProfileRange(val['publication']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
                             this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
-                            this.mapProfileRange(1 - val['publication']['mean_abstract'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
+                            this.mapProfileRange(val['publication']['mean_abstract'],  val['max']['abstract_difference'],  val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
@@ -123,9 +176,9 @@
                         let data_avg = [
                             this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
                             this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
-                            this.mapProfileRange(1 - val['avg']['abstract_difference'], 1 - val['max']['abstract_difference'], 1 - val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['avg']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
+                            this.mapProfileRange(val['avg']['abstract_difference'], val['max']['abstract_difference'], val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
@@ -133,7 +186,7 @@
 
                         this.loaded = true;
                         this.chartData = {
-                            labels: ['Score', 'Bot Percentage', 'Sentiment', 'Follower', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
+                            labels: ['Score', 'Bot Percentage', 'Follower', 'Sentiment', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
                             datasets: [
                                 {
                                     label: 'average Publication',
@@ -258,9 +311,9 @@
                                 borderWidth: 3,
                                 hoverBorderWidth: 5,
                                 data: data,
-                                pointRadius: 2,
+                                pointRadius: 1,
                                 pointHoverRadius: 2,
-                                pointHoverBorderWidth: 5,
+                                pointHoverBorderWidth: 3,
                                 order: colors.length - 1 - i,
                                 tension: 0.2
                             });

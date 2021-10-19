@@ -1,15 +1,29 @@
 <template>
     <div class="p-grid">
+
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
+            <Card class="table-card">
+                <template #title>
+                    Trending {{ authorName }}
+                </template>
+                <template #content>
+                    <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading" :totalRecords="totalRecords"
+                                           @page="onPage($event)" @sort="onSort($event)">
+                    </TrendingPublicationsTable>
+                </template>
+            </Card>
+        </div>
+
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Trending
+                    <time-tooltip/>Trending over Time by Ambalytics Trends
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadTrendingProgress"/>
                     <br>
-                    <publication-chart v-if="renderTrendingChart" :height="600" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderTrendingChart" :height="500" title=" " :dateFormat="true"
                                        :rawData="trendOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">
@@ -26,37 +40,47 @@
                 </template>
                 <template #content>
                     <div class="padding-left" v-if="!isNaN(tweetCount)">
-                        <h3><time-tooltip/>Tweet Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Tweet Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(pubCount)">
-                        <h3><time-tooltip/>Publication Count</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Publication Count
+                        </h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(totalFollowers)">
-                        <h3><time-tooltip/>Total Followers Reached</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Total Followers Reached
+                        </h3>
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
                     <div class="padding-left" v-if="!isNaN(scoreSum)">
-                        <h3><time-tooltip/>Average Score per Tweet</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Score per Tweet
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(sentiment)">
-                        <h3><time-tooltip/>Average Sentiment</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
+                        <h3>
+                            <time-tooltip/>
+                            Average Sentiment
+                        </h3>
+                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(containsAbstract)">
-                        <h3><time-tooltip/>Average Contains Abstract</h3>
+                        <h3>
+                            <time-tooltip/>
+                            Average Contains Abstract
+                        </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
-                    </div>
-                    <div class="padding-left" v-if="!isNaN(exclamations)">
-                        <h3><time-tooltip/>Average Exclamations</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
-                    </div>
-                    <div class="padding-left" v-if="!isNaN(questions)">
-                        <h3><time-tooltip/>Average Questions</h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
                         <h3>Tweet Author Count</h3>
@@ -78,42 +102,34 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
-            <Card class="table-card">
+         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card>
                 <template #title>
-                    Trending {{ authorName }}
+                    Tweet Author Locations
                 </template>
                 <template #content>
-                    <div class="p-input-icon-left">
-                        <i class="pi pi-search" @click="fetchData"/>
-                        <InputText v-model="searchWord" placeholder="Keyword Search" @keydown="search"/>
+                    <MapChart v-if="renderMap" :countryData="countries"/>
+                    <div v-else class="no-data">
+                        - no data available -
                     </div>
-                    <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows"
-                               :rowHover="true"
-                               :lazy="true"
-                               :loading="loading" :rowsPerPageOptions="[10, 20, 50]" :sort-order="- 1"
-                               :totalRecords="totalRecords" class="big-table"
-                               @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
-                               @row-click="rowClick($event)">
-                        <template #empty>
-                            No Publications found.
-                        </template>
-                        <template #loading>
-                            Loading Publications data. Please wait.
-                        </template>
-                        <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                                :key="col.field" :class="col.class">
-                            <template v-if="col.numberTemplate" #body="slotProps">
-                                <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
-                                    localeNumber(slotProps.data[col.field]) }}
-                                </div>
-                            </template>
-                        </Column>
-                    </DataTable>
                 </template>
             </Card>
         </div>
 
+
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
+            <Card>
+                <template #title>
+                    Tweet Content Word Cloud
+                </template>
+                <template #content>
+                    <word-cloud ref="worldCloud" v-if="renderCloud" :data="words"></word-cloud>
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
+                </template>
+            </Card>
+        </div>
 
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
@@ -130,13 +146,13 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Publications over Time
+                    Publications over Time by Twitter Activity
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="600" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderPublicationChart" :height="700" title=" " :dateFormat="true"
                                        :rawData="pubsOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">
@@ -146,40 +162,6 @@
             </Card>
         </div>
 
-
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card>
-                <template #title>
-                    Authors
-                </template>
-                <template #content>
-                    <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364"
-                              lowColor="#E6B24B"
-                              countryStrokeColor="#eee"
-                              defaultCountryFillColor="#fff"
-                    />
-                    <div v-else class="no-data">
-                        - no data available -
-                    </div>
-                </template>
-            </Card>
-        </div>
-
-
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
-            <Card>
-                <template #title>
-                    Words
-                </template>
-                <template #content>
-                    <word-cloud ref="worldCloud" v-if="renderCloud" :data="words"></word-cloud>
-                    <div v-else class="no-data">
-                        - no data available -
-                    </div>
-                </template>
-            </Card>
-        </div>
     </div>
 </template>
 
@@ -192,10 +174,11 @@
     import WordCloud from "../components/WordCloud";
     import StatService from "../services/StatService";
     import TimeTooltip from "../components/TimeTooltip";
+    import TrendingPublicationsTable from "../components/TrendingPublicationsTable";
 
     export default {
         name: 'Publications',
-        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip},
+        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip, TrendingPublicationsTable},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
                 if (to.query.time !== undefined) {
@@ -211,131 +194,6 @@
             return {
                 duration: "currently",
                 authorName: '',
-                columns: [
-                    {
-                        field: 'trending_ranking',
-                        header: 'Rank',
-                        sortable: false,
-                        numberTemplate: false,
-                        class: "amba rank"
-                    },
-                    {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
-                    {field: 'pub_date', header: 'Date', sortable: true, numberTemplate: true, noLocale: true},
-                    {
-                        field: 'citation_count',
-                        header: 'Citation Count',
-                        sortable: true,
-                        class: "text-align-right",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'score',
-                        header: 'Score',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'projected_change',
-                        header: 'Projected Change',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'count',
-                        header: 'Tweet Count',
-                        sortable: true,
-                        class: "text-align-right  amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'sum_followers',
-                        header: 'Follower reached',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_sentiment',
-                        header: 'Mean Sentiment',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'abstract_difference',
-                        header: 'Abstract Difference',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_age',
-                        header: 'mean Age',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_length',
-                        header: 'mean Length',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_questions',
-                        header: 'mean "?"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_exclamations',
-                        header: 'mean "!"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'mean_bot_rating',
-                        header: 'mean Bot Rating',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'trending',
-                        header: 'trending',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {field: 'ema', header: 'ema', sortable: true, class: "text-align-right amba", numberTemplate: true},
-                    {
-                        field: 'kama',
-                        header: 'kama',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true},
-                    {
-                        field: 'mean_score',
-                        header: 'mean Score',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'stddev',
-                        header: 'stddev',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                ],
                 lazyParams: {},
                 data: [],
                 loading: true,
@@ -433,10 +291,9 @@
                         console.log(e);
                     });
             },
-            search(e) {
-                if (e.keyCode === 13) {
-                    this.fetchData();
-                }
+            search(event) {
+                this.searchWord = event;
+                this.fetchData();
             },
             onPage(event) {
                 this.lazyParams = event;
@@ -445,9 +302,6 @@
             onSort(event) {
                 this.lazyParams = event;
                 this.fetchData();
-            },
-            rowClick(event) {
-                this.$router.push('/publication/' + event.data.doi)
             },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
@@ -469,11 +323,18 @@
                     .then(response => {
                         this.data = response.data.results;
                         this.data.forEach(element => {
-                            element.score = Math.round(element.score);
+                               element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);
+                            element.projected_change = Math.round(element.projected_change);
+                            element.mean_age = Math.round(element.mean_age / 3600 * 10) / 10;
+                            element.mean_length = Math.round(element.mean_length);
+                            element.ema = Math.round(element.ema);
+                            element.kama = Math.round(element.kama);
+                            element.mean_score = Math.round(element.mean_score);
+                            element.stddev = Math.round(element.stddev);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
-                            this.totalRecords = element.total_count;
-                             if (!element.pub_date) {
+                            this.totalRecords = element.total_count ? element.total_count : 0;
+                            if (!element.pub_date) {
                                 element.pub_date = element.year;
                             } else {
                                 let d = new Date(element.pub_date);
@@ -516,7 +377,7 @@
 
                 AuthorService.profileData(this.$route.params.id, this.duration)
                     .then(response => {
-                        this.profileData = response.data.results;
+                        this.profileData = [response.data.results];
                     })
                     .catch(e => {
                         console.log(e);

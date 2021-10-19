@@ -1,80 +1,106 @@
 <template>
     <div class="p-grid">
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3 publication_info_main scroller">
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6 publication_info_main scroller">
             <Card>
                 <template #title>
                     {{ publication.title }}
                 </template>
                 <template #content>
-                    <div class="license" style="margin-bottom: 5px;">
-                        <a v-if="publication.license && publication.abstract"
-                           target="_blank" :href="publication.license"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>License</a>
+                    <div class="content">
+                        <div class="authors">
+                            <span v-for="author in publication.authors" v-bind:key="author">
+                                <router-link :to="{ name: 'author', params: { id: author.id }}" class="source-link">
+                                            {{ author.name }},
+                                </router-link>
+                            </span>
+                        </div>
+
+
+                        <div v-if="publication.license && publication.abstract" class="abstract special-scrollbar">
+                            {{ publication.abstract }}
+                        </div>
+
+                        <div class="license" style="margin-bottom: 5px;">
+                            <a v-if="publication.license && publication.abstract"
+                               style="font-size: 1rem; float: left;"
+                               target="_blank" :href="publication.license"><i
+                                    style="font-size: 0.8em; margin-right: 0.3em"
+                                    class="pi pi-external-link"></i>License</a>
+                        </div>
+
+                        <div>
+                            <a class="doi" target="_blank" :href="realUrl">
+                                <i class="pi pi-external-link" style="font-size: 0.8em; margin-right: 0.3em"></i>
+                                go to source
+                            </a>
+                        </div>
                     </div>
-                    <div v-if="publication.license && publication.abstract" class="abstract special-scrollbar">
-                        {{ publication.abstract }}
-                    </div>
-                    <div style="float:right; padding-top: 20px;">
-                        <span style="float:left; font-size: 0.7rem; margin: 20px 5px 0 0; text-align: center;">more information:</span><br>
-                        <a class="doi" target="_blank" :href="realUrl"><i style="font-size: 0.8em; margin-right: 3px"
-                                                                          class="pi pi-external-link"></i>{{
-                            publication.url
-                            }}</a>
+
+                    <div class="metatdata">
+                        <table class="info">
+                            <tr>
+                                <td><h4>DOI:</h4></td>
+                                <td>{{ publication.doi }}</td>
+                            </tr>
+                            <tr>
+                                <td><h4>Date:</h4></td>
+                                <td>{{ !!publication.pub_date ? dateFormat(publication.pub_date) : publication.year }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h4>Type:</h4></td>
+                                <td>{{ typeString(publication.type) }}</td>
+                            </tr>
+                            <tr>
+                                <td><h4>Publisher:</h4></td>
+                                <td>{{ publication.publisher }}</td>
+                            </tr>
+                            <tr>
+                                <td><h4>Citation Count:</h4></td>
+                                <td>{{ publication.citation_count }}</td>
+                            </tr>
+                        </table>
+
+                        <h4>Field of Study:</h4>
+                        <ul class="subjects">
+                            <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
+                                <router-link :to="{ name: 'fieldOfStudy', params: { id: subject.id }}"
+                                             class="source-link">
+                                    {{ subject.name }}
+                                </router-link>
+                            </li>
+                        </ul>
+
+
+                        <h4>Meta Data Sources:</h4>
+                        <ul class="sources">
+                            <li v-for="subject in publication.sources" v-bind:key="subject.title"
+                                v-bind:class="{ hidden: subject.title === 'DB' }">
+                                <a class="source-link" target="_blank" :href="subject.url"><i
+                                        style="font-size: 0.8em; margin-right: 0.3em"
+                                        class="pi pi-external-link"></i>{{ subject.title === 'Amba' ?
+                                    'Ambalytics' : subject.title }}</a>
+                            </li>
+                        </ul>
                     </div>
                 </template>
             </Card>
         </div>
+
 
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card class="side">
+            <Card>
                 <template #title>
-                    Information
+                    Profile
                 </template>
                 <template #content>
-                    <table class="info">
-                        <tr>
-                            <td><h4>Date:</h4></td>
-                            <td>{{ !!publication.pub_date ? dateFormat(publication.pub_date) : publication.year }}</td>
-                        </tr>
-                        <tr>
-                            <td><h4>Type:</h4></td>
-                            <td>{{ typeString(publication.type) }}</td>
-                        </tr>
-                        <tr>
-                            <td><h4>Publisher:</h4></td>
-                            <td>{{ publication.publisher }}</td>
-                        </tr>
-                    </table>
-
-                    <h4>Authors:</h4>
-                    <ul class="authors special-scrollbar">
-                        <li v-for="author in publication.authors" v-bind:key="author.name">
-                            <router-link :to="{ name: 'author', params: { id: author.id }}" class="source-link">
-                                {{ author.name }}
-                            </router-link>
-                        </li>
-                    </ul>
-
-                    <h4>Subjects:</h4>
-                    <ul class="subjects">
-                        <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
-                            <router-link :to="{ name: 'author', params: { id: subject.id }}" class="source-link">
-                                {{ subject.name }}
-                            </router-link>
-                        </li>
-                    </ul>
-
-
-                    <h4>Sources:</h4>
-                    <ul class="sources">
-                        <li v-for="subject in publication.sources" v-bind:key="subject.title"
-                            v-bind:class="{ hidden: subject.title === 'DB' }">
-                            <a class="source-link" target="_blank" :href="subject.url">{{ subject.title }}</a>
-                        </li>
-                    </ul>
+                    <publication-chart title=" " :rawData="profileData" :height="500"
+                                       type="radar"></publication-chart>
                 </template>
             </Card>
         </div>
+
 
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card class="stats">
@@ -116,7 +142,7 @@
                             <time-tooltip/>
                             Average Sentiment
                         </h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(containsAbstract)">
                         <h3>
@@ -124,20 +150,6 @@
                             Average Contains Abstract
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
-                    </div>
-                    <div class="padding-left" v-if="!isNaN(exclamations)">
-                        <h3>
-                            <time-tooltip/>
-                            Average Exclamations
-                        </h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
-                    </div>
-                    <div class="padding-left" v-if="!isNaN(questions)">
-                        <h3>
-                            <time-tooltip/>
-                            Average Questions
-                        </h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(tweetAuthorCount)">
                         <h3>Tweet Author Count</h3>
@@ -147,31 +159,13 @@
             </Card>
         </div>
 
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Profile
-                </template>
-                <template #content>
-                    <publication-chart title=" " :rawData="profileData" :height="500"
-                                       type="radar"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
                 <template #title>
-                    Authors
+                    Tweet Author Locations
                 </template>
                 <template #content>
-                    <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364"
-                              lowColor="#E6B24B"
-                              countryStrokeColor="#eee"
-                              defaultCountryFillColor="#fff"
-                    />
+                    <MapChart v-if="renderMap" :countryData="countries"/>
                     <div v-else class="no-data">
                         - no data available -
                     </div>
@@ -183,7 +177,7 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
             <Card>
                 <template #title>
-                    Words
+                    Tweet Content Word Cloud
                 </template>
                 <template #content>
                     <word-cloud ref="worldCloud" v-if="renderCloud" :data="words"></word-cloud>
@@ -194,54 +188,10 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Entities
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['entity']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Types
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Hashtags
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['hashtag']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Languages
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['lang']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Publication over Time
+                    Publication over Time by Twitter Activity
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
@@ -265,6 +215,50 @@
                 <template #content>
                     <AmbaTweet :doi_in="$route.params.p">
                     </AmbaTweet>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Twitter Entities
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['entity']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Tweet Types
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Hashtags
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['hashtag']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Languages
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['lang']"></publication-chart>
                 </template>
             </Card>
         </div>
@@ -449,7 +443,7 @@
 
                 StatService.profileData(this.$route.params.p, this.duration)
                     .then(response => {
-                        this.profileData = response.data.results;
+                        this.profileData = [response.data.results];
                     })
                     .catch(e => {
                         console.log(e);
@@ -491,52 +485,66 @@
 
     a.doi {
         float: right;
-        font-family: 'Courier New', monospace;
         color: $color-main;
         text-decoration: none;
 
         &:hover {
-            font-weight: 700;
-            /*<!--letter-spacing: -0.4px;-->*/
+            color: black;
         }
     }
 
-    .publication_info_main {
+    .publication_info_main .p-card-content {
+        display: flex;
+        justify-content: space-between;
+
+        .content {
+            width: 50%;
+        }
+
+        .metatdata {
+            width: calc(50% - 3em);
+
+            h4 {
+                margin: 0.4em 0 0.3em 2px;
+            }
+
+            ul {
+                margin: 0;
+                list-style-type: none;
+            }
+
+            li {
+                padding: 0.2em 0;
+            }
+        }
+
         .abstract {
-            height: 620px;
+            max-height: 620px;
             overflow-y: auto;
             text-align: justify;
             padding-right: 10px;
-        }
-    }
-
-
-    .info {
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #fff;
-        width: 100%;
-
-        h4 {
-            margin: 5px 0;
-        }
-    }
-
-    .side {
-
-        li {
-            padding: 5px 0;
+            margin: 1em 0;
         }
 
-        ul.authors {
-            max-height: 300px;
-            overflow-y: auto;
+        .info {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+
+            td {
+                padding: 0;
+            }
+
+            h4 {
+                margin: 0.4em 0 0.3em 0;
+            }
+        }
+
+        .authors {
+            font-style: italic;
         }
 
     }
 
-    .hidden {
-        display: none;
-    }
 
 </style>

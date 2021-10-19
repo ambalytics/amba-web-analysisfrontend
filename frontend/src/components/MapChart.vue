@@ -48,7 +48,7 @@
         min: 0,
         max: 0,
         resolution: 100,
-        barData: ["#fde2e2", "#d83737"]
+        barData: ["#E6B24B", "#0f6364"]
     };
 
     export default {
@@ -62,11 +62,11 @@
         props: {
             lowColor: {
                 type: String,
-                default: "#fde2e2"
+                default: "#E6B24B"
             },
             highColor: {
                 type: String,
-                default: "#d83737"
+                default: "#0f6364"
             },
             chromaScaleOn: {
                 type: Boolean,
@@ -78,11 +78,11 @@
             },
             defaultCountryFillColor: {
                 type: String,
-                default: "#dadada"
+                default: "#ccc"
             },
             countryStrokeColor: {
                 type: String,
-                default: "#909090"
+                default: "#fff"
             },
             legendHeaderBackgroundColor: {
                 type: String,
@@ -160,6 +160,11 @@
             }
         },
         mounted() {
+            this.$data.node.id = 'map-style';
+            console.log(this.$data.node)
+            if (document.getElementById(this.$data.node.id)) {
+                document.getElementById(this.$data.node.id).remove();
+            }
             document.body.appendChild(this.$data.node);
             this.renderMapCSS();
         }

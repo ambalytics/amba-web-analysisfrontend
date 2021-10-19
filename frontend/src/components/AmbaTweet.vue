@@ -29,18 +29,25 @@
                 <h3 class="title">{{ title }}</h3>
                 <i class="pi pi-link">{{ doi }}</i>
             </router-link>
-            <div v-if="!doi_in" class="authors">
-                <span v-for="author in authors" v-bind:key="author">
-                    <router-link :to="{ name: 'author', params: { id: author.id }}" class="source-link">
-                                {{ author.name }},
-                    </router-link>
-                </span>
-                <div class="license">
-                    <a v-if="license && abstract" target="_blank" :href="license"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>License</a>
-                    <a target="_blank" :href="'http://doi.org/' + doi"><i style="font-size: 0.8em; margin-right: 3px" class="pi pi-external-link"></i>More</a>
+            <div v-if="!doi_in">
+                <div class="authors">
+                    <span v-for="author in authors" v-bind:key="author">
+                        <router-link :to="{ name: 'author', params: { id: author.id }}" class="source-link">
+                                    {{ author.name }},
+                        </router-link>
+                    </span>
                 </div>
+
                 <div v-if="license && abstract" class="abstract special-scrollbar">
                     {{ abstract }}
+                </div>
+
+                <div class="license">
+                    <a v-if="license && abstract" target="_blank" :href="license"><i
+                            style="font-size: 0.8em; margin-right: 0.5em" class="pi pi-external-link"></i>License</a>
+                    <span v-else></span>
+                    <a target="_blank" :href="'http://doi.org/' + doi"><i style="font-size: 0.8em; margin-right: 0.5em"
+                                                                          class="pi pi-external-link"></i>go to Source</a>
                 </div>
             </div>
             <div v-else>
@@ -67,18 +74,6 @@
                     <p>{{ localeNumber(contains_abstract_raw * 100) }}%</p>
                 </div>
                 <div>
-                    <h3>Question Mark Count</h3>
-                    <p>{{ localeNumber(question_mark_count) }}</p>
-                </div>
-                <div>
-                    <h3>Exclamation Mark Count</h3>
-                    <p>{{ localeNumber(exclamation_mark_count) }}</p>
-                </div>
-                <div>
-                    <h3>Length</h3>
-                    <p>{{ localeNumber(length) }}</p>
-                </div>
-                <div>
                     <h3>Followers</h3>
                     <p>{{ localeNumber(followers) }}</p>
                 </div>
@@ -98,7 +93,7 @@
                     <h3>Type</h3>
                     <p>{{ subj_type }}</p>
                 </div>
-                <div>
+                <div v-if="entities && entities.length > 0" >
                     <h3>Entities</h3>
                     <p v-for="entity in entities" v-bind:key="entity">{{ entity }}</p>
                 </div>
@@ -221,7 +216,7 @@
                         this.authors = r.data.results[0]['authors'];
                         this.entities = response['entities'];
                         if (this.entities === '[]') {
-                            this.entities = ['-']
+                            this.entities = []
                         } else {
                             this.entities = JSON.parse(this.entities)
                         }
@@ -260,9 +255,9 @@
 
         .rendered-tweet {
             flex-grow: 0;
-            width: 450px;
-            max-width: 450px;
-            min-width: 450px;
+            width: 400px;
+            max-width: 400px;
+            min-width: 400px;
             padding: 10px;
 
             max-height: 800px;
@@ -274,7 +269,8 @@
             flex-grow: 1;
             padding: 10px;
             margin-left: 10px;
-            width: 450px;
+            width: 300px;
+            min-width: 300px;
 
             .link {
                 color: $color-main;
@@ -295,11 +291,14 @@
                 }
 
                 .pi-link::before {
+                    font-family: 'primeicons' !important;
                     margin: 5px 5px -5px 0;
                     font-size: 0.8em;
                 }
 
                 .pi-link {
+                    font-size: 0.9em;
+                    font-family: 'Courier New', monospace !important;
                     margin: 0 0 5px 5px;
                 }
 
@@ -310,16 +309,18 @@
             }
 
             .authors {
-                font-size: 0.8em;
+                font-size: 1em;
+                margin: 2.5em 0.5em 0.5em 0;
+                font-style: italic;
             }
 
             .license {
-                margin: 10px 0 0 0;
+                margin: 1em 0 2.5em 0;
                 display: flex;
                 justify-content: space-between;
 
                 a {
-                    font-size: 0.9em;
+                    font-size: 1em;
                     text-decoration: none;
                     color: $color-main;
 
@@ -330,15 +331,18 @@
             }
 
             .abstract {
-                font-size: 1.2em;
+                font-size: 1.1em;
                 max-height: 200px;
                 overflow-y: auto;
-                margin: 5px 0 15px 0;
+                padding-right: 0.5em;
+
+                text-align: justify;
+                text-justify: inter-word;
             }
 
             .values {
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
                 align-content: center;
                 column-gap: 10px;
@@ -347,8 +351,11 @@
 
                 div {
                     border-radius: 5px;
-                    border: 2px solid $color-main;
+                    border: 1px solid $color-main;
                     padding: 5px 10px;
+                    min-width: 100px;
+                    width: 30%;
+                    flex-grow: 1;
 
                     h3 {
                         color: black;

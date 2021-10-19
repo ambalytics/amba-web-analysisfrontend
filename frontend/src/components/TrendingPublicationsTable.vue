@@ -1,83 +1,108 @@
-Publications.vue
 <template>
-    <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
-        <Card class="table-card">
-            <template #title>
-                <time-tooltip/>
-                Trending Fields of Study
+    <div>
+        <div class="p-input-icon-left">
+            <i class="pi pi-search" @click="search"/>
+            <InputText v-model="searchWord" placeholder="Title Search" @keydown="search"/>
+        </div>
+        <DataTable :value="value" dataKey="doi" :paginator="true" :rows="lazyParams.rows" :rowHover="true"
+                   :lazy="true"
+                   :loading="loading" :rowsPerPageOptions="[10, 20]" :sort-order="-1"
+                   :totalRecords="totalRecords" class="big-table"
+                   @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
+                   @row-click="rowClick($event)">
+            <template #empty>
+                No Publications found.
             </template>
-            <template #content>
-                <div class="p-input-icon-left">
-                    <i class="pi pi-search" @click="fetchData"/>
-                    <InputText v-model="searchWord" placeholder="Name Search" @keydown="search"/>
-                </div>
-                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true"
-                           :lazy="true"
-                           :loading="loading" :rowsPerPageOptions="[10, 20, 50]" :sort-order="-1"
-                           :totalRecords="totalRecords" class="big-table"
-                           @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
-                           @row-click="rowClick($event)">
-                    <template #empty>
-                        No Fields of Study found.
-                    </template>
-                    <template #loading>
-                        Loading Fields of Study data. Please wait.
-                    </template>
-                    <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                            :key="col.field" :class="col.class">
-                        <template #header>
-                            <div v-if="col.help" :class="col.classHelp">
-                                <i v-tooltip="col.help" class="pi pi-fw pi-question-circle"></i>
-                            </div>
-                        </template>
-                        <template v-if="col.numberTemplate" #body="slotProps">
-                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
-                                localeNumber(slotProps.data[col.field]) }}
-                            </div>
-                        </template>
-                    </Column>
-                </DataTable>
+            <template #loading>
+                Loading Publications data. Please wait.
             </template>
-        </Card>
+            <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
+                    :key="col.field" :class="col.class">
+                <template #header>
+                    <div v-if="col.help" :class="col.classHelp">
+                        <i v-tooltip="col.help" class="pi pi-fw pi-question-circle"></i>
+                    </div>
+                </template>
+                <template v-if="col.numberTemplate" #body="slotProps">
+                    <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
+                        localeNumber(slotProps.data[col.field]) }}
+                    </div>
+                </template>
+            </Column>
+        </DataTable>
     </div>
 </template>
 
 <script>
-    import FieldOfStudyService from "../services/FieldOfStudyService";
-    import TimeTooltip from "../components/TimeTooltip";
-
     export default {
-        name: 'FieldsOfStudy',
-        components: {TimeTooltip},
-        beforeRouteUpdate(to, from) {
-            if (to.query.time !== from.query.time) {
-                if (to.query.time !== undefined) {
-                    this.duration = to.query.time;
-                    this.fetchData();
-                } else {
-                    this.duration = 'currently';
-                    this.fetchData();
+        name: "TrendingPublicationTable",
+        props: {
+            value: {
+                type: Array,
+                required: true
+            },
+            lazyParams: {
+                type: Object,
+                required: true
+            },
+            loading: {
+                type: Boolean,
+                required: true
+            },
+            totalRecords: {
+                type: Number,
+                required: true
+            },
+        },
+        methods: {
+            onPage(event) {
+                this.$emit('page', event);
+            },
+            onSort(event) {
+                this.$emit('sort', event);
+            },
+            search(e) {
+                if (e.keyCode === 13) {
+                    this.$emit('search', this.searchWord);
                 }
-            }
+            },
+            rowClick(event) {
+                this.$router.push('/publication/' + event.data.doi)
+            },
+            localeNumber: function (x) {
+                if (isNaN(x)) return '-';
+                x = Math.round(x * 100) / 100;
+                return x.toLocaleString(); // 'de-De'
+            },
         },
         data() {
             return {
-                duration: "currently",
+                searchWord: '',
                 columns: [
                     {
                         field: 'trending_ranking',
                         header: 'Rank',
                         sortable: false,
                         numberTemplate: false,
-                        class: "amba rank"
+                        class: "amba rank prio1",
+                        help: false
                     },
-                    {field: 'name', header: 'Name', sortable: false, numberTemplate: false},
+                    {field: 'title', header: 'Title', sortable: false, numberTemplate: false, class: "prio1"},
                     {
-                        field: 'pub_count',
-                        header: 'Publication Count',
+                        field: 'pub_date',
+                        header: 'Date',
                         sortable: true,
-                        class: "text-align-right",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        noLocale: true,
+                        class: "prio1"
+                    },
+                    {
+                        field: 'citation_count',
+                        header: 'Citation Count',
+                        sortable: true,
+                        class: "text-align-right prio1",
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'score',
@@ -216,76 +241,12 @@ Publications.vue
                         help: false
                     },
                 ],
-                lazyParams: {},
-                data: [],
-                loading: true,
-                searchWord: '',
-                totalRecords: 0,
             }
         },
-        created() {
-            if (this.$route.query.time !== undefined) {
-                this.duration = this.$route.query.time;
-            }
-            this.fetchData();
-        },
-        mounted() {
-            this.lazyParams = {
-                first: 0,
-                rows: 10,
-                sortField: 'score',
-                sortOrder: -1,
-            };
-        },
-        methods: {
-            search(e) {
-                if (e.keyCode === 13) {
-                    this.fetchData();
-                }
-            },
-            onPage(event) {
-                this.lazyParams = event;
-                this.fetchData();
-            },
-            onSort(event) {
-                this.lazyParams = event;
-                this.fetchData();
-            },
-            rowClick(event) {
-                this.$router.push('/fieldOfStudy/' + event.data.id)
-            },
-            localeNumber: function (x) {
-                if (isNaN(x)) return '-';
-                return x.toLocaleString(); // 'de-De'
-            },
-            fetchData() {
-                this.error = this.post = null;
-                this.loading = true;
-                // console.log(this.lazyParams.sortOrder);
-                FieldOfStudyService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
-                    .then(response => {
-                        this.data = response.data.results;
-                        this.data.forEach(element => {
-                            element.score = Math.round(element.score);
-                            element.length_avg = Math.round(element.length_avg);
-                            element.projected_change = Math.round(element.projected_change);
-                            element.mean_age = Math.round(element.mean_age / 3600 * 10) / 10;
-                            element.mean_length = Math.round(element.mean_length);
-                            element.ema = Math.round(element.ema);
-                            element.kama = Math.round(element.kama);
-                            element.mean_score = Math.round(element.mean_score);
-                            element.stddev = Math.round(element.stddev);
-                            element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
-                            this.totalRecords = element.total_count;
-                        });
-                        this.loading = false
-                    })
-                    .catch(e => {
-                        this.data = [];
-                        this.loading = false;
-                        console.log(e);
-                    });
-            },
-        }
     }
 </script>
+
+
+<style lang="scss">
+    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
+</style>
