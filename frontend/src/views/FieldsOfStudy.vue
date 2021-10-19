@@ -1,15 +1,18 @@
-Publications.vue<template>
+Publications.vue
+<template>
     <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
         <Card class="table-card">
             <template #title>
-                 <time-tooltip/>Trending Fields of Study
+                <time-tooltip/>
+                Trending Fields of Study
             </template>
             <template #content>
                 <div class="p-input-icon-left">
                     <i class="pi pi-search" @click="fetchData"/>
                     <InputText v-model="searchWord" placeholder="Keyword Search" @keydown="search"/>
                 </div>
-                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true" :lazy="true"
+                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true"
+                           :lazy="true"
                            :loading="loading" :rowsPerPageOptions="[10, 20, 50]" :sort-order="-1"
                            :totalRecords="totalRecords" class="big-table"
                            @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
@@ -22,8 +25,15 @@ Publications.vue<template>
                     </template>
                     <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
                             :key="col.field" :class="col.class">
+                        <template #header>
+                            <div v-if="col.help" :class="col.classHelp">
+                                <i v-tooltip="col.help" class="pi pi-fw pi-question-circle"></i>
+                            </div>
+                        </template>
                         <template v-if="col.numberTemplate" #body="slotProps">
-                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] : localeNumber(slotProps.data[col.field]) }}</div>
+                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
+                                localeNumber(slotProps.data[col.field]) }}
+                            </div>
                         </template>
                     </Column>
                 </DataTable>
@@ -54,7 +64,13 @@ Publications.vue<template>
             return {
                 duration: "currently",
                 columns: [
-                    {field: 'trending_ranking', header: 'Rank', sortable: false, numberTemplate: false, class: "amba rank"},
+                    {
+                        field: 'trending_ranking',
+                        header: 'Rank',
+                        sortable: false,
+                        numberTemplate: false,
+                        class: "amba rank"
+                    },
                     {field: 'name', header: 'Name', sortable: false, numberTemplate: false},
                     {
                         field: 'pub_count',
@@ -75,7 +91,9 @@ Publications.vue<template>
                         header: 'Projected Change',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'the expected score change to the next window using Holt-Winters forecasting',
+                        classHelp: 'negative-margin-left'
                     },
                     {
                         field: 'count',
@@ -110,7 +128,8 @@ Publications.vue<template>
                         header: 'mean Age',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'in hours'
                     },
                     {
                         field: 'mean_length',
@@ -138,22 +157,32 @@ Publications.vue<template>
                         header: 'mean Bot Rating',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'higher is better'
                     },
                     {
                         field: 'trending',
                         header: 'trending',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'slope of the mann kendall yue wang modification trending result'
                     },
-                    {field: 'ema', header: 'ema', sortable: true, class: "text-align-right amba", numberTemplate: true},
+                    {
+                        field: 'ema',
+                        header: 'ema',
+                        sortable: true,
+                        class: "text-align-right amba",
+                        numberTemplate: true,
+                        help: 'exponential moving average'
+                    },
                     {
                         field: 'kama',
                         header: 'kama',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'Kaufman’s Adaptive Moving Average'
                     },
                     {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true},
                     {
@@ -168,7 +197,8 @@ Publications.vue<template>
                         header: 'stddev',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'standard deviation of non-null records'
                     },
                 ],
                 lazyParams: {},
@@ -216,13 +246,20 @@ Publications.vue<template>
             fetchData() {
                 this.error = this.post = null;
                 this.loading = true;
-                console.log(this.lazyParams.sortOrder);
+                // console.log(this.lazyParams.sortOrder);
                 FieldOfStudyService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;
                         this.data.forEach(element => {
                             element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);
+                            element.projected_change = Math.round(element.projected_change);
+                            element.mean_age = Math.round(element.mean_age / 3600 * 10) / 10;
+                            element.mean_length = Math.round(element.mean_length);
+                            element.ema = Math.round(element.ema);
+                            element.kama = Math.round(element.kama);
+                            element.mean_score = Math.round(element.mean_score);
+                            element.stddev = Math.round(element.stddev);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
                             this.totalRecords = element.total_count;
                         });

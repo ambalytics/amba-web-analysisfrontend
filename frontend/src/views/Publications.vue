@@ -39,6 +39,11 @@
                     </template>
                     <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
                             :key="col.field" :class="col.class">
+                        <template #header>
+                            <div v-if="col.help" :class="col.classHelp">
+                                <i v-tooltip="col.help" class="pi pi-fw pi-question-circle"></i>
+                            </div>
+                        </template>
                         <template v-if="col.numberTemplate" #body="slotProps">
                             <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
                                 localeNumber(slotProps.data[col.field]) }}
@@ -82,7 +87,8 @@
                         header: 'Rank',
                         sortable: false,
                         numberTemplate: false,
-                        class: "amba rank"
+                        class: "amba rank",
+                        help: false
                     },
                     {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
                     // {field: 'doi', header: 'DOI', sortable: false, numberTemplate: false},
@@ -93,7 +99,8 @@
                         header: 'Citation Count',
                         sortable: true,
                         class: "text-align-right",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'score',
@@ -107,87 +114,102 @@
                         header: 'Projected Change',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'the expected score change to the next window using Holt-Winters forecasting',
+                        classHelp: 'negative-margin-left'
                     },
                     {
                         field: 'count',
                         header: 'Tweet Count',
                         sortable: true,
                         class: "text-align-right  amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'sum_followers',
-                        header: 'Follower reached',
+                        header: 'Followers reached',
                         sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
+                        class: "text-align-right wider amba",
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'mean_sentiment',
                         header: 'Mean Sentiment',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'abstract_difference',
                         header: 'Abstract Difference',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'mean_age',
                         header: 'mean Age',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'in hours'
                     },
                     {
                         field: 'mean_length',
                         header: 'mean Length',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'mean_questions',
                         header: 'mean "?"',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'mean_exclamations',
                         header: 'mean "!"',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: false
                     },
                     {
                         field: 'mean_bot_rating',
                         header: 'mean Bot Rating',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'higher is better'
                     },
                     {
                         field: 'trending',
                         header: 'trending',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'slope of the mann kendall yue wang modification trending result'
                     },
-                    {field: 'ema', header: 'ema', sortable: true, class: "text-align-right amba", numberTemplate: true},
+                    {field: 'ema', header: 'ema', sortable: true, class: "text-align-right amba", numberTemplate: true,
+                        help: 'exponential moving average'},
                     {
                         field: 'kama',
                         header: 'kama',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'Kaufman’s Adaptive Moving Average'
                     },
-                    {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true},
+                    {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true,
+                        help: 'Kaufman’s Efficiency Ratio'},
                     {
                         field: 'mean_score',
                         header: 'mean Score',
@@ -200,7 +222,8 @@
                         header: 'stddev',
                         sortable: true,
                         class: "text-align-right amba",
-                        numberTemplate: true
+                        numberTemplate: true,
+                        help: 'standard deviation of non-null records'
                     },
                 ],
                 lazyParams: {},
@@ -280,7 +303,7 @@
             fetchData() {
                 this.error = this.post = null;
                 this.loading = true;
-                console.log(this.lazyParams.sortOrder);
+                // console.log(this.lazyParams.sortOrder);
                 PublicationService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;
@@ -289,6 +312,13 @@
                             dois.push(element.doi);
                             element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);
+                            element.projected_change = Math.round(element.projected_change);
+                            element.mean_age = Math.round(element.mean_age / 3600 * 10) / 10;
+                            element.mean_length = Math.round(element.mean_length);
+                            element.ema = Math.round(element.ema);
+                            element.kama = Math.round(element.kama);
+                            element.mean_score = Math.round(element.mean_score);
+                            element.stddev = Math.round(element.stddev);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
                             this.totalRecords = element.total_count;
                             if (!element.pub_date) {
