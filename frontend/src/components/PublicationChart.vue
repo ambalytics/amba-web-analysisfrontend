@@ -64,15 +64,10 @@
                         events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
                         legend: {
                             onClick: (evt, item, legend) => {
-                                // console.log(evt);
-                                // console.log(item);
-                                // console.log(legend);
                                 const chart = legend.chart;
-                                // const chartArea = chart.chartArea;
-                                // console.log(chart.getDatasetMeta(item.datasetIndex).data[0].options.borderWidth);
-
-                                if (chart.getDatasetMeta(item.datasetIndex).data[0].options.borderWidth > 3) {
-                                    this.$router.push('/publication/' + item.text)
+                                // console.log(chart.getDatasetMeta(item.datasetIndex).data[0].options);
+                                if (chart.getDatasetMeta(item.datasetIndex).data[0].options.radius === 2) {
+                                    this.$router.push('/publication/' + item.text);
                                 }
 
                                 chart.setActiveElements([{
@@ -80,35 +75,7 @@
                                     index: 0
                                 }]);
 
-                                // const tooltip = chart.tooltip;
-                                // tooltip.setActiveElements([{
-                                //     datasetIndex: item.datasetIndex,
-                                //     index: 0,
-                                // }], {
-                                //     x: (chartArea.left + chartArea.right) / 2,
-                                //     y: (chartArea.top + chartArea.bottom) / 2,
-                                // });
-
-                                // var meta = c.getDatasetMeta(0),
-                                //     rect = c.canvas.getBoundingClientRect(),
-                                //     point = meta.data[item.datasetIndex].getCenterPoint(),
-                                //     evt1 = new MouseEvent('mousemove', {
-                                //         clientX: rect.left + point.x,
-                                //         clientY: rect.top + point.y
-                                //     }),
-                                //     node = c.canvas;
-                                // console.log(evt1);
-                                // node.dispatchEvent(evt1);
-                                // item.element = null
-                                // chart.updateHoverStyle(
-                                //     [item],
-                                //     'dataset', true);
-
-
-                                // console.log([item.element, item.datasetIndex, item.index])
-
                                 chart.render();
-                                // chart.update();
                             },
                         },
                     }
