@@ -15,7 +15,7 @@
 
         <div class="header-text">ambalytics analysis streams</div>
 
-        <Menubar :model="items">
+        <Menubar  :model="items">
             <template #item="{item}">
                 <router-link v-if="item.show" :to="item.to" class="p-d-flex p-ai-center p-menuitem-link">
                     <span class="p-menuitem-text">{{item.label}}</span>
@@ -26,6 +26,13 @@
 
     <div class="layout-content">
         <router-view/>
+    </div>
+
+    <div class="bottom-1 right-2 w-full flex justify-end" style="padding: 0 1rem 1rem 0;">
+        <div class="text-xs font-light text-gray-800">
+            <a href="https://ambalytics.com/privacy-policy" target="_blank">Privacy Policy</a> | <a
+                href="https://ambalytics.com/imprint" target="_blank">Imprint</a>
+        </div>
     </div>
 </template>
 
@@ -54,33 +61,31 @@
                 this.items.push({
                     label: route.label,
                     to: route.path,
-                    show: route.show,
-                    icon: route.icon
-                })
+                    show: route.show
+                });
             });
         },
-        data() {
-            return {
-                items: [],
-                dataTimeOptions: [{
-                    label: 'currently',
-                    duration: 'currently'
-                }, {
-                    label: 'today',
-                    duration: 'today'
-                }, {
-                    label: 'week',
-                    duration: 'week',
-                }, {
-                    label: 'month',
-                    duration: 'month',
-                }, {
-                    label: 'year',
-                    duration: 'year',
-                }],
-                selectedTime: null,
-            }
-        },
+        data: () => ({
+            items: [],
+            dataTimeOptions: [{
+                label: 'Present (6h)',
+                duration: 'currently'
+            }, {
+                label: 'Today (24h)',
+                duration: 'today'
+            }, {
+                label: 'Week (7d)',
+                duration: 'week',
+            }, {
+                label: 'Month (30d)',
+                duration: 'month',
+            }, {
+                label: 'Year (365d)',
+                duration: 'year',
+            }],
+            selectedTime: null,
+        })
+        ,
         methods: {
             changeDuration() {
                 console.log(this.selectedTime.duration);
@@ -220,6 +225,25 @@
 
     }
 
+    .text-gray-800 {
+        --tw-text-opacity: 1;
+        color: rgba(31, 41, 55, var(--tw-text-opacity));
+    }
+
+    .font-light {
+        font-weight: 300;
+    }
+
+    .text-xs {
+        font-size: .75rem;
+        line-height: 1rem;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: inherit;
+    }
+
     .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
         background: rgba($color-main, 0.7) !important;
 
@@ -351,26 +375,28 @@
         .p-card-content {;
             display: grid;
             padding: 0 1vw;
-            grid-template-columns: 85%;
+            grid-template-columns: 90%;
             justify-content: center;
             align-items: center;
             align-content: center;
 
-
             div.padding-left {
                 width: 100%;
+                /*<!--border: 1px solid $color-main;-->*/
+                border-radius: 5px;
+                margin: 0.2em;
             }
 
             h3 {
                 margin: 0.6em 0 0.2em 0.7em;
-                font-size: 1.2em;
+                font-size: 1em;
                 width: 100%;
             }
 
             p.padding-left {
                 margin: -5px 0 0 0;
                 font-weight: 700;
-                font-size: 2.6em;
+                font-size: 2em;
                 font-family: 'Courier New', monospace !important;
                 text-align: end;
                 width: 100%;
@@ -574,10 +600,57 @@
         }
     }
 
-    .wider {
-         width: 160px;
+    .hidden {
+        display: none;
     }
+
+    .wider {
+        width: 160px;
+    }
+
     .negative-margin-left {
         margin-left: -20px;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .bottom-1 {
+        bottom: .25rem;
+    }
+
+    .right-2 {
+        right: .5rem;
+    }
+
+    .fixed {
+        position: fixed;
+    }
+
+    @media only screen and (max-width: 2500px) {
+        .prio4 {
+            display: none !important;
+        }
+    }
+
+    @media only screen and (max-width: 2300px) {
+        .prio3 {
+            display: none !important;
+        }
+    }
+
+    @media only screen and (max-width: 1700px) {
+        .prio2 {
+            display: none !important;
+        }
     }
 </style>

@@ -46,14 +46,21 @@ export const getDynamicMapCss = (countryData, chromaScale, highColor, chromaScal
   const { min, max } = getMaxAndMinCountryDataValues(countryData);
   const colorScaleUnit = getColorScaleUnit(Math.log(min), Math.log(max));
   const css = [];
-  Object.keys(countryData).forEach((key) => {
-    if (key === 'unknown') return;
+  if (Object.keys(countryData).length === 1) {
+    Object.keys(countryData).forEach((key) => {
+       if (key === 'unknown') return;
+      css.push(`.vue-world-map #${key} { fill: ${highColor}; }`);
+    });
+  } else {
+    Object.keys(countryData).forEach((key) => {
+      if (key === 'unknown') return;
 
-    const value = Math.log(countryData[key]);
-    const scaleValue = colorScaleUnit * (value - Math.log(min));
-    const hex = chromaScale(scaleValue).hex();
-    css.push(`.vue-world-map #${key} { fill: ${chromaScaleOn ? hex : highColor}; }`);
-  });
+      const value = Math.log(countryData[key]);
+      const scaleValue = colorScaleUnit * (value - Math.log(min));
+      const hex = chromaScale(scaleValue).hex();
+      css.push(`.vue-world-map #${key} { fill: ${chromaScaleOn ? hex : highColor}; }`);
+    });
+  }
   return {min: min, max: max, colorScaleUnit: colorScaleUnit, css: css};
 };
 

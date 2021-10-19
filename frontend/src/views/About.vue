@@ -25,6 +25,9 @@
         <div class="about">
             <div class="about-line">powered by <a href="https://ambalytics.com/" target="_blank"><img
                     style="margin-bottom: -10px" src="../assets/amba-logo.png"></a></div>
+            <div class="about-line">
+                <a href="https://ambalytics.com/privacy-policy" target="_blank">Privacy Policy</a> | <a
+                    href="https://ambalytics.com/imprint" target="_blank">Imprint</a></div>
             <div class="about-line">Twitter Data from <a href="https://twitter.com/" target="_blank"><img
                     src="../assets/twitter-logo.svg"></a></div>
             <div class="about-line">Publication Data from <a href="https://crossref.org/" target="_blank"><img
@@ -79,6 +82,7 @@
         border: 3px solid $color-main;
         border-radius: 5px;
         margin: 30px 0 0 200px;
+        height: 530px;
     }
 
     .help > img {
@@ -86,6 +90,7 @@
     }
 
     .help > div {
+        height: 500px;
         width: 300px;
         padding: 10px;
     }

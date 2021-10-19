@@ -2,6 +2,22 @@
     <div class="p-grid">
 
         <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <TrendingOverview :trendingItems="trendingItems"></TrendingOverview>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card>
+                <template #title>
+                    Newest Tweet
+                </template>
+                <template #content>
+                    <AmbaTweet>
+                    </AmbaTweet>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
             <Card class="stats">
                 <template #title>
                     Stats
@@ -41,7 +57,7 @@
                             <time-tooltip/>
                             Average Sentiment
                         </h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 10000) / 100) }}%</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(containsAbstract)">
                         <h3>
@@ -72,104 +88,10 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card>
-                <template #title>
-                    Newest Tweet
-                </template>
-                <template #content>
-                    <AmbaTweet>
-                    </AmbaTweet>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    <time-tooltip/>
-                    Trending
-                </template>
-                <template #content>
-                    <div v-for="item in trendingItems" :key="item.label" class="trending-items">
-                        <h4><i style="margin-right: 5px;" :class="item.icon"></i>{{ item.label }}</h4>
-                        <DataTable :value="item.data" :autoLayout="true" @row-click="rowClick($event, item.label)">
-                            <Column class="amba rank" field="trending_ranking" header="Rank"></Column>
-                            <Column v-if="item.label === 'Publication'" field="title" header="Title"></Column>
-                            <Column v-if="item.label !== 'Publication'" field="name" header="Name"></Column>
-                        </DataTable>
-                    </div>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Tweet Type
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Languages
-                </template>
-                <template #content>
-                    <publication-chart :rawData="topValues['lang']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Hashtags
-                </template>
-                <template #content>
-                    <publication-chart :show-others="false" :rawData="topValues['hashtag']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
-            <Card>
-                <template #title>
-                    Entities
-                </template>
-                <template #content>
-                    <publication-chart :show-others="false" :rawData="topValues['entity']"></publication-chart>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card>
-                <template #title>
-                    Authors
-                </template>
-                <template #content>
-                    <MapChart v-if="renderMap" :countryData="countries"
-                              highColor="#0f6364"
-                              lowColor="#E6B24B"
-                              countryStrokeColor="#eee"
-                              defaultCountryFillColor="#fff"
-                    />
-                    <div v-else class="no-data">
-                        - no data available -
-                    </div>
-                </template>
-            </Card>
-        </div>
-
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
             <Card>
                 <template #title>
-                    Words
+                    Tweet Content Word Cloud
                 </template>
                 <template #content>
                     <word-cloud v-if="renderCloud" ref="worldCloud" :data="words"></word-cloud>
@@ -181,10 +103,24 @@
         </div>
 
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card>
+                <template #title>
+                    Tweet Author Locations
+                </template>
+                <template #content>
+                    <MapChart v-if="renderMap" :countryData="countries"/>
+                    <div v-else class="no-data">
+                        - no data available -
+                    </div>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
                     <time-tooltip/>
-                    Top 5 Publications over Time
+                    Top 5 Publications over Time by Twitter Activity
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
@@ -200,7 +136,7 @@
             <Card class="big-chart">
                 <template #title>
                     <time-tooltip/>
-                    Top 5 Trending over Time
+                    Top 5 Trending Publications by Ambalytics Trends
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
@@ -212,6 +148,49 @@
             </Card>
         </div>
 
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Tweet Types
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['tweet_type']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Twitter Languages
+                </template>
+                <template #content>
+                    <publication-chart :rawData="topValues['lang']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Hashtags
+                </template>
+                <template #content>
+                    <publication-chart :show-others="false" :rawData="topValues['hashtag']"></publication-chart>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+            <Card>
+                <template #title>
+                    Top Twitter Entities
+                </template>
+                <template #content>
+                    <publication-chart :show-others="false" :rawData="topValues['entity']"></publication-chart>
+                </template>
+            </Card>
+        </div>
     </div>
 </template>
 
@@ -227,10 +206,11 @@
     import MapChart from "../components/MapChart";
     import WordCloud from "../components/WordCloud";
     import TimeTooltip from "../components/TimeTooltip";
+    import TrendingOverview from "../components/TrendingOverview";
 
     export default {
         name: 'Home',
-        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip},
+        components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip, TrendingOverview},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
                 if (to.query.time !== undefined) {
@@ -283,6 +263,7 @@
                 {label: 'stddev', value: 'stddev'},
             ],
             pubsOverTimeData: [],
+            fosWords: [],
             selectedPubField: 'score',
             pubFields: [
                 {label: 'Bot Rating', value: 'bot_rating'},
@@ -321,6 +302,26 @@
                         console.log(e);
                     });
             },
+            loadFosWordData() {
+                 FieldOfStudy.trending(this.duration, 0, 80)
+                    .then(response => {
+                        // this.fosWords = response.data.results;
+
+                        let words = [];
+                        response.data.results.forEach((e) => {
+                            let obj = {};
+                            obj.text = e.name;
+                            obj.value = e.score;
+                            words.push(obj)
+                        });
+                        this.words = words;
+                        this.renderCloud = true;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.fosWords = []
+                    });
+            },
             loadTrendingProgress() {
                 StatService.progressTrending(this.selectedTrendField, 5, this.duration)
                     .then(response => {
@@ -332,7 +333,7 @@
                     });
             },
             loadTrendingItems() {
-                PublicationService.trending(this.duration, 0, 3)
+                PublicationService.trending(this.duration, 0, 5)
                     .then(response => {
                         this.trendingItems[0].data = response.data.results;
                     })
@@ -358,17 +359,6 @@
                         console.log(e);
                         this.trendingItems[2].data = []
                     });
-            },
-            rowClick(event, extra) {
-                if (event.data.doi) {
-                    this.$router.push('/publication/' + event.data.doi)
-                } else if (event.data.id) {
-                    if (extra === "Author") {
-                        this.$router.push('/author/' + event.data.id)
-                    } else {
-                        this.$router.push('/fieldOfStudy/' + event.data.id)
-                    }
-                }
             },
             fetchData() {
                 this.loadTrendingItems();
@@ -418,6 +408,7 @@
                             console.log(e);
                         });
                 }
+                // this.loadFosWordData();
 
                 if (!this.renderMap) {
                     StatService.top(['location'], null, 1000)
@@ -476,35 +467,3 @@
         }
     }
 </script>
-
-<style lang="scss">
-    @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
-
-    .trending-items {
-        h4 {
-            color: $color-main;
-            margin: 35px 0 10px 0;
-        }
-
-        .p-datatable {
-            margin: 5px;
-        }
-
-        .p-datatable .p-datatable-tbody > tr {
-            cursor: pointer;
-
-            &:hover {
-                background: rgba($color-main, 0.2);
-            }
-        }
-
-        .p-datatable .p-datatable-thead > tr > th {
-            padding: 10px;
-
-            &.rank > div {
-                display: flex;
-                justify-content: center;
-            }
-        }
-    }
-</style>

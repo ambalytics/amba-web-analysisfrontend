@@ -1,9 +1,9 @@
 <template>
     <div class="p-col-12 p-md-12 p-lg-12 p-xl-12">
-        <Card class="table-card">
+        <Card class="table-card big-chart">
             <template #title>
                 <time-tooltip/>
-                Trending Publications
+                Trending Publications over Time by Ambalytics Trends
             </template>
             <template #content>
                 <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
@@ -21,36 +21,9 @@
                 Trending Publications
             </template>
             <template #content>
-                <div class="p-input-icon-left">
-                    <i class="pi pi-search" @click="fetchData"/>
-                    <InputText v-model="searchWord" placeholder="Keyword Search" @keydown="search"/>
-                </div>
-                <DataTable :value="data" dataKey="doi" :paginator="true" :rows="this.lazyParams.rows" :rowHover="true"
-                           :lazy="true"
-                           :loading="loading" :rowsPerPageOptions="[10, 20]" :sort-order="-1"
-                           :totalRecords="totalRecords" class="big-table"
-                           @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
-                           @row-click="rowClick($event)">
-                    <template #empty>
-                        No Publications found.
-                    </template>
-                    <template #loading>
-                        Loading Publications data. Please wait.
-                    </template>
-                    <Column v-for="col of columns" :field="col.field" :header="col.header" :sortable="col.sortable"
-                            :key="col.field" :class="col.class">
-                        <template #header>
-                            <div v-if="col.help" :class="col.classHelp">
-                                <i v-tooltip="col.help" class="pi pi-fw pi-question-circle"></i>
-                            </div>
-                        </template>
-                        <template v-if="col.numberTemplate" #body="slotProps">
-                            <div class="wrapper">{{ col.noLocale ? slotProps.data[col.field] :
-                                localeNumber(slotProps.data[col.field]) }}
-                            </div>
-                        </template>
-                    </Column>
-                </DataTable>
+                <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading" :totalRecords="totalRecords"
+                                           @page="onPage($event)" @sort="onSort($event)">
+                </TrendingPublicationsTable>
             </template>
         </Card>
     </div>
@@ -62,10 +35,11 @@
     import TimeTooltip from "../components/TimeTooltip";
     import PublicationChart from "../components/PublicationChart";
     import StatService from "../services/StatService";
+    import TrendingPublicationsTable from "../components/TrendingPublicationsTable";
 
     export default {
         name: 'Publications',
-        components: {TimeTooltip, PublicationChart},
+        components: {PublicationChart, TimeTooltip, TrendingPublicationsTable},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
                 if (to.query.time !== undefined) {
@@ -81,156 +55,11 @@
             return {
                 duration: "currently",
                 trendOverTimeData: [],
-                columns: [
-                    {
-                        field: 'trending_ranking',
-                        header: 'Rank',
-                        sortable: false,
-                        numberTemplate: false,
-                        class: "amba rank",
-                        help: false
-                    },
-                    {field: 'title', header: 'Title', sortable: false, numberTemplate: false},
-                    // {field: 'doi', header: 'DOI', sortable: false, numberTemplate: false},
-                    {field: 'pub_date', header: 'Date', sortable: true, numberTemplate: true, noLocale: true},
-                    // {field: 'year', header: 'Year', sortable: true, numberTemplate: true, noLocale: true},
-                    {
-                        field: 'citation_count',
-                        header: 'Citation Count',
-                        sortable: true,
-                        class: "text-align-right",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'score',
-                        header: 'Score',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'projected_change',
-                        header: 'Projected Change',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'the expected score change to the next window using Holt-Winters forecasting',
-                        classHelp: 'negative-margin-left'
-                    },
-                    {
-                        field: 'count',
-                        header: 'Tweet Count',
-                        sortable: true,
-                        class: "text-align-right  amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'sum_followers',
-                        header: 'Followers reached',
-                        sortable: true,
-                        class: "text-align-right wider amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'mean_sentiment',
-                        header: 'Mean Sentiment',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'abstract_difference',
-                        header: 'Abstract Difference',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'mean_age',
-                        header: 'mean Age',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'in hours'
-                    },
-                    {
-                        field: 'mean_length',
-                        header: 'mean Length',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'mean_questions',
-                        header: 'mean "?"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'mean_exclamations',
-                        header: 'mean "!"',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: false
-                    },
-                    {
-                        field: 'mean_bot_rating',
-                        header: 'mean Bot Rating',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'higher is better'
-                    },
-                    {
-                        field: 'trending',
-                        header: 'trending',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'slope of the mann kendall yue wang modification trending result'
-                    },
-                    {field: 'ema', header: 'ema', sortable: true, class: "text-align-right amba", numberTemplate: true,
-                        help: 'exponential moving average'},
-                    {
-                        field: 'kama',
-                        header: 'kama',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'Kaufman’s Adaptive Moving Average'
-                    },
-                    {field: 'ker', header: 'ker', sortable: true, class: "text-align-right amba", numberTemplate: true,
-                        help: 'Kaufman’s Efficiency Ratio'},
-                    {
-                        field: 'mean_score',
-                        header: 'mean Score',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true
-                    },
-                    {
-                        field: 'stddev',
-                        header: 'stddev',
-                        sortable: true,
-                        class: "text-align-right amba",
-                        numberTemplate: true,
-                        help: 'standard deviation of non-null records'
-                    },
-                ],
                 lazyParams: {},
+                totalRecords: 0,
                 data: [],
                 loading: true,
                 searchWord: '',
-                totalRecords: 0,
                 selectedTrendField: 'score',
                 trendFields: [
                     {label: 'Score', value: 'score'},
@@ -262,17 +91,16 @@
         },
         mounted() {
             this.lazyParams = {
-                first: 0,
-                rows: 10,
-                sortField: 'score',
-                sortOrder: -1,
-            };
+                    first: 0,
+                    rows: 10,
+                    sortField: 'score',
+                    sortOrder: -1,
+                }
         },
         methods: {
-            search(e) {
-                if (e.keyCode === 13) {
-                    this.fetchData();
-                }
+            search(event) {
+                this.searchWord = event;
+                this.fetchData();
             },
             onPage(event) {
                 this.lazyParams = event;
@@ -281,14 +109,6 @@
             onSort(event) {
                 this.lazyParams = event;
                 this.fetchData();
-            },
-            rowClick(event) {
-                this.$router.push('/publication/' + event.data.doi)
-            },
-            localeNumber: function (x) {
-                if (isNaN(x)) return '-';
-                x = Math.round(x * 100) / 100;
-                return x.toLocaleString(); // 'de-De'
             },
             loadTrendingProgress() {
                 StatService.progressTrending(this.selectedTrendField, this.lazyParams.rows, this.duration, this.dois)
@@ -320,7 +140,7 @@
                             element.mean_score = Math.round(element.mean_score);
                             element.stddev = Math.round(element.stddev);
                             element.contains_abstract_avg = Math.round(element.contains_abstract_avg * 100) / 100;
-                            this.totalRecords = element.total_count;
+                            this.totalRecords = element.total_count ? element.total_count : 0;
                             if (!element.pub_date) {
                                 element.pub_date = element.year;
                             } else {
