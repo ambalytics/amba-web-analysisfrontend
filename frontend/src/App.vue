@@ -574,4 +574,10 @@
         }
     }
 
+    .wider {
+         width: 160px;
+    }
+    .negative-margin-left {
+        margin-left: -20px;
+    }
 </style>
