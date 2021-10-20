@@ -6,7 +6,7 @@
         </div>
         <DataTable :value="value" dataKey="doi" :paginator="true" :rows="lazyParams.rows" :rowHover="true"
                    :lazy="true"
-                   :loading="loading" :rowsPerPageOptions="[10, 20]" :sort-order="-1"
+                   :loading="loading" :rowsPerPageOptions="[5, 10, 20]" :sort-order="-1"
                    :totalRecords="totalRecords" class="big-table"
                    @page="onPage($event)" @sort="onSort($event)" ref="dt" sort-field="score"
                    @row-click="rowClick($event)">

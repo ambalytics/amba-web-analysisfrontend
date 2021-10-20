@@ -244,7 +244,7 @@
         mounted() {
             this.lazyParams = {
                 first: 0,
-                rows: 10,
+                rows: 5,
                 sortField: 'score',
                 sortOrder: -1,
             };
