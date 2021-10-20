@@ -97,4 +97,35 @@
             }
         }
     }
+
+
+    @media screen and (max-width: 960px) {
+        td.amba.rank {
+            font-size: 1rem !important;
+
+            span {
+                font-size: 1rem;
+            }
+        }
+
+        .trending-items {
+            margin-top: -1.5em;
+
+            h4 {
+                color: $color-main;
+                margin: 0 0.3em 0 0;
+                float: right;
+                padding-bottom: 0.2em;
+                z-index: 2;
+                position: relative;
+            }
+
+            .p-datatable {
+                margin: 0 0 3em 0;
+                float: none;
+                width: 100%;
+                font-size: 0.9em;
+            }
+        }
+    }
 </style>

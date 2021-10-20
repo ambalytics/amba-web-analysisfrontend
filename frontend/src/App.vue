@@ -15,7 +15,7 @@
 
         <div class="header-text">ambalytics analysis streams</div>
 
-        <Menubar  :model="items">
+        <Menubar :model="items">
             <template #item="{item}">
                 <router-link v-if="item.show" :to="item.to" class="p-d-flex p-ai-center p-menuitem-link">
                     <span class="p-menuitem-text">{{item.label}}</span>
@@ -505,6 +505,12 @@
         color: $color-main;
     }
 
+    @media only screen and (max-width: 1300px) {
+        .header-text {
+            display: none;
+        }
+    }
+
     @media only screen and (max-width: 960px) {
 
         .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
@@ -517,10 +523,6 @@
             top: 90%;
             left: -50px;
             min-width: max-content;
-        }
-
-        .header-text {
-            display: none;
         }
 
         .amba-tweet {

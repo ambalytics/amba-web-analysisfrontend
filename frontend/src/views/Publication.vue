@@ -89,7 +89,7 @@
         </div>
 
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-6 p-xl-3">
             <Card>
                 <template #title>
                     Profile
@@ -102,7 +102,7 @@
         </div>
 
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-6 p-xl-3">
             <Card class="stats">
                 <template #title>
                     Stats
@@ -219,7 +219,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-3 p-xl-3">
             <Card>
                 <template #title>
                     Top Twitter Entities
@@ -230,7 +230,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-3 p-xl-3">
             <Card>
                 <template #title>
                     Tweet Types
@@ -241,7 +241,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-3 p-xl-3">
             <Card>
                 <template #title>
                     Top Hashtags
@@ -252,7 +252,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-3 p-xl-3">
             <Card>
                 <template #title>
                     Top Languages
@@ -533,6 +533,7 @@
 
             td {
                 padding: 0;
+                word-break: break-word;
             }
 
             h4 {

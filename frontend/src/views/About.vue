@@ -81,8 +81,8 @@
         display: flex;
         border: 3px solid $color-main;
         border-radius: 5px;
-        margin: 30px 0 0 200px;
-        height: 530px;
+        margin: 30px 20px 0 0;
+        height: max-content;
     }
 
     .help > img {
@@ -90,8 +90,8 @@
     }
 
     .help > div {
-        height: 500px;
-        width: 300px;
+        min-width: 250px;
+        max-width: 300px;
         padding: 10px;
     }
 
@@ -113,7 +113,7 @@
     .about-container {
         display: flex;
         justify-content: center;
-        padding-right: 350px;
+        padding: 0 5em;
 
         .about {
             display: flex;
@@ -164,13 +164,26 @@
         }
     }
 
-    @media only screen and (max-width: 960px) {
+    @media only screen and (max-width: 1700px) {
+        .about-container .about .about-line {
+            height: fit-content;
+            flex-wrap: wrap;
+        }
+    }
+
+    @media only screen and (max-width: 1200px) {
         .about-container {
             padding-right: 0;
             flex-wrap: wrap;
         }
         .help {
             margin: 0;
+        }
+        .about-container {
+            padding: 0;
+        }
+        .about-container .about .about-line {
+            padding: 20px 20px;
         }
     }
 </style>

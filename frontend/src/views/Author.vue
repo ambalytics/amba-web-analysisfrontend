@@ -33,7 +33,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-6 p-xl-3">
             <Card class="stats">
                 <template #title>
                     Stats
@@ -90,7 +90,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-6 p-lg-6 p-xl-3">
             <Card>
                 <template #title>
                     Profile
@@ -117,7 +117,7 @@
         </div>
 
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6 word-wrapper">
             <Card>
                 <template #title>
                     Tweet Content Word Cloud
@@ -131,7 +131,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6">
             <Card>
                 <template #title>
                     Newest Tweet
@@ -143,7 +143,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6">
             <Card class="big-chart">
                 <template #title>
                     Publications over Time by Twitter Activity

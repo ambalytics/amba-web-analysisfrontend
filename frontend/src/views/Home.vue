@@ -1,7 +1,7 @@
 <template>
     <div class="p-grid">
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-3">
             <TrendingOverview :trendingItems="trendingItems"></TrendingOverview>
         </div>
 
@@ -17,7 +17,7 @@
             </Card>
         </div>
 
-        <div class="p-col-12 p-md-6 p-lg-4 p-xl-3">
+        <div class="p-col-12 p-md-12 p-lg-12 p-xl-3">
             <Card class="stats">
                 <template #title>
                     Stats
