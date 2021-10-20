@@ -512,6 +512,16 @@
     }
 
     @media only screen and (max-width: 960px) {
+        .publication_info_main .p-card-content .content {
+            width: 100% !important;
+        }
+        .publication_info_main .p-card-content .metatdata {
+            width: 100% !important;
+            margin-top: 2em !important;
+        }
+        .publication_info_main .p-card-content {
+            flex-direction: column !important;
+        }
 
         .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
             box-shadow: none;
