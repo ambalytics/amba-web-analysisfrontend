@@ -192,7 +192,7 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    Publication over Time by Twitter Activity
+                    Publication by Twitter Activity over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
