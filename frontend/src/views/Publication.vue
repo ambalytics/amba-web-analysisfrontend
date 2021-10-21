@@ -77,7 +77,8 @@
                         <ul class="sources">
                             <li v-for="subject in publication.sources" v-bind:key="subject.title"
                                 v-bind:class="{ hidden: subject.title === 'DB' }">
-                                <a class="source-link" target="_blank" :href="subject.url"><i
+                                <a class="source-link" target="_blank" :href="subject.title === 'Meta' ?
+                                    realUrl : subject.url"><i
                                         style="font-size: 0.8em; margin-right: 0.3em"
                                         class="pi pi-external-link"></i>{{ subject.title === 'Amba' ?
                                     'Ambalytics' : subject.title }}</a>
