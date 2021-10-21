@@ -120,7 +120,7 @@
             <Card class="big-chart">
                 <template #title>
                     <time-tooltip/>
-                    Top 5 Publications over Time by Twitter Activity
+                    Top 5 Publications by Twitter Activity over Time
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
