@@ -3,7 +3,7 @@
         <Card class="table-card big-chart">
             <template #title>
                 <time-tooltip/>
-                Trending COVID-19 Publications over Time by Ambalytics Trends
+                Trending COVID-19 Publications by Ambalytics Trends
             </template>
             <template #content>
                 <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
