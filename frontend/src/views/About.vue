@@ -14,7 +14,7 @@
                     period of time.<br>
                     This allows us to rank publications over a period of time using our trending algorithm.<br>
                     The periods of time are:
-                    <br>&nbsp; &nbsp;-&nbsp; currently (last 6h)
+                    <br>&nbsp; &nbsp;-&nbsp; present (last 6h)
                     <br>&nbsp; &nbsp;-&nbsp; today (last 24h)
                     <br>&nbsp; &nbsp;-&nbsp; week (last 7 days)
                     <br>&nbsp; &nbsp;-&nbsp; month (last 30 days)

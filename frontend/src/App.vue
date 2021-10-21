@@ -13,7 +13,7 @@
             </Dropdown>
         </div>
 
-        <div class="header-text">ambalytics analysis streams</div>
+        <div class="header-text">ambalytics trends</div>
 
         <Menubar :model="items">
             <template #item="{item}">
@@ -297,7 +297,7 @@
                 text-decoration: none;
 
                 &:hover {
-                    background: rgba(0, 0, 0, 0.06);
+                    background: rgba($color-main, 0.7) !important;
                     border-radius: 4px;
                 }
             }
@@ -460,26 +460,25 @@
         color: darkgrey;
     }
 
-
-    .body {
+    .special-scrollbar {
 
         &::-webkit-scrollbar {
-            width: 8px;
+            width: 8px !important;
         }
 
         /* Track */
         &::-webkit-scrollbar-track {
-            background: #fff;
+            background: #fff !important;
         }
 
         /* Handle */
         &::-webkit-scrollbar-thumb {
-            background: $color-main;
+            background: $color-main !important;
         }
 
         /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
-            background: $color-main;
+            background: rgba($color-main, 0.7) !important;
         }
     }
 
@@ -511,6 +510,7 @@
         }
     }
 
+    // phone
     @media only screen and (max-width: 960px) {
         .publication_info_main .p-card-content .content {
             width: 100% !important;
@@ -526,6 +526,13 @@
         .layout-topbar .p-menubar .p-menuitem .p-menuitem-link {
             box-shadow: none;
             margin-left: 0;
+        }
+
+        .big-chart .p-dropdown {
+            position: relative;
+            left: 0;
+            width: 150px;
+            top: -10px;
         }
 
 

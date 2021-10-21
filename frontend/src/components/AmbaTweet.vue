@@ -237,7 +237,7 @@
         color: $color-main;
         position: relative;
         flex-wrap: wrap;
-        row-gap: 30px;
+        row-gap: 50px;
 
         .reload-button {
             cursor: pointer;
@@ -260,7 +260,7 @@
             min-width: 400px;
             padding: 10px;
 
-            max-height: 800px;
+            max-height: 650px;
             overflow-y: auto;
         }
 

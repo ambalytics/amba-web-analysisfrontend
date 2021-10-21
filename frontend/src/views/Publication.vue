@@ -41,7 +41,7 @@
                         <table class="info">
                             <tr>
                                 <td><h4>DOI:</h4></td>
-                                <td>{{ publication.doi }}</td>
+                                <td class="doi">{{ publication.doi }}</td>
                             </tr>
                             <tr>
                                 <td><h4>Date:</h4></td>
@@ -62,7 +62,7 @@
                             </tr>
                         </table>
 
-                        <h4>Field of Study:</h4>
+                        <h4 v-if="publication.fields_of_study && publication.fields_of_study.length > 0">Fields of Study:</h4>
                         <ul class="subjects">
                             <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
                                 <router-link :to="{ name: 'fieldOfStudy', params: { id: subject.id }}"
@@ -504,8 +504,16 @@
         .metatdata {
             width: calc(50% - 3em);
 
+            table h4 {
+                margin: 0.4em 0 0.3em 2px !important;
+            }
+
             h4 {
                 margin: 0.4em 0 0.3em 2px;
+
+                &:last-of-type {
+                    margin-top: 1em;
+                }
             }
 
             ul {
@@ -519,7 +527,7 @@
         }
 
         .abstract {
-            max-height: 620px;
+            max-height: 400px;
             overflow-y: auto;
             text-align: justify;
             padding-right: 10px;
@@ -545,6 +553,9 @@
             font-style: italic;
         }
 
+        .doi {
+            font-family: "Courier New", monospace !important;
+        }
     }
 
 

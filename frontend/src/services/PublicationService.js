@@ -30,6 +30,29 @@ class PublicationService {
         return http.get('/publication/trending', {params: params});
     }
 
+    trendingCovid(duration, offset, limit, sort, order, search) {
+        let params = new URLSearchParams();
+
+        params.append("duration", duration);
+
+        if (offset) {
+            params.append("offset", offset);
+        }
+        if (limit) {
+            params.append("limit", limit);
+        }
+        if (sort) {
+            params.append("sort", sort);
+        }
+        if (order) {
+            params.append("order", order);
+        }
+        if (search) {
+            params.append("search", search);
+        }
+        return http.get('/publication/trending/covid', {params: params});
+    }
+
     trendingFos(duration, id, offset, limit, sort, order, search) {
         let params = new URLSearchParams();
 
