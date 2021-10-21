@@ -80,7 +80,7 @@ class StatService {
     }
 
     profileData(doi, duration) {
-        return http.get('/stats/profile', {params: {dois: doi, duration: duration}});
+        return http.get('/stats/profile', {params: {doi: doi, duration: duration}});
     }
 
     top(fields = null, doi = null, limit = 80) {
