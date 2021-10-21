@@ -17,7 +17,7 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    <time-tooltip/>Trending over Time by Ambalytics Trends
+                    <time-tooltip/>Trending Publications by Ambalytics Trends
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
