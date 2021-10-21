@@ -440,6 +440,8 @@
     }
 
     .big-chart {
+        height: 730px !important;
+
         .p-card-content, .p-card-body {
             height: 100%;
             color: #fff;
@@ -565,10 +567,6 @@
             margin: -15px 5px 0 0;
         }
 
-        .wordCloud {
-            height: 200px !important;
-        }
-
         .amba.rank {
             margin-top: 10px;
         }
@@ -603,8 +601,24 @@
         }
 
         .p-chart {
-            height: 400px;
+            min-height: 500px;
         }
+
+        .wordCloud {
+            height: 45vw !important;
+        }
+
+
+        .big-chart {
+            height: 830px !important;
+        }
+        .trending-items h4 {
+            font-size: 1.3em;
+        }
+        .trending-items .p-datatable .p-datatable-tbody > tr td {
+            font-size: 1.2em;
+        }
+
     }
 
     .license {
