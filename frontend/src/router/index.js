@@ -11,6 +11,12 @@ const routes = [
         show: true,
         component: Home
     }, {
+        path: '/covid',
+        label: 'COVID-19',
+        name: 'covid',
+        show: true,
+        component: () => import(/* webpackChunkName: "Publications" */ '../views/CovidPapers.vue')
+    },{
         path: '/publications',
         label: 'Publications',
         name: 'publications',
