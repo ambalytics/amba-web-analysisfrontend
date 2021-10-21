@@ -51,6 +51,7 @@
         mounted() {
             this.options = {
                 responsive: true,
+                aspectRatio: 0.6,
             };
 
             if (this.type === "line") {
