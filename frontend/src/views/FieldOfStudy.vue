@@ -135,7 +135,7 @@
                     <Dropdown v-model="selectedPubField" :options="pubFields" optionLabel="label"
                               optionValue="value" placeholder="Select a Field" @change="loadPubsProgress"/>
                     <br>
-                    <publication-chart v-if="renderPublicationChart" :height="700" title=" " :dateFormat="true"
+                    <publication-chart v-if="renderPublicationChart" :height="600" title=" " :dateFormat="true"
                                        :rawData="pubsOverTimeData"
                                        type="line"></publication-chart>
                     <div v-else class="no-data">

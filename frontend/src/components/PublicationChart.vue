@@ -135,7 +135,7 @@
                             this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
                             this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_abstract'],  val['max']['abstract_difference'],  val['min']['abstract_difference'], 0, 100),
+                            this.mapProfileRange(val['publication']['abstract_difference'],  val['max']['abstract_difference'],  val['min']['abstract_difference'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
