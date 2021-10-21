@@ -43,7 +43,7 @@
     export default {
         components: {TimeTooltip},
         created() {
-            document.title = "ambalytics analysis streams";
+            document.title = "ambalytics trends";
 
             this.$router.isReady().then(() => {
                 if (this.$route.query.time !== undefined) {
