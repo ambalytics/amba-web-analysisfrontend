@@ -1,5 +1,7 @@
 <template>
-    <div class="help-text" v-if="openPublication"><router-link :to="currentPublication">click again to open publication</router-link></div>
+    <div class="help-text" v-if="openPublication">
+        <router-link :to="currentPublication">click again to open publication</router-link>
+    </div>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
     <div v-else class="no-data">
         - no data available -
@@ -134,59 +136,60 @@
 
                 this.loaded = false;
 
-                if (val && (val.length > 0 || this.type === "radar")) {
+                if ((val && (val.length > 0) || this.type === "radar")) {
                     if (this.type === "radar") {
                         val = val[0];
-                        let data_this = [
-                            this.mapProfileRange(val['publication']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
-                            this.mapProfileRange(val['publication']['abstract_difference'],  val['max']['abstract_difference'],  val['min']['abstract_difference'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
-                            this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
-                        ];
+                        if (val['publication']['mean_score'] != null) {
+                            let data_this = [
+                                this.mapProfileRange(val['publication']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
+                                this.mapProfileRange(val['publication']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
+                                this.mapProfileRange(val['publication']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
+                                this.mapProfileRange(val['publication']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
+                                this.mapProfileRange(val['publication']['abstract_difference'], val['min']['abstract_difference'], val['max']['abstract_difference'], 0, 100),
+                                this.mapProfileRange(val['publication']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
+                                this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
+                                this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
+                            ];
+                            let data_avg = [
+                                this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
+                                this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
+                                this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
+                                this.mapProfileRange(val['avg']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
+                                this.mapProfileRange(val['avg']['abstract_difference'], val['min']['abstract_difference'], val['max']['abstract_difference'], 0, 100),
+                                this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
+                                this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
+                                this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
+                            ];
 
-                        let data_avg = [
-                            this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_bot_rating'], val['min']['mean_bot_rating'], val['max']['mean_bot_rating'], 0, 100),
-                            this.mapProfileRange(val['avg']['sum_followers'], val['min']['sum_followers'], val['max']['sum_followers'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_sentiment'], val['min']['mean_sentiment'], val['max']['mean_sentiment'], 0, 100),
-                            this.mapProfileRange(val['avg']['abstract_difference'], val['max']['abstract_difference'], val['min']['abstract_difference'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_questions'], val['min']['mean_questions'], val['max']['mean_questions'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
-                            this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
-                        ];
 
+                            this.loaded = true;
+                            this.chartData = {
+                                labels: ['Score', 'Bot Percentage', 'Follower', 'Sentiment', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
+                                datasets: [
+                                    {
+                                        label: 'average Publication',
+                                        backgroundColor: 'rgba(179,181,198,0.2)',
+                                        borderColor: 'rgba(179,181,198,1)',
+                                        pointBackgroundColor: 'rgba(179,181,198,1)',
+                                        pointBorderColor: '#fff',
+                                        pointHoverBackgroundColor: '#fff',
+                                        pointHoverBorderColor: 'rgba(179,181,198,1)',
+                                        data: data_avg
+                                    },
+                                    {
+                                        label: (typeof val['publication']['doi'] === 'string' || val['publication']['doi'] instanceof String) ? val['publication']['doi'] : val['publication']['doi']['name'],
+                                        backgroundColor: 'rgba(15,99,100,0.2)',
+                                        borderColor: 'rgba(15,99,100,1)',
+                                        pointBackgroundColor: 'rgba(15,99,100,1)',
+                                        pointBorderColor: '#fff',
+                                        pointHoverBackgroundColor: '#fff',
+                                        pointHoverBorderColor: 'rgba(15,99,100,1)',
+                                        data: data_this
+                                    }
+                                ]
+                            };
 
-                        this.loaded = true;
-                        this.chartData = {
-                            labels: ['Score', 'Bot Percentage', 'Follower', 'Sentiment', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
-                            datasets: [
-                                {
-                                    label: 'average Publication',
-                                    backgroundColor: 'rgba(179,181,198,0.2)',
-                                    borderColor: 'rgba(179,181,198,1)',
-                                    pointBackgroundColor: 'rgba(179,181,198,1)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverBackgroundColor: '#fff',
-                                    pointHoverBorderColor: 'rgba(179,181,198,1)',
-                                    data: data_avg
-                                },
-                                {
-                                    label: (typeof val['publication']['doi'] === 'string' || val['publication']['doi'] instanceof String) ? val['publication']['doi'] : val['publication']['doi']['name'],
-                                    backgroundColor: 'rgba(15,99,100,0.2)',
-                                    borderColor: 'rgba(15,99,100,1)',
-                                    pointBackgroundColor: 'rgba(15,99,100,1)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverBackgroundColor: '#fff',
-                                    pointHoverBorderColor: 'rgba(15,99,100,1)',
-                                    data: data_this
-                                }
-                            ]
-                        };
-
+                        }
                     } else if (this.type === "doughnut") {
                         val.forEach(e => {
                             if (e.value !== "total") {

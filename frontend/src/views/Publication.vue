@@ -131,12 +131,12 @@
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left" v-if="!isNaN(scoreSum)">
+                    <div class="padding-left" v-if="!isNaN(score)">
                         <h3>
                             <time-tooltip/>
                             Average Score per Tweet
                         </h3>
-                        <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
+                        <p class="padding-left">{{ localeNumber(Math.round(score * 100) / 100) }}</p>
                     </div>
                     <div class="padding-left" v-if="!isNaN(sentiment)">
                         <h3>
@@ -301,7 +301,7 @@
             renderCloud: false,
             renderMap: false,
             tweetCount: '-',
-            scoreSum: '-',
+            score: '-',
             totalFollowers: '-',
             sentiment: '-',
             containsAbstract: '-',
@@ -384,7 +384,7 @@
                     .then(response => {
                         this.tweetCount = response.data.results['count'];
                         this.totalFollowers = response.data.results['followers'];
-                        this.scoreSum = response.data.results['score'];
+                        this.score = response.data.results['score'];
                         this.containsAbstract = response.data.results['contains_abstract_raw'];
                         this.sentiment = response.data.results['sentiment_raw'];
                         this.questions = response.data.results['questions'];
@@ -394,7 +394,7 @@
                         console.log(e);
                         this.tweetCount = '-';
                         this.totalFollowers = '-';
-                        this.scoreSum = '-';
+                        this.score = '-';
                         this.containsAbstract = '-';
                         this.sentiment = '-';
                         this.questions = '-';

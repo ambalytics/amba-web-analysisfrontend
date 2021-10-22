@@ -277,9 +277,9 @@
                 {label: 'Count', value: 'count'},
             ],
             trendingItems: [
-                {label: 'Publication', data: [], icon: 'pi pi-fw pi-book'},
-                {label: 'Author', data: [], icon: 'pi pi-fw pi-user'},
-                {label: 'Field of Study', data: [], icon: 'pi pi-fw pi-sitemap'},
+                {label: 'Publications', data: [], icon: 'pi pi-fw pi-book', path: '/publications'},
+                {label: 'Authors', data: [], icon: 'pi pi-fw pi-user', path: '/authors'},
+                {label: 'Fields of Study', data: [], icon: 'pi pi-fw pi-sitemap', path: '/fieldsOfStudy'},
             ]
         }), created() {
             if (this.$route.query.time !== undefined) {
