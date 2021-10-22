@@ -619,6 +619,9 @@
             font-size: 1.2em;
         }
 
+        .help-text {
+            margin: 10px 0 20px 0 !important;
+        }
     }
 
     .license {
