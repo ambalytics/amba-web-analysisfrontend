@@ -122,7 +122,6 @@
                     maxIn = number;
                 }
                 let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
-                 console.log([minIn, maxIn, number, r]);
                 return r;
             }
         },
