@@ -619,6 +619,9 @@
             font-size: 1.2em;
         }
 
+        .help-text {
+            margin: 10px 0 20px 0 !important;
+        }
     }
 
     .license {
@@ -685,5 +688,13 @@
         .prio2 {
             display: none !important;
         }
+    }
+
+    .help-text {
+        text-align: center;
+        font-size: 0.9em;
+        margin: -30px 0 10px 0;
+        height: 20px;
+        color: $color-main;
     }
 </style>

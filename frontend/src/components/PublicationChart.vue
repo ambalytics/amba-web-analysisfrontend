@@ -1,4 +1,5 @@
 <template>
+    <div class="help-text" v-if="openPublication"><router-link :to="currentPublication">click again to open publication</router-link></div>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
     <div v-else class="no-data">
         - no data available -
@@ -47,6 +48,8 @@
         data: () => ({
             loaded: false,
             chartData: null,
+            openPublication: false,
+            currentPublication: '/publications'
         }),
         mounted() {
             this.options = {
@@ -75,6 +78,8 @@
                                     datasetIndex: item.datasetIndex,
                                     index: 0
                                 }]);
+                                this.openPublication = true;
+                                this.currentPublication = '/publication/' + item.text;
 
                                 chart.render();
                             },
@@ -113,8 +118,10 @@
         },
         methods: {
             mapProfileRange: function (number, minIn, maxIn, minOut, maxOut) {
+                if (number > maxIn) {
+                    maxIn = number;
+                }
                 let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
-                // console.log([minIn, maxIn, number, r]);
                 return r;
             }
         },
@@ -151,6 +158,7 @@
                             this.mapProfileRange(val['avg']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
                         ];
+
 
                         this.loaded = true;
                         this.chartData = {
