@@ -686,4 +686,12 @@
             display: none !important;
         }
     }
+
+    .help-text {
+        text-align: center;
+        font-size: 0.9em;
+        margin: -30px 0 10px 0;
+        height: 20px;
+        color: $color-main;
+    }
 </style>
