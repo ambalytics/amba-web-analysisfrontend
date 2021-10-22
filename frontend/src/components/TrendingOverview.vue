@@ -6,11 +6,11 @@
         </template>
         <template #content>
             <div v-for="item in trendingItems" :key="item.label" class="trending-items">
-                <h4><i style="margin-right: 5px;" :class="item.icon"></i>{{ item.label }}</h4>
+                <router-link v-if="item.path" :to="item.path"><h4><i style="margin-right: 5px;" :class="item.icon"></i>{{ item.label }}</h4></router-link>
                 <DataTable :value="item.data" :autoLayout="true" @row-click="rowClick($event, item.label)">
                     <Column class="amba rank" field="trending_ranking" header="Rank"></Column>
-                    <Column v-if="item.label === 'Publication'" field="title" header="Title"></Column>
-                    <Column v-if="item.label !== 'Publication'" field="name" header="Name"></Column>
+                    <Column v-if="item.label === 'Publications'" field="title" header="Title"></Column>
+                    <Column v-if="item.label !== 'Publications'" field="name" header="Name"></Column>
                 </DataTable>
             </div>
         </template>
@@ -29,9 +29,9 @@
                 required: true,
                 default() {
                     return [
-                        {label: 'Publication', data: [], icon: 'pi pi-fw pi-book'},
-                        {label: 'Author', data: [], icon: 'pi pi-fw pi-user'},
-                        {label: 'Field of Study', data: [], icon: 'pi pi-fw pi-sitemap'},
+                        {label: 'Publications', data: [], icon: 'pi pi-fw pi-book', path: '/publications'},
+                        {label: 'Authors', data: [], icon: 'pi pi-fw pi-user', path: '/authors'},
+                        {label: 'Fields of Study', data: [], icon: 'pi pi-fw pi-sitemap', path: '/fieldsOfStudy'},
                     ]
                 }
             },
