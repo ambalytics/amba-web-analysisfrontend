@@ -147,7 +147,6 @@
                             this.mapProfileRange(val['publication']['mean_exclamations'], val['min']['mean_exclamations'], val['max']['mean_exclamations'], 0, 100),
                             this.mapProfileRange(val['publication']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
                         ];
-                        console.log(data_this);
 
                         let data_avg = [
                             this.mapProfileRange(val['avg']['mean_score'], val['min']['mean_score'], val['max']['mean_score'], 0, 100),
@@ -160,7 +159,6 @@
                             this.mapProfileRange(val['avg']['mean_length'], val['min']['mean_length'], val['max']['mean_length'], 0, 100),
                         ];
 
-                        console.log(data_avg);
 
                         this.loaded = true;
                         this.chartData = {
