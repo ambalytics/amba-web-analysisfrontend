@@ -25,11 +25,13 @@
         </div>
         <div v-else class="external-content-warning">
             <h3>External Twitter Content</h3>
-            <div>Here will be external content from <a href="https://twitter.com">Twitter</a> to be loaded. This may share personal data and store cookies on
-                your pc. <br>
-                More Information about Twitters use of <a
-                        href="https://help.twitter.com/en/rules-and-policies/twitter-cookies">cookies</a> and
-                their <a href="https://twitter.com/de/privacy">privacy</a> policies.
+            <div>
+                ambalytics wants to load content from <a href="https://twitter.com">Twitter</a>.
+                To protect your data, it was not loaded without your consent.<br><br>
+                Activation may transfer personal data to Twitter. Learn more about Twitter‘s use of <a
+                    href="https://help.twitter.com/en/rules-and-policies/twitter-cookies">cookies</a> and <a
+                    href="https://twitter.com/de/privacy">privacy</a> policy.
+
             </div>
             <Button label="Load external data" icon="pi pi-check" @click="allowExternalContent"/>
         </div>
