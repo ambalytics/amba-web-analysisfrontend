@@ -224,6 +224,7 @@ Publications.vue
             }
         },
         created() {
+            document.title = "Trending authors";
             if (this.$route.query.time !== undefined) {
                 this.duration = this.$route.query.time;
             }

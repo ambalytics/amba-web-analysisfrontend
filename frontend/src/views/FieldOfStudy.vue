@@ -296,7 +296,8 @@
 
                 FieldOfStudyService.get(this.$route.params.id)
                     .then(response => {
-                        this.fieldOfStudyName = response.data.results.fields_of_study.name
+                        this.fieldOfStudyName = response.data.results.fields_of_study.name;
+                        document.title = this.fieldOfStudyName;
                     })
                     .catch(e => {
                         this.fieldOfStudyName = '';
