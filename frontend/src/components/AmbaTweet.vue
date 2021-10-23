@@ -1,7 +1,7 @@
 <template>
     <div class="amba-tweet">
         <i class="pi pi-refresh reload-button" @click="loadNewestTweet"></i>
-        <div class="rendered-tweet special-scrollbar">
+        <div v-if="tweetsAllowed" class="rendered-tweet special-scrollbar">
             <Tweet
                     v-if="tweetId !== ''"
                     :tweet-id="tweetId"
@@ -22,6 +22,16 @@
                     <span>Sorry, that tweet can't be loaded.</span>
                 </template>
             </Tweet>
+        </div>
+        <div v-else class="external-content-warning">
+            <h3>External Twitter Content</h3>
+            <div>Here will be external content from <a href="https://twitter.com">Twitter</a> to be loaded. This may share personal data and store cookies on
+                your pc. <br>
+                More Information about Twitters use of <a
+                        href="https://help.twitter.com/en/rules-and-policies/twitter-cookies">cookies</a> and
+                their <a href="https://twitter.com/de/privacy">privacy</a> policies.
+            </div>
+            <Button label="Load external data" icon="pi pi-check" @click="allowExternalContent"/>
         </div>
 
         <div class="processed-data">
@@ -47,7 +57,8 @@
                             style="font-size: 0.8em; margin-right: 0.5em" class="pi pi-external-link"></i>License</a>
                     <span v-else></span>
                     <a target="_blank" :href="'http://doi.org/' + doi"><i style="font-size: 0.8em; margin-right: 0.5em"
-                                                                          class="pi pi-external-link"></i>go to Source</a>
+                                                                          class="pi pi-external-link"></i>go to
+                        Source</a>
                 </div>
             </div>
             <div v-else>
@@ -93,7 +104,7 @@
                     <h3>Type</h3>
                     <p>{{ subj_type }}</p>
                 </div>
-                <div v-if="entities && entities.length > 0" >
+                <div v-if="entities && entities.length > 0">
                     <h3>Entities</h3>
                     <p v-for="entity in entities" v-bind:key="entity">{{ entity }}</p>
                 </div>
@@ -163,13 +174,18 @@
                 length: "",
                 authors: "",
                 entities: [],
-                license: null
+                license: null,
+                tweetsAllowed: false,
             }
         },
         created() {
             this.loadNewestTweet();
         },
         methods: {
+            allowExternalContent: function () {
+                this.$cookie.setCookie('external-content-allowed', true);
+                this.tweetsAllowed = true;
+            },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
                 return x.toLocaleString();  //'de-De'
@@ -219,6 +235,10 @@
                             this.entities = []
                         } else {
                             this.entities = JSON.parse(this.entities)
+                        }
+                        console.log(this.$cookie.getCookie('external-content-allowed'));
+                        if (this.$cookie.getCookie('external-content-allowed') && this.$cookie.getCookie('external-content-allowed') === 'true') {
+                            this.tweetsAllowed = true;
                         }
                     })
                     .catch(e => {
@@ -372,6 +392,36 @@
                     }
                 }
             }
+        }
+    }
+
+    .external-content-warning {
+        padding: 1em;
+        border: 1px solid $color-main;
+        color: black;
+        width: 300px;
+        border-radius: 5px;
+        height: fit-content;
+
+        h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        div {
+            font-size: 0.9em;
+            margin: 1em 0.5em;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        a {
+            color: dodgerblue;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: rgba($color-main, 0.7) !important;
         }
     }
 </style>
