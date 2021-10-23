@@ -58,6 +58,7 @@
                 responsive: true,
                 aspectRatio: 0.6,
                 normalized: true,
+                animation: false,
             };
 
             if (this.type === "line") {
@@ -65,6 +66,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     normalized: true,
+                    animation: false,
                     spanGaps: true,
                     hover: {
                         mode: 'dataset'
@@ -96,6 +98,7 @@
             if (this.type === "radar") {
                 this.options = {
                     responsive: true,
+                    animation: false,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
