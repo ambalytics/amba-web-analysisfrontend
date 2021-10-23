@@ -19,6 +19,7 @@ import SelectButton from 'primevue/selectbutton';
 import Dropdown from 'primevue/dropdown';
 import TabMenu from 'primevue/tabmenu';
 import Button from 'primevue/button';
+import './registerServiceWorker'
 
 
 const app = createApp(App);
