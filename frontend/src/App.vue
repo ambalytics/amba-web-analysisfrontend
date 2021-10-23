@@ -13,8 +13,7 @@
             </Dropdown>
         </div>
 
-        <div class="header-text">ambalytics trends</div>
-
+        <div class="header-text">ambalytics <span class="header-text-trends">trends</span></div>
         <Menubar :model="items">
             <template #item="{item}">
                 <router-link v-if="item.show" :to="item.to" class="p-d-flex p-ai-center p-menuitem-link">
@@ -311,11 +310,15 @@
 
         div.header-text {
             color: $color-main;
-            /*font-variant: small-caps;*/
-            letter-spacing: -2.5px;
+            letter-spacing: -1px;
             font-family: 'Lato', sans-serif;
             font-size: 2em;
-            font-weight: bold;
+
+            .header-text-trends {
+                font-size: 1.1em;
+                /*font-style: italic;*/
+                font-weight: bold;
+            }
         }
 
     }
