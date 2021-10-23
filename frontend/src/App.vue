@@ -303,8 +303,8 @@
 
 
             img {
-                height: 50px;
-                width: auto;
+                height: 55px;
+                width: 55px;
             }
         }
 
