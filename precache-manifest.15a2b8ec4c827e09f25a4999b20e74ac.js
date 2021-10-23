@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
   },
   {
-    "revision": "bbd982d9823ba7189041",
+    "revision": "54447c5a4e598af4e59e",
     "url": "/css/Publication.315ec643.css"
   },
   {
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "d89164dff6136444e6f2",
-    "url": "/css/app.5ec5c2d5.css"
+    "revision": "06757ceeddffa17d1dfe",
+    "url": "/css/app.a2e77709.css"
   },
   {
     "revision": "45d190c0264badff2587",
@@ -164,12 +164,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/twitter-logo.923455be.svg"
   },
   {
-    "revision": "5bb3b90f2d288bbf44e6bf0cfc87f987",
+    "revision": "bd421bce351d015fb1b39a01b1b70cfe",
     "url": "/index.html"
   },
   {
-    "revision": "78163df3bf31c07f6626",
-    "url": "/js/Author.f7bcc1b3.js"
+    "revision": "f922e6efd8704cb1dfac",
+    "url": "/js/Author.b3313987.js"
   },
   {
     "revision": "48eb144bcc9c9b6e9355",
@@ -180,12 +180,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/Author~FieldsOfStudy~Publications.8b80dd83.js"
   },
   {
-    "revision": "fc9138665ec49cd20c6a",
-    "url": "/js/FieldsOfStudy.ea7835d5.js"
+    "revision": "a484248bf69dcc86d6cf",
+    "url": "/js/FieldsOfStudy.1e1f12cd.js"
   },
   {
-    "revision": "bbd982d9823ba7189041",
-    "url": "/js/Publication.8405333e.js"
+    "revision": "54447c5a4e598af4e59e",
+    "url": "/js/Publication.b0a8dc94.js"
   },
   {
     "revision": "c5f04163577b116b568b",
@@ -196,8 +196,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/about.c71f9e75.js"
   },
   {
-    "revision": "d89164dff6136444e6f2",
-    "url": "/js/app.4b57d821.js"
+    "revision": "06757ceeddffa17d1dfe",
+    "url": "/js/app.e1125a20.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
