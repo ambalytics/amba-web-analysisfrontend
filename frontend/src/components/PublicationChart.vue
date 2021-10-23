@@ -57,12 +57,16 @@
             this.options = {
                 responsive: true,
                 aspectRatio: 0.6,
+                normalized: true,
             };
 
             if (this.type === "line") {
                 this.options = {
                     responsive: true,
                     maintainAspectRatio: false,
+                    normalized: true,
+                    animation: false,
+                    spanGaps: true,
                     hover: {
                         mode: 'dataset'
                     },
@@ -93,6 +97,7 @@
             if (this.type === "radar") {
                 this.options = {
                     responsive: true,
+                    animation: false,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
@@ -114,7 +119,8 @@
                                 lineWidth: 2
                             }
                         }
-                    }
+                    },
+                    normalized: true,
                 }
             }
         },
@@ -290,11 +296,11 @@
                                 borderWidth: 3,
                                 hoverBorderWidth: 5,
                                 data: data,
-                                pointRadius: 1,
+                                pointRadius: 0.5,
                                 pointHoverRadius: 2,
                                 pointHoverBorderWidth: 3,
                                 order: colors.length - 1 - i,
-                                tension: 0.2
+                                tension: 0.2,
                             });
                         });
 
