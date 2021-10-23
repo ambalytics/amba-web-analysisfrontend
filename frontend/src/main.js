@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config';
+import { VueCookieNext } from 'vue-cookie-next'
 
 import 'primeflex/primeflex.css';
 import 'primevue/resources/primevue.min.css';
@@ -17,6 +18,7 @@ import InputText from 'primevue/inputtext';
 import SelectButton from 'primevue/selectbutton';
 import Dropdown from 'primevue/dropdown';
 import TabMenu from 'primevue/tabmenu';
+import Button from 'primevue/button';
 
 
 const app = createApp(App);
@@ -26,6 +28,7 @@ app.provide('selectedTime', {
                     icon: "pi pi-fw pi-clock",
                     duration: 3600 * 6
                 });
+app.use(VueCookieNext);
 app.use(router);
 
 app.use(PrimeVue);
@@ -39,6 +42,7 @@ app.component('InputText', InputText);
 app.component('SelectButton', SelectButton);
 app.component('Dropdown', Dropdown);
 app.component('TabMenu', TabMenu);
+app.component('Button', Button);
 
 
 app.directive('tooltip', Tooltip);
