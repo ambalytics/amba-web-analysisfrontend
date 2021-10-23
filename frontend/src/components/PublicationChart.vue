@@ -57,12 +57,15 @@
             this.options = {
                 responsive: true,
                 aspectRatio: 0.6,
+                normalized: true,
             };
 
             if (this.type === "line") {
                 this.options = {
                     responsive: true,
                     maintainAspectRatio: false,
+                    normalized: true,
+                    spanGaps: true,
                     hover: {
                         mode: 'dataset'
                     },
@@ -114,7 +117,8 @@
                                 lineWidth: 2
                             }
                         }
-                    }
+                    },
+                    normalized: true,
                 }
             }
         },
