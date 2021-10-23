@@ -363,6 +363,7 @@
                     .then(response => {
                         // console.log(response.data.data);
                         this.publication = response.data.results['publication'][0];
+                        document.title = this.publication.title;
                         this.publication['authors'] = response.data.results['authors'];
                         this.publication['fields_of_study'] = response.data.results['fields_of_study'];
                         this.publication['sources'] = response.data.results['sources'];

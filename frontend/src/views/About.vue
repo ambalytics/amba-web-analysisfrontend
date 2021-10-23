@@ -49,6 +49,9 @@
 
     export default {
         name: 'About',
+        created() {
+            document.title = "About ambalytics trends";
+        }
     }
 </script>
 

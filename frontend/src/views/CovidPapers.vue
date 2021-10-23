@@ -84,6 +84,8 @@
             }
         },
         created() {
+            document.title = "COVID-19 Trends - trending publications about covid";
+
             if (this.$route.query.time !== undefined) {
                 this.duration = this.$route.query.time;
             }

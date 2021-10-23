@@ -312,7 +312,8 @@
 
                 AuthorService.get(this.$route.params.id)
                     .then(response => {
-                        this.authorName = response.data.results.author.name
+                        this.authorName = response.data.results.author.name;
+                        document.title = this.authorName;
                     })
                     .catch(e => {
                         this.authorName = '';
