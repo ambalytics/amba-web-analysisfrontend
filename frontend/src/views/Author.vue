@@ -220,7 +220,7 @@
                     {label: 'Score', value: 'score'},
                     {label: 'Count', value: 'count'},
                     {label: 'Sentiment', value: 'mean_sentiment'},
-                    {label: 'Followers', value: 'sum_follower'},
+                    {label: 'Followers', value: 'sum_followers'},
                     {label: 'Contains Abstract', value: 'abstract_difference'},
                     {label: 'Mean Age', value: 'mean_age'},
                     {label: 'Length', value: 'mean_length'},
