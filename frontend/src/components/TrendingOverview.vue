@@ -1,5 +1,5 @@
 <template>
-    <Card>
+    <Card class="trending-items-card">
         <template #title>
             <time-tooltip/>
             Trending
@@ -56,21 +56,28 @@
 <style lang="scss">
     @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
 
-    .trending-items {
-        margin-top: -1.5em;
+    .trending-items-card {
+        /*height: 50rem;*/
 
+    }
+
+    .trending-items {
+        margin-top: -2em;
+        position: relative;
+
+        &:last-of-type {
+            margin-bottom: -4em;
+        }
         h4 {
             color: $color-main;
-            margin: 1em 0.3em 0 0;
-            float: right;
-            padding-bottom: 0.2em;
+            right: 0;
+            top: 0;
+            position: absolute;
             z-index: 2;
-            position: relative;
         }
 
         .p-datatable {
-            margin: -1.5em 0 1.3em 0;
-            float: left;
+            padding: 1.3em 0 2em;
             width: 100%;
             font-size: 0.9em;
         }

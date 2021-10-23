@@ -65,7 +65,6 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     normalized: true,
-                    animation: false,
                     spanGaps: true,
                     hover: {
                         mode: 'dataset'
@@ -97,7 +96,6 @@
             if (this.type === "radar") {
                 this.options = {
                     responsive: true,
-                    animation: false,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
@@ -267,22 +265,31 @@
                             }
                         }
 
+                        let cache = {};
+                        let options = {
+                            year: '2-digit',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        };
+
                         val.forEach((e, i) => {
                             // publication level
-
                             let data = [];
+
                             e.data.forEach(t => {
                                 let date = new Date(t.time);
-                                let options = {
-                                    year: '2-digit',
-                                    month: '2-digit',
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                };
-                                label.push(date.toLocaleTimeString('de-DE', options));
+                                let dataLabel = '';
+                                if (Object.prototype.hasOwnProperty.call(cache, (date.getTime()))) {
+                                    dataLabel = cache[date.getTime()];
+                                } else {
+                                    dataLabel = date.toLocaleTimeString('de-DE', options);
+                                    cache[date.getTime()] = dataLabel;
+                                }
+                                label.push(dataLabel);
                                 data.push({
-                                    x: date.toLocaleTimeString('de-DE', options),
+                                    x: dataLabel,
                                     y: t.value
                                 });
                             });
@@ -296,7 +303,7 @@
                                 borderWidth: 3,
                                 hoverBorderWidth: 5,
                                 data: data,
-                                pointRadius: 0.5,
+                                pointRadius: 0.7,
                                 pointHoverRadius: 2,
                                 pointHoverBorderWidth: 3,
                                 order: colors.length - 1 - i,
