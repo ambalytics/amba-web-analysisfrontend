@@ -28,7 +28,7 @@
             <div>
                 ambalytics wants to load content from <a href="https://twitter.com">Twitter</a>.
                 To protect your data, it was not loaded without your consent.<br><br>
-                Activation may transfer personal data to Twitter. Learn more about Twitter‘s use of <a
+                Activation may transfer personal data to Twitter. Learn more about Twitter's use of <a
                     href="https://help.twitter.com/en/rules-and-policies/twitter-cookies">cookies</a> and <a
                     href="https://twitter.com/de/privacy">privacy</a> policy.
 
