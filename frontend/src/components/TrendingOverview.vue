@@ -41,7 +41,7 @@
                 if (event.data.doi) {
                     this.$router.push('/publication/' + event.data.doi)
                 } else if (event.data.id) {
-                    if (extra === "Author") {
+                    if (extra === "Authors") {
                         this.$router.push('/author/' + event.data.id)
                     } else {
                         this.$router.push('/fieldOfStudy/' + event.data.id)
