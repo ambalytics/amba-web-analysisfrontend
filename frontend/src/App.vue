@@ -42,7 +42,7 @@
     export default {
         components: {TimeTooltip},
         created() {
-            document.title = "ambalytics trends - trending publications people tweet about";
+            document.title = "Trending Scientific Publications on Social Media";
 
             this.$router.isReady().then(() => {
                 if (this.$route.query.time !== undefined) {

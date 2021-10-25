@@ -282,7 +282,7 @@
                 {label: 'Fields of Study', data: [], icon: 'pi pi-fw pi-sitemap', path: '/fieldsOfStudy'},
             ]
         }), created() {
-            document.title = "Trending publications people tweet about";
+            document.title = "Trending Scientific Publications on Social Media";
             if (this.$route.query.time !== undefined) {
                 this.duration = this.$route.query.time;
             }
