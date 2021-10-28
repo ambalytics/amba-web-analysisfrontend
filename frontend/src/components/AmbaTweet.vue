@@ -318,7 +318,7 @@
         }
 
         .processed-data {
-            margin-top: -40px;
+            margin-top: -20px;
             flex-grow: 1;
             padding: 10px;
             margin-left: 10px;
@@ -458,11 +458,4 @@
         }
     }
 
-    @media not all and (min-resolution:.001dpcm) {
-        @media {
-            .processed-data {
-                margin-top: 0;
-            }
-        }
-    }
 </style>
