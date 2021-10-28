@@ -616,8 +616,10 @@
 
         .wordCloud {
             height: 45vw !important;
-            display: grid !important;
-            margin: -70px 0 10px 0;
+
+            svg {
+                display: block;
+            }
         }
 
 
