@@ -318,7 +318,7 @@
         }
 
         .processed-data {
-            margin-top: -50px;
+            margin-top: -40px;
             flex-grow: 1;
             padding: 10px;
             margin-left: 10px;
