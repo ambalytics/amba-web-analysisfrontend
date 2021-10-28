@@ -98,7 +98,7 @@
                     sortField: 'score',
                     sortOrder: -1,
                 };
-                this.timer = setInterval(this.loadTrendingProgress, 180000);
+                this.timer = setInterval(this.fetchData, 180000);
         },
         methods: {
             search(event) {
