@@ -457,4 +457,12 @@
             background: rgba($color-main, 0.7) !important;
         }
     }
+
+    @media not all and (min-resolution:.001dpcm) {
+        @media {
+            .processed-data {
+                margin-top: 0;
+            }
+        }
+    }
 </style>
