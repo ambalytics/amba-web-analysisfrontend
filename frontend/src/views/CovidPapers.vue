@@ -66,6 +66,7 @@
                     {label: 'Count', value: 'count'},
                     {label: 'Sentiment', value: 'mean_sentiment'},
                     {label: 'Followers', value: 'sum_followers'},
+                    {label: 'Theil–Sen estimator', value: 'trending'},
                     {label: 'Contains Abstract', value: 'abstract_difference'},
                     {label: 'Mean Age', value: 'mean_age'},
                     {label: 'Length', value: 'mean_length'},
@@ -73,12 +74,11 @@
                     {label: 'Exclamations', value: 'mean_exclamations'},
                     {label: 'Bot Rating', value: 'mean_bot_rating'},
                     {label: 'Projected Change', value: 'projected_change'},
-                    {label: 'Trending Value', value: 'trending'},
-                    {label: 'ema', value: 'ema'},
-                    {label: 'kama', value: 'kama'},
-                    {label: 'ker', value: 'ker'},
+                    {label: 'EMA', value: 'ema'},
+                    {label: 'KAMA', value: 'kama'},
+                    {label: 'KER', value: 'ker'},
                     {label: 'Mean Score', value: 'mean_score'},
-                    {label: 'stddev', value: 'stddev'},
+                    {label: 'SD', value: 'stddev'},
                 ],
                 dois: []
             }
@@ -97,7 +97,8 @@
                     rows: 10,
                     sortField: 'score',
                     sortOrder: -1,
-                }
+                };
+                this.timer = setInterval(this.fetchData, 180000);
         },
         methods: {
             search(event) {
@@ -159,6 +160,9 @@
                         console.log(e);
                     });
             },
+        },
+        beforeUnmount() {
+            clearInterval(this.timer);
         }
     }
 </script>

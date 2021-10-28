@@ -1,6 +1,9 @@
 <template>
     <div class="amba-tweet">
-        <i class="pi pi-refresh reload-button" @click="loadNewestTweet"></i>
+        <div class="reload-button">
+            <span>auto-update</span>
+            <InputSwitch v-model="autoUpdate" @change="updateAutoUpdate"/>
+        </div>
         <div v-if="tweetsAllowed" class="rendered-tweet special-scrollbar">
             <Tweet
                     v-if="tweetId !== ''"
@@ -178,12 +181,28 @@
                 entities: [],
                 license: null,
                 tweetsAllowed: false,
+                autoUpdate: false,
             }
         },
         created() {
             this.loadNewestTweet();
         },
         methods: {
+            updateAutoUpdate() {
+                if (this.autoUpdate === true) {
+                    this.startAutoUpdate();
+                } else {
+                    this.cancelAutoUpdate();
+                }
+            },
+            startAutoUpdate() {
+                console.log('start auto update');
+                this.timer = setInterval(this.loadNewestTweet, 10000);
+            },
+            cancelAutoUpdate() {
+                console.log('cancel auto update');
+                clearInterval(this.timer);
+            },
             allowExternalContent: function () {
                 this.$cookie.setCookie('external-content-allowed', true);
                 this.tweetsAllowed = true;
@@ -201,6 +220,7 @@
                 return 'Bot'
             },
             loadNewestTweet() {
+                console.log('load tweet');
                 StatService.newestTweet(this.mode, this.doi_in, this.id_in)
                     .then(r => {
                         let response = r.data.results[0].data;
@@ -247,6 +267,9 @@
                         console.log(e);
                     });
             }
+        },
+        beforeUnmount() {
+            this.cancelAutoUpdate();
         }
     }
 </script>
@@ -261,17 +284,25 @@
         flex-wrap: wrap;
         row-gap: 50px;
 
+        .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+            background: rgba($color-main, 0.5);
+        }
+
+        .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
+            background: rgba($color-main, 0.3) !important;
+        }
+
         .reload-button {
+            display: flex;
             cursor: pointer;
             position: absolute;
             right: -1em;
             top: -4.5em;
             padding: 5px;
 
-            &:hover {
-                font-size: 1.2em;
-                right: -0.95em;
-                top: -3.85em;
+            span {
+                font-size: 0.8em;
+                margin-right: 0.7em;
             }
         }
 
@@ -287,7 +318,7 @@
         }
 
         .processed-data {
-            margin-top: -50px;
+            margin-top: -20px;
             flex-grow: 1;
             padding: 10px;
             margin-left: 10px;
@@ -389,7 +420,7 @@
                     p {
                         font-size: 1.2em;
                         font-weight: bold;
-                        float: right;
+                        text-align: end;
                         margin: 0;
                     }
                 }
@@ -426,4 +457,5 @@
             background: rgba($color-main, 0.7) !important;
         }
     }
+
 </style>

@@ -107,18 +107,17 @@
 
     .p-datatable.big-table {
         th:nth-child(1), td:nth-child(1) {
-            width: 60px;
+            width: 50px;
         }
 
         th:nth-child(2), td:nth-child(2) {
-            width: 350px;
+            width: 350px !important;
         }
     }
 
     table.p-datatable-table {
-
         .p-datatable-tbody > tr > td {
-            padding: 10px;
+            padding: 0.6em;
 
             &.rank {
                 width: 40px;
@@ -129,17 +128,18 @@
         }
 
         td > .wrapper {
-            font-size: 0.95em;
+            font-size: 0.9em;
             text-align: right;
             display: inline-block;
             min-width: 100%;
             font-weight: 700;
             font-family: 'Courier New', monospace !important;
-            padding: 10px 40px 10px 10px !important
+            padding: 0.5em 2em 0.5em 0.5em !important
         }
 
         th {
-            font-size: 0.9em;
+            font-size: 0.85em;
+            padding: 0.9em !important;
         }
 
         th.text-align-right > .p-column-header-content > span.p-column-title {
@@ -342,8 +342,8 @@
         }
 
         .wordCloud {
+            transform-origin: left;
             display: flex;
-            justify-content: center;
             align-items: center;
             height: 100%;
 
@@ -563,6 +563,13 @@
             }
         }
 
+        .p-column-title {
+            font-size: 0.95em !important;
+        }
+        td {
+            text-align: end !important;
+        }
+
         tr > td > span.p-column-title {
             display: block;
             font-weight: bold !important;
@@ -615,9 +622,11 @@
         .big-chart {
             height: 830px !important;
         }
+
         .trending-items h4 {
             font-size: 1.3em;
         }
+
         .trending-items .p-datatable .p-datatable-tbody > tr td {
             font-size: 1.2em;
         }
@@ -625,6 +634,7 @@
         .help-text {
             margin: 10px 0 20px 0 !important;
         }
+
     }
 
     .license {
@@ -678,6 +688,21 @@
     @media only screen and (max-width: 2500px) {
         .prio4 {
             display: none !important;
+        }
+
+        td > .wrapper {
+            font-size: 1em !important;
+            text-align: end;
+            display: inline-block;
+            min-width: 100%;
+            font-weight: 700;
+            font-family: 'Courier New', monospace !important;
+            padding: 0.6em 2.4em 0.6em 0.6em !important
+        }
+
+        th {
+            font-size: 1em;
+            padding: 1em !important;
         }
     }
 
