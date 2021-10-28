@@ -632,7 +632,8 @@
         }
 
         .help-text {
-            margin: 10px 0 20px 0 !important;
+            height: fit-content !important;
+            margin-top: 10px !important;
         }
 
     }
