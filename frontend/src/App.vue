@@ -342,8 +342,8 @@
         }
 
         .wordCloud {
+            transform-origin: left;
             display: flex;
-            justify-content: center;
             align-items: center;
             height: 100%;
 
@@ -616,11 +616,6 @@
 
         .wordCloud {
             height: 45vw !important;
-
-            svg {
-                display: block;
-                flex-grow: 1;
-            }
         }
 
 
