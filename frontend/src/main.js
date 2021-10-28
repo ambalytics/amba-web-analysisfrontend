@@ -19,6 +19,8 @@ import SelectButton from 'primevue/selectbutton';
 import Dropdown from 'primevue/dropdown';
 import TabMenu from 'primevue/tabmenu';
 import Button from 'primevue/button';
+import InputSwitch from 'primevue/inputswitch';
+
 import './registerServiceWorker'
 
 
@@ -44,6 +46,7 @@ app.component('SelectButton', SelectButton);
 app.component('Dropdown', Dropdown);
 app.component('TabMenu', TabMenu);
 app.component('Button', Button);
+app.component('InputSwitch', InputSwitch);
 
 
 app.directive('tooltip', Tooltip);

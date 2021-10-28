@@ -1,6 +1,6 @@
 <template>
     <div class="help-text" v-if="openPublication">
-        <router-link :to="currentPublication">click again to open publication</router-link>
+        <router-link :to="currentPublication">{{ openPublicationText }}</router-link>
     </div>
     <Chart v-if="loaded" :type="type" :data="chartData" :options="options" :height="height"/>
     <div v-else class="no-data">
@@ -51,6 +51,7 @@
             loaded: false,
             chartData: null,
             openPublication: false,
+            openPublicationText: 'click to open publication',
             currentPublication: '/publications'
         }),
         mounted() {
@@ -76,7 +77,6 @@
                         legend: {
                             onClick: (evt, item, legend) => {
                                 const chart = legend.chart;
-                                // console.log(chart.getDatasetMeta(item.datasetIndex).data[0].options);
                                 if (chart.getDatasetMeta(item.datasetIndex).data[0].options.radius === 2) {
                                     this.$router.push('/publication/' + item.text);
                                 }
@@ -85,11 +85,20 @@
                                     datasetIndex: item.datasetIndex,
                                     index: 0
                                 }]);
+
                                 this.openPublication = true;
+                                this.openPublicationText = 'click to open publication: ' + chart.getDatasetMeta(item.datasetIndex)._dataset.title;
                                 this.currentPublication = '/publication/' + item.text;
 
                                 chart.render();
                             },
+                        },
+                        tooltip: {
+                            callbacks: {
+                                beforeLabel: function (context) {
+                                    return context.dataset.title;
+                                }
+                            }
                         },
                     }
                 }
@@ -124,7 +133,8 @@
                     normalized: true,
                 }
             }
-        },
+        }
+        ,
         methods: {
             mapProfileRange: function (number, minIn, maxIn, minOut, maxOut) {
                 if (number > maxIn) {
@@ -133,7 +143,8 @@
                 let r = (number - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut;
                 return r;
             }
-        },
+        }
+        ,
         watch: {
             rawData: function (val) {
                 let data = [];
@@ -171,7 +182,7 @@
 
                             this.loaded = true;
                             this.chartData = {
-                                labels: ['Score', 'Bot Percentage', 'Follower', 'Sentiment', 'Abstract Difference', 'Questions', 'Exclamations', 'Length'],
+                                labels: ['Mean Score', 'Mean Bot Rating', 'Sum Follower', 'Mean Sentiment', 'Mean Abstract Difference', 'Mean Questions', 'Mean Exclamations', 'Mean Length'],
                                 datasets: [
                                     {
                                         label: 'average Publication',
@@ -299,6 +310,7 @@
 
                             dt.push({
                                 label: e.doi,
+                                title: e.title,
                                 backgroundColor: colors[i] + "30",
                                 hoverBackgroundColor: colors[i] + "AA",
                                 borderColor: colors[i],

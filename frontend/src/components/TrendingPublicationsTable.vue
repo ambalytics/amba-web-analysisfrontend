@@ -113,11 +113,11 @@
                     },
                     {
                         field: 'trending',
-                        header: 'trending',
+                        header: 'Theil–Sen estimator',
                         sortable: true,
                         class: "text-align-right amba prio1",
                         numberTemplate: true,
-                        help: 'slope of the mann kendall yue wang modification trending result'
+                        help: 'Theil–Sen estimator, slope of the mann kendall yue wang modification trending calculation'
                     },
                     {
                         field: 'count',
@@ -153,7 +153,7 @@
                     },
                     {
                         field: 'mean_age',
-                        header: 'mean Age',
+                        header: 'Mean Age',
                         sortable: true,
                         class: "text-align-right amba prio2",
                         numberTemplate: true,
@@ -170,24 +170,24 @@
                     },
                     {
                         field: 'mean_bot_rating',
-                        header: 'mean Bot Rating',
+                        header: 'Mean Bot Rating',
                         sortable: true,
                         class: "text-align-right amba prio2",
                         numberTemplate: true,
-                        help: 'higher is better'
+                        help: 'Higher values means less bots, a score of 10 means no detected bots.'
                     },
 
                     {
                         field: 'ema',
-                        header: 'ema',
+                        header: 'EMA',
                         sortable: true,
                         class: "text-align-right amba prio3",
                         numberTemplate: true,
-                        help: 'exponential moving average'
+                        help: 'Exponential Moving Average'
                     },
                     {
                         field: 'kama',
-                        header: 'kama',
+                        header: 'KAMA',
                         sortable: true,
                         class: "text-align-right amba prio3",
                         numberTemplate: true,
@@ -195,7 +195,7 @@
                     },
                     {
                         field: 'ker',
-                        header: 'ker',
+                        header: 'KER',
                         sortable: true,
                         class: "text-align-right amba prio3",
                         numberTemplate: true,
@@ -203,22 +203,22 @@
                     },
                     {
                         field: 'mean_score',
-                        header: 'mean Score',
+                        header: 'Mean Score',
                         sortable: true,
                         class: "text-align-right amba prio3",
                         numberTemplate: true
                     },
                     {
                         field: 'stddev',
-                        header: 'stddev',
+                        header: 'SD',
                         sortable: true,
                         class: "text-align-right amba prio3",
                         numberTemplate: true,
-                        help: 'standard deviation of non-null records'
+                        help: 'Standard Deviation of the scores'
                     },
                     {
                         field: 'mean_length',
-                        header: 'mean Length',
+                        header: 'Mean Length',
                         sortable: true,
                         class: "text-align-right amba prio4",
                         numberTemplate: true,
@@ -226,7 +226,7 @@
                     },
                     {
                         field: 'mean_questions',
-                        header: 'mean "?"',
+                        header: 'Mean "?"',
                         sortable: true,
                         class: "text-align-right amba prio4",
                         numberTemplate: true,
@@ -234,7 +234,7 @@
                     },
                     {
                         field: 'mean_exclamations',
-                        header: 'mean "!"',
+                        header: 'Mean "!"',
                         sortable: true,
                         class: "text-align-right amba prio4",
                         numberTemplate: true,
