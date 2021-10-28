@@ -619,6 +619,7 @@
 
             svg {
                 display: block;
+                flex-grow: 1;
             }
         }
 
