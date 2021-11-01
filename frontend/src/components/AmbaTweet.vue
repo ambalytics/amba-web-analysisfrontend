@@ -196,6 +196,7 @@
                 }
             },
             startAutoUpdate() {
+                this.loadNewestTweet();
                 console.log('start auto update');
                 this.timer = setInterval(this.loadNewestTweet, 10000);
             },
