@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "8648d321c67abbc34e5f",
+    "revision": "bd9dde0e529259006ce3",
     "url": "/css/app.969d2713.css"
   },
   {
@@ -164,7 +164,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/twitter-logo.923455be.svg"
   },
   {
-    "revision": "d3c8ba92d6f9217297246720b7dc807b",
+    "revision": "93b6f0a61d3ba586d35285439d8352d5",
     "url": "/index.html"
   },
   {
@@ -196,8 +196,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/about.c71f9e75.js"
   },
   {
-    "revision": "8648d321c67abbc34e5f",
-    "url": "/js/app.3dae5cde.js"
+    "revision": "bd9dde0e529259006ce3",
+    "url": "/js/app.87296ac1.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
