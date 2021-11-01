@@ -111,6 +111,16 @@
                         },
                         tooltip: {
                             callbacks: {
+                                title: function (o) {
+                                    let options = {
+                                        year: '2-digit',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    };
+                                    return new Date(parseInt(o[0].label)).toLocaleTimeString('de-DE', options);
+                                },
                                 beforeLabel: function (context) {
                                     return context.dataset.title;
                                 }
