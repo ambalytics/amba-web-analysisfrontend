@@ -72,6 +72,22 @@
                     hover: {
                         mode: 'dataset'
                     },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function (value) {
+                                    let options = {
+                                        year: '2-digit',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    };
+                                    return new Date(this.getLabelForValue(value)).toLocaleTimeString('de-DE', options);
+                                }
+                            }
+                        }
+                    },
                     plugins: {
                         events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
                         legend: {
@@ -279,28 +295,14 @@
                             }
                         }
 
-                        let cache = {};
-                        let options = {
-                            year: '2-digit',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        };
-
                         val.forEach((e, i) => {
                             // publication level
                             let data = [];
 
                             e.data.forEach(t => {
                                 let date = new Date(t.time);
-                                let dataLabel = '';
-                                if (Object.prototype.hasOwnProperty.call(cache, (date.getTime()))) {
-                                    dataLabel = cache[date.getTime()];
-                                } else {
-                                    dataLabel = date.toLocaleTimeString('de-DE', options);
-                                    cache[date.getTime()] = dataLabel;
-                                }
+                                let dataLabel = date.getTime();
+
                                 label.push(dataLabel);
                                 data.push({
                                     x: dataLabel,
