@@ -148,7 +148,7 @@
                     <div class="padding-left" >
                         <h3>
                             <time-tooltip/>
-                            Average Contains Abstract
+                            Average Abstract Similarity
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
@@ -316,7 +316,7 @@
             trendingRank: '-',
             pubFields: [
                 {label: 'Bot Rating', value: 'bot_rating'},
-                {label: 'Contains Abstract', value: 'contains_abstract_raw'},
+                {label: 'Abstract Similarity', value: 'contains_abstract_raw'},
                 {label: 'Exclamations', value: 'exclamations'},
                 {label: 'Followers', value: 'followers'},
                 {label: 'Length', value: 'length'},
