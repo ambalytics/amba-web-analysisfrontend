@@ -76,7 +76,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/browserconfig.xml"
   },
   {
-    "revision": "77ea9d1f9e9867f826a3",
+    "revision": "d2a0aeb8f6dfbc9d5d25",
     "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
   },
   {
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "173f86b2ac98980084a0",
-    "url": "/css/app.969d2713.css"
+    "revision": "b351cc532ec1d81bad77",
+    "url": "/css/app.b93519da.css"
   },
   {
     "revision": "6a377b49c5a12a22a2b4",
@@ -612,7 +612,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "9eca2f6911380de98c54f4a218f24f27",
+    "revision": "cbf450b64723d77d640bbba896c6c3e2",
     "url": "/index.html"
   },
   {
@@ -620,16 +620,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/Author.2fbae47d.js"
   },
   {
-    "revision": "475b560bd17c5eb6498c",
-    "url": "/js/Authors.dcfd9e00.js"
+    "revision": "190bffe1355d63abb42d",
+    "url": "/js/Authors.58688164.js"
   },
   {
-    "revision": "77ea9d1f9e9867f826a3",
-    "url": "/js/Author~FieldsOfStudy~Publications.c00a5895.js"
+    "revision": "d2a0aeb8f6dfbc9d5d25",
+    "url": "/js/Author~FieldsOfStudy~Publications.bb4c4017.js"
   },
   {
-    "revision": "7ed25a5cf84382b9bc44",
-    "url": "/js/FieldsOfStudy.410bc7ab.js"
+    "revision": "06abe8c6e8f361750996",
+    "url": "/js/FieldsOfStudy.3c34b5b4.js"
   },
   {
     "revision": "d6be1ba0ff5e1f26e30f",
@@ -644,8 +644,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/about.c71f9e75.js"
   },
   {
-    "revision": "173f86b2ac98980084a0",
-    "url": "/js/app.f031f191.js"
+    "revision": "b351cc532ec1d81bad77",
+    "url": "/js/app.c913949f.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
