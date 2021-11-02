@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
   },
   {
-    "revision": "d6be1ba0ff5e1f26e30f",
+    "revision": "5e8254b0141e5b8cf88a",
     "url": "/css/Publication.315ec643.css"
   },
   {
@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "b351cc532ec1d81bad77",
+    "revision": "fd14c06d4b88529126c1",
     "url": "/css/app.b93519da.css"
   },
   {
@@ -612,12 +612,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "cbf450b64723d77d640bbba896c6c3e2",
+    "revision": "286f620670155ce3a0695a2a12417d72",
     "url": "/index.html"
   },
   {
-    "revision": "05ea34818d400575e22d",
-    "url": "/js/Author.2fbae47d.js"
+    "revision": "8cb5827c3ce217c5a05d",
+    "url": "/js/Author.28436213.js"
   },
   {
     "revision": "190bffe1355d63abb42d",
@@ -628,24 +628,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/Author~FieldsOfStudy~Publications.bb4c4017.js"
   },
   {
-    "revision": "06abe8c6e8f361750996",
-    "url": "/js/FieldsOfStudy.3c34b5b4.js"
+    "revision": "ccffcf68cdb43c9bcddb",
+    "url": "/js/FieldsOfStudy.2f68c903.js"
   },
   {
-    "revision": "d6be1ba0ff5e1f26e30f",
-    "url": "/js/Publication.d6dd7efa.js"
+    "revision": "5e8254b0141e5b8cf88a",
+    "url": "/js/Publication.b54ba083.js"
   },
   {
-    "revision": "dc8f1a9d6fcd623e0691",
-    "url": "/js/Publications.d05a8fb0.js"
+    "revision": "ff06472faf795f5d9250",
+    "url": "/js/Publications.7011baf8.js"
   },
   {
     "revision": "31773e54652c82b746ac",
     "url": "/js/about.c71f9e75.js"
   },
   {
-    "revision": "b351cc532ec1d81bad77",
-    "url": "/js/app.c913949f.js"
+    "revision": "fd14c06d4b88529126c1",
+    "url": "/js/app.47f1b83c.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
