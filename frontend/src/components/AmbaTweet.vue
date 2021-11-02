@@ -75,7 +75,7 @@
                     <p>{{ localeNumber(score) }}</p>
                 </div>
                 <div>
-                    <h3>Bot Rating</h3>
+                    <h3>Bot Detection</h3>
                     <p>{{ formatBot(bot_rating) }}</p>
                 </div>
                 <div>
@@ -359,6 +359,7 @@
                 i.pi {
                     float: right;
                     font-size: 1.2em;
+                    word-break: break-all;
                 }
             }
 

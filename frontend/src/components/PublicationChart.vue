@@ -211,7 +211,7 @@
 
                             this.loaded = true;
                             this.chartData = {
-                                labels: ['Mean Score', 'Mean Bot Rating', 'Sum Follower', 'Mean Sentiment', 'Mean Abstract Difference', 'Mean Questions', 'Mean Exclamations', 'Mean Length'],
+                                labels: ['Mean Score', 'Mean Bot Rating', 'Sum Follower', 'Mean Sentiment', 'Mean Abstract Similarity', 'Mean Questions', 'Mean Exclamations', 'Mean Length'],
                                 datasets: [
                                     {
                                         label: 'average Publication',
