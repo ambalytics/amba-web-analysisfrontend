@@ -190,6 +190,18 @@
         </div>
 
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+            <Card>
+                <template #title>
+                    Newest Tweet
+                </template>
+                <template #content>
+                    <AmbaTweet :doi_in="$route.params.p">
+                    </AmbaTweet>
+                </template>
+            </Card>
+        </div>
+
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
                     Publication by Twitter Activity over Time
@@ -204,18 +216,6 @@
                     <div v-else class="no-data">
                         - no data available -
                     </div>
-                </template>
-            </Card>
-        </div>
-
-        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
-            <Card>
-                <template #title>
-                    Newest Tweet
-                </template>
-                <template #content>
-                    <AmbaTweet :doi_in="$route.params.p">
-                    </AmbaTweet>
                 </template>
             </Card>
         </div>
