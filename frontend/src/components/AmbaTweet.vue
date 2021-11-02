@@ -84,7 +84,7 @@
                     <p>{{ localeNumber(sentiment_raw) }}</p>
                 </div>
                 <div>
-                    <h3>Contains Abstract <i style="font-size: 0.9em;" class="pi pi-question-circle"
+                    <h3>Abstract Similarity<i style="font-size: 0.9em;" class="pi pi-question-circle"
                                              v-tooltip="'Between 50 and 85% is good, much more and it\'s just the abstract, less and it will have little to do with the publication.'"></i>
                     </h3>
                     <p>{{ localeNumber(contains_abstract_raw * 100) }}%</p>
@@ -196,6 +196,7 @@
                 }
             },
             startAutoUpdate() {
+                this.loadNewestTweet();
                 console.log('start auto update');
                 this.timer = setInterval(this.loadNewestTweet, 10000);
             },

@@ -103,14 +103,27 @@
                                 }]);
 
                                 this.openPublication = true;
-                                this.openPublicationText = 'click to open publication: ' + chart.getDatasetMeta(item.datasetIndex)._dataset.title;
+                                let title = chart.getDatasetMeta(item.datasetIndex)._dataset.title;
+                                if (title.length > 80) {
+                                    title = title.replace(/^(.{70}[^\s]*).*/, "$1") + '...';
+                                }
+                                this.openPublicationText = 'click to open publication: ' + title;
                                 this.currentPublication = '/publication/' + item.text;
-
                                 chart.render();
                             },
                         },
                         tooltip: {
                             callbacks: {
+                                title: function (o) {
+                                    let options = {
+                                        year: '2-digit',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    };
+                                    return new Date(parseInt(o[0].label)).toLocaleTimeString('de-DE', options);
+                                },
                                 beforeLabel: function (context) {
                                     return context.dataset.title;
                                 }
