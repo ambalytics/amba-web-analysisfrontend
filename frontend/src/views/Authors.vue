@@ -120,7 +120,7 @@ Publications.vue
                     },
                     {
                         field: 'abstract_difference',
-                        header: 'Abstract Difference',
+                        header: 'Abstract Similarity',
                         sortable: true,
                         class: "text-align-right amba prio2",
                         numberTemplate: true,

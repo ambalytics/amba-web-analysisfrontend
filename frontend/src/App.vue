@@ -620,7 +620,7 @@
 
 
         .big-chart {
-            height: 830px !important;
+            height: max-content !important;
         }
 
         .trending-items h4 {
