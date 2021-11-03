@@ -5,6 +5,9 @@
             <Card>
                 <template #title>
                     {{ publication.title }}
+                    <a class="source" target="_blank" :href="realUrl">
+                        <i class="pi pi-external-link" style="    font-size: 1.5rem;"></i>
+                    </a>
                 </template>
                 <template #content>
                     <div class="content">
@@ -30,7 +33,7 @@
                         </div>
 
                         <div>
-                            <a class="doi" target="_blank" :href="realUrl">
+                            <a class="source" target="_blank" :href="realUrl">
                                 <i class="pi pi-external-link" style="font-size: 0.8em; margin-right: 0.3em"></i>
                                 go to source
                             </a>
@@ -62,7 +65,8 @@
                             </tr>
                         </table>
 
-                        <h4 v-if="publication.fields_of_study && publication.fields_of_study.length > 0">Fields of Study:</h4>
+                        <h4 v-if="publication.fields_of_study && publication.fields_of_study.length > 0">Fields of
+                            Study:</h4>
                         <ul class="subjects">
                             <li v-for="subject in publication.fields_of_study" v-bind:key="subject.name">
                                 <router-link :to="{ name: 'fieldOfStudy', params: { id: subject.id }}"
@@ -109,21 +113,21 @@
                     Stats
                 </template>
                 <template #content>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Trending Rank
                         </h3>
                         <p class="padding-left">{{ localeNumber(trendingRank)}}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Tweet Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Total Followers Reached
@@ -131,28 +135,28 @@
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Score per Tweet
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(score * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Sentiment
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Abstract Similarity
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>Tweet Author Count</h3>
                         <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
                     </div>
@@ -485,7 +489,7 @@
 <style lang="scss">
     @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
 
-    a.doi {
+    a.doi, a.source {
         float: right;
         color: $color-main;
         text-decoration: none;
@@ -495,70 +499,80 @@
         }
     }
 
-    .publication_info_main .p-card-content {
-        display: flex;
-        justify-content: space-between;
-
-        .content {
-            width: 50%;
+    .publication_info_main {
+        .p-card {
+            border: 2px solid $color-main;
         }
 
-        .metatdata {
-            width: calc(50% - 3em);
+        .p-card-content {
+            display: flex;
+            justify-content: space-between;
 
-            table h4 {
-                margin: 0.4em 0 0.3em 2px !important;
+
+            .content {
+                width: 50%;
             }
 
-            h4 {
-                margin: 0.4em 0 0.3em 2px;
+            .metatdata {
+                width: calc(50% - 3em);
 
-                &:last-of-type {
-                    margin-top: 1em;
+                table h4 {
+                    margin: 0.4em 0 0.3em 2px !important;
+                }
+
+                tr > td {
+                    text-align: left !important;
+                }
+
+                h4 {
+                    margin: 0.4em 0 0.3em 2px;
+
+                    &:last-of-type {
+                        margin-top: 1em;
+                    }
+                }
+
+                ul {
+                    margin: 0;
+                    list-style-type: none;
+                }
+
+                li {
+                    padding: 0.2em 0;
                 }
             }
 
-            ul {
-                margin: 0;
-                list-style-type: none;
+            .abstract {
+                max-height: 400px;
+                overflow-y: auto;
+                text-align: justify;
+                padding-right: 10px;
+                margin: 1em 0;
             }
 
-            li {
-                padding: 0.2em 0;
-            }
-        }
-
-        .abstract {
-            max-height: 400px;
-            overflow-y: auto;
-            text-align: justify;
-            padding-right: 10px;
-            margin: 1em 0;
-        }
-
-        .info {
-            padding: 0;
-            margin: 0;
-            width: 100%;
-
-            td {
+            .info {
                 padding: 0;
-                word-break: break-word;
+                margin: 0;
+                width: 100%;
+
+                td {
+                    padding: 0;
+                    word-break: break-word;
+                }
+
+                h4 {
+                    margin: 0.4em 0 0.3em 0;
+                }
             }
 
-            h4 {
-                margin: 0.4em 0 0.3em 0;
+            .authors {
+                font-style: italic;
             }
-        }
 
-        .authors {
-            font-style: italic;
-        }
-
-        .doi {
-            font-family: "Courier New", monospace !important;
+            .doi {
+                font-family: "Courier New", monospace !important;
+            }
         }
     }
-
 
 </style>

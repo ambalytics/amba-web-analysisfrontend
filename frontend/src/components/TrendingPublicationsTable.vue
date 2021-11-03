@@ -63,6 +63,7 @@
             },
             search(e) {
                 if (e.keyCode === 13) {
+                    console.log('search')
                     this.$emit('search', this.searchWord);
                 }
             },

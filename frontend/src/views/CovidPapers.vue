@@ -22,7 +22,7 @@
             </template>
             <template #content>
                 <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading" :totalRecords="totalRecords"
-                                           @page="onPage($event)" @sort="onSort($event)">
+                                           @page="onPage($event)" @sort="onPage($event)" @search="onSearch($event)">
                 </TrendingPublicationsTable>
             </template>
         </Card>
@@ -101,16 +101,12 @@
                 this.timer = setInterval(this.fetchData, 180000);
         },
         methods: {
-            search(event) {
-                this.searchWord = event;
-                this.fetchData();
-            },
             onPage(event) {
                 this.lazyParams = event;
                 this.fetchData();
             },
-            onSort(event) {
-                this.lazyParams = event;
+            onSearch(word) {
+                this.searchWord = word;
                 this.fetchData();
             },
             loadTrendingProgress() {
