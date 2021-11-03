@@ -22,7 +22,7 @@
             </template>
             <template #content>
                 <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading" :totalRecords="totalRecords"
-                                           @page="onPage($event)" @sort="onSort($event)">
+                                           @page="onPage($event)" @sort="onPage($event)" @search="onSearch($event)">
                 </TrendingPublicationsTable>
             </template>
         </Card>
@@ -73,12 +73,12 @@
                     {label: 'Exclamations', value: 'mean_exclamations'},
                     {label: 'Bot Rating', value: 'mean_bot_rating'},
                     {label: 'Projected Change', value: 'projected_change'},
-                    {label: 'Trending Value', value: 'trending'},
-                    {label: 'ema', value: 'ema'},
-                    {label: 'kama', value: 'kama'},
-                    {label: 'ker', value: 'ker'},
+                    {label: 'Theil–Sen estimator', value: 'trending'},
+                    {label: 'EMA', value: 'ema'},
+                    {label: 'KAMA', value: 'kama'},
+                    {label: 'KER', value: 'ker'},
                     {label: 'Mean Score', value: 'mean_score'},
-                    {label: 'stddev', value: 'stddev'},
+                    {label: 'SD', value: 'stddev'},
                 ],
                 dois: []
             }
@@ -100,16 +100,12 @@
                 }
         },
         methods: {
-            search(event) {
-                this.searchWord = event;
-                this.fetchData();
-            },
             onPage(event) {
                 this.lazyParams = event;
                 this.fetchData();
             },
-            onSort(event) {
-                this.lazyParams = event;
+            onSearch(word) {
+                this.searchWord = word;
                 this.fetchData();
             },
             loadTrendingProgress() {
