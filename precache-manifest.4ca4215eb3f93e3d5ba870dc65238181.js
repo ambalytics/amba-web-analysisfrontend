@@ -76,19 +76,19 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/browserconfig.xml"
   },
   {
-    "revision": "d2a0aeb8f6dfbc9d5d25",
+    "revision": "3d81eb51bfebf9aaab93",
     "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
   },
   {
-    "revision": "5e8254b0141e5b8cf88a",
-    "url": "/css/Publication.315ec643.css"
+    "revision": "4bd27b56be705a26408b",
+    "url": "/css/Publication.2bcd74aa.css"
   },
   {
     "revision": "31773e54652c82b746ac",
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "fd14c06d4b88529126c1",
+    "revision": "15180835e77578ec77ea",
     "url": "/css/app.b93519da.css"
   },
   {
@@ -612,40 +612,40 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "286f620670155ce3a0695a2a12417d72",
+    "revision": "07c6a2c04e7acc913552be03b8836fb9",
     "url": "/index.html"
   },
   {
-    "revision": "8cb5827c3ce217c5a05d",
-    "url": "/js/Author.28436213.js"
+    "revision": "bee56b62ead81431b01d",
+    "url": "/js/Author.ecac84ff.js"
   },
   {
     "revision": "190bffe1355d63abb42d",
     "url": "/js/Authors.58688164.js"
   },
   {
-    "revision": "d2a0aeb8f6dfbc9d5d25",
-    "url": "/js/Author~FieldsOfStudy~Publications.bb4c4017.js"
+    "revision": "3d81eb51bfebf9aaab93",
+    "url": "/js/Author~FieldsOfStudy~Publications.827a8eca.js"
   },
   {
-    "revision": "ccffcf68cdb43c9bcddb",
-    "url": "/js/FieldsOfStudy.2f68c903.js"
+    "revision": "6b768668512e26e5e510",
+    "url": "/js/FieldsOfStudy.b85682aa.js"
   },
   {
-    "revision": "5e8254b0141e5b8cf88a",
-    "url": "/js/Publication.b54ba083.js"
+    "revision": "4bd27b56be705a26408b",
+    "url": "/js/Publication.d1610de4.js"
   },
   {
-    "revision": "ff06472faf795f5d9250",
-    "url": "/js/Publications.7011baf8.js"
+    "revision": "cb9e9d07135a020e27ce",
+    "url": "/js/Publications.b5838cb7.js"
   },
   {
     "revision": "31773e54652c82b746ac",
     "url": "/js/about.c71f9e75.js"
   },
   {
-    "revision": "fd14c06d4b88529126c1",
-    "url": "/js/app.47f1b83c.js"
+    "revision": "15180835e77578ec77ea",
+    "url": "/js/app.011f60a3.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
