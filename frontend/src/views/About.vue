@@ -33,7 +33,7 @@
             <div class="about-line">Publication Data from <a href="https://crossref.org/" target="_blank"><img
                     src="../assets/crossref-logo.svg"></a><a href="https://develop.openaire.eu/overview.html"
                                                              target="_blank"><img
-                    src="../assets/open-aire-logo.png"></a><a href="https://www.semanticscholar.org/product/api"
+                    src="../assets/open-aire-logo.png"></a><a href="https://www.semanticscholar.org?utm_source=api"
                                                               target="_blank"><img
                     src="../assets/semantic_scholar-logo.svg"></a></div>
             <div class="about-line">Source Code<a href="https://github.com/ambalytics" target="_blank"><img

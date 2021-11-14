@@ -157,8 +157,8 @@
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left">
-                        <h3>Tweet Author Count</h3>
-                        <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
+                        <h3>Total Tweets Processed</h3>
+                        <p class="padding-left">{{ localeNumber(totalTweetCount) }}</p>
                     </div>
                 </template>
             </Card>
@@ -311,7 +311,7 @@
             containsAbstract: '-',
             questions: '-',
             exclamations: '-',
-            tweetAuthorCount: '-',
+            totalTweetCount: '-',
             topValues: [],
             profileData: [],
             pubOverTimeData: [],
@@ -342,7 +342,7 @@
         },
         methods: {
             localeNumber: function (x) {
-                if (!x || isNaN(x)) return '-';
+                if (isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
             },
             hover(e) {
@@ -359,6 +359,39 @@
                     .catch(e => {
                         this.renderPublicationChart = false;
                         this.pubOverTimeData = [];
+                        console.log(e);
+                    });
+            },
+            loadStats() {
+                StatService.numbers(this.duration, null, this.$route.params.p)
+                    .then(response => {
+                        this.tweetCount = response.data.results['count'];
+                        this.totalFollowers = response.data.results['followers'];
+                        this.score = response.data.results['score'];
+                        this.containsAbstract = response.data.results['contains_abstract_raw'];
+                        this.sentiment = response.data.results['sentiment_raw'];
+                        this.questions = response.data.results['questions'];
+                        this.exclamations = response.data.results['exclamations'];
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.tweetCount = '-';
+                        this.totalFollowers = '-';
+                        this.score = '-';
+                        this.containsAbstract = '-';
+                        this.sentiment = '-';
+                        this.questions = '-';
+                        this.exclamations = '-';
+                    });
+            },
+            loadTweetCount() {
+                StatService.tweetCount('publication', this.$route.params.p)
+                    .then(response => {
+                        // console.log(response);
+                        this.totalTweetCount = response.data.results[0].sum;
+                    })
+                    .catch(e => {
+                        this.totalTweetCount = '-';
                         console.log(e);
                     });
             },
@@ -384,27 +417,8 @@
                         console.log(e);
                     });
                 this.loadPubProgress();
-
-                StatService.numbers(this.duration, null, this.$route.params.p)
-                    .then(response => {
-                        this.tweetCount = response.data.results['count'];
-                        this.totalFollowers = response.data.results['followers'];
-                        this.score = response.data.results['score'];
-                        this.containsAbstract = response.data.results['contains_abstract_raw'];
-                        this.sentiment = response.data.results['sentiment_raw'];
-                        this.questions = response.data.results['questions'];
-                        this.exclamations = response.data.results['exclamations'];
-                    })
-                    .catch(e => {
-                        console.log(e);
-                        this.tweetCount = '-';
-                        this.totalFollowers = '-';
-                        this.score = '-';
-                        this.containsAbstract = '-';
-                        this.sentiment = '-';
-                        this.questions = '-';
-                        this.exclamations = '-';
-                    });
+                this.loadStats();
+                this.loadTweetCount();
 
                 StatService.top(null, this.$route.params.p)
                     .then(response => {
@@ -454,16 +468,6 @@
                     .catch(e => {
                         console.log(e);
                         this.profileData = ['ds']
-                    });
-
-                StatService.tweetAuthorCount('publication', this.$route.params.p)
-                    .then(response => {
-                        // console.log(response);
-                        this.tweetAuthorCount = response.data.results[0].count;
-                    })
-                    .catch(e => {
-                        this.tweetAuthorCount = '-';
-                        console.log(e);
                     });
             },
             typeString: function (type) {

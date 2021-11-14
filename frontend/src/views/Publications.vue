@@ -98,6 +98,7 @@
                     sortField: 'score',
                     sortOrder: -1,
                 }
+            this.timer = setInterval(this.fetchData, 180000);
         },
         methods: {
             onPage(event) {
@@ -156,6 +157,9 @@
                         console.log(e);
                     });
             },
+        },
+        beforeUnmount() {
+            clearInterval(this.timer);
         }
     }
 </script>

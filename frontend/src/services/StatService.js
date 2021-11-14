@@ -79,6 +79,20 @@ class StatService {
         return http.get("/stats/countTweetAuthors", {params: params});
     }
 
+    tweetCount(mode, doi, id) {
+        let params = new URLSearchParams();
+
+        params.append("mode", mode);
+
+        if (mode === 'publication' && doi) {
+            params.append("doi", doi);
+        } else if (id) {
+            params.append("id", id);
+        }
+
+        return http.get("/stats/countTweets", {params: params});
+    }
+
     profileData(doi, duration) {
         return http.get('/stats/profile', {params: {doi: doi, duration: duration}});
     }
@@ -102,7 +116,7 @@ class StatService {
 
     percentages(fields = null, doi = null, limit = 12, minPercentage = 0.6) {
         if (fields === null) {
-            fields = ['lang', 'tweet_type', 'entity', 'hashtag', 'source'];
+            fields = ['lang', 'tweet_type', 'entity', 'hashtag'];
         }
 
         let params = new URLSearchParams();
