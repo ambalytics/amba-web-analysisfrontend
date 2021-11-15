@@ -81,8 +81,8 @@
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
                     <div class="padding-left" >
-                        <h3>Tweet Author Count</h3>
-                        <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
+                        <h3>Total Tweets Processed</h3>
+                        <p class="padding-left">{{ localeNumber(totalTweetCount) }}</p>
                     </div>
                 </template>
             </Card>
@@ -238,7 +238,7 @@
             containsAbstract: '-',
             questions: '-',
             exclamations: '-',
-            tweetAuthorCount: '-',
+            totalTweetCount: '-',
             a: 0,
             topValues: [],
             trendOverTimeData: [],
@@ -288,7 +288,17 @@
             }
             this.fetchData();
         },
+        mounted() {
+          this.timerStats = setInterval(this.loadStats, 60000);
+          this.timerTweets = setInterval(this.loadTweetCount, 5000);
+          this.timerTrending = setInterval(this.trendingUpdates, 180000);
+        },
         methods: {
+            trendingUpdates() {
+                this.loadTrendingItems();
+                this.loadTrendingProgress();
+                this.loadPubsProgress();
+            },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
                 return x.toLocaleString('de-De');
@@ -361,12 +371,9 @@
                         this.trendingItems[2].data = []
                     });
             },
-            fetchData() {
-                this.loadTrendingItems();
-
-                StatService.numbers(this.duration)
+            loadStats() {
+                StatService.numbers(this.duration, null, this.$route.params.p)
                     .then(response => {
-                        // 'bot_rating', 'contains_abstract_raw', 'exclamations', 'followers', 'length', 'questions', 'score', 'sentiment_raw', 'count'
                         this.tweetCount = response.data.results['count'];
                         this.totalFollowers = response.data.results['followers'];
                         this.scoreSum = response.data.results['score'];
@@ -387,7 +394,22 @@
                         this.questions = '-';
                         this.exclamations = '-';
                     });
-
+            },
+            loadTweetCount() {
+                StatService.tweetCount('publication', this.$route.params.p)
+                    .then(response => {
+                        // console.log(response);
+                        this.totalTweetCount = response.data.results[0].sum;
+                    })
+                    .catch(e => {
+                        this.totalTweetCount = '-';
+                        console.log(e);
+                    });
+            },
+            fetchData() {
+                this.loadTrendingItems();
+                this.loadStats();
+                this.loadTweetCount();
                 this.loadPubsProgress();
                 this.loadTrendingProgress();
 
@@ -449,22 +471,17 @@
                             console.log(e);
                         });
                 }
-
-                StatService.tweetAuthorCount('publications')
-                    .then(response => {
-                        // console.log(response);
-                        this.tweetAuthorCount = response.data.results[0].count;
-                    })
-                    .catch(e => {
-                        this.tweetAuthorCount = '-';
-                        console.log(e);
-                    });
             },
             hover(e) {
                 if (!e) {
                     console.log(e)
                 }
             },
+        },
+        beforeUnmount() {
+            clearInterval(this.timerTweets);
+            clearInterval(this.timerStats);
+            clearInterval(this.timerTrending);
         }
     }
 </script>
