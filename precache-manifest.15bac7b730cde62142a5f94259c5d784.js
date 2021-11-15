@@ -80,15 +80,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
   },
   {
-    "revision": "4bd27b56be705a26408b",
+    "revision": "af0b0e33efd82d72ddf7",
     "url": "/css/Publication.2bcd74aa.css"
   },
   {
-    "revision": "31773e54652c82b746ac",
+    "revision": "07d934ab588696ea57b3",
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "15180835e77578ec77ea",
+    "revision": "580117c8666c85d9cd7f",
     "url": "/css/app.b93519da.css"
   },
   {
@@ -612,7 +612,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "07c6a2c04e7acc913552be03b8836fb9",
+    "revision": "c20ad2a3b01b6b7c0c8f73b28fe09105",
     "url": "/index.html"
   },
   {
@@ -632,20 +632,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/FieldsOfStudy.b85682aa.js"
   },
   {
-    "revision": "4bd27b56be705a26408b",
-    "url": "/js/Publication.d1610de4.js"
+    "revision": "af0b0e33efd82d72ddf7",
+    "url": "/js/Publication.d45c944d.js"
   },
   {
-    "revision": "cb9e9d07135a020e27ce",
-    "url": "/js/Publications.b5838cb7.js"
+    "revision": "2bba867440ea6d1848a0",
+    "url": "/js/Publications.7de2b6ce.js"
   },
   {
-    "revision": "31773e54652c82b746ac",
-    "url": "/js/about.c71f9e75.js"
+    "revision": "07d934ab588696ea57b3",
+    "url": "/js/about.f63ddc3d.js"
   },
   {
-    "revision": "15180835e77578ec77ea",
-    "url": "/js/app.011f60a3.js"
+    "revision": "580117c8666c85d9cd7f",
+    "url": "/js/app.2f07131d.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
