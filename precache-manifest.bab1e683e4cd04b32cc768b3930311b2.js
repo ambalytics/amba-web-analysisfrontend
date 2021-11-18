@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.acbc4467.css"
   },
   {
-    "revision": "580117c8666c85d9cd7f",
+    "revision": "fab1f32988205eaa3d98",
     "url": "/css/app.b93519da.css"
   },
   {
@@ -158,6 +158,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "aff42a4282666ff4fdce8e553918592b",
     "url": "/img/homepage.png"
+  },
+  {
+    "revision": "9bc20c8e75e9b836208739e6b63d55e1",
+    "url": "/img/icon.9bc20c8e.svg"
   },
   {
     "revision": "b6ca9e0ea7ae62329fa978cb7b7aab63",
@@ -612,7 +616,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "c20ad2a3b01b6b7c0c8f73b28fe09105",
+    "revision": "86da5115c7f67f1e28f04910e9fb20e8",
     "url": "/index.html"
   },
   {
@@ -644,8 +648,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/about.f63ddc3d.js"
   },
   {
-    "revision": "580117c8666c85d9cd7f",
-    "url": "/js/app.2f07131d.js"
+    "revision": "fab1f32988205eaa3d98",
+    "url": "/js/app.48107314.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
