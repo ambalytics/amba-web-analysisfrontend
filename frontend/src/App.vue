@@ -3,7 +3,7 @@
     <div class="layout-topbar p-d-flex p-shadow-3  p-jc-between  p-ai-center">
         <div class="logo-link">
             <router-link to="/" class="logo p-d-flex p-ai-center">
-                <img alt="logo" src="./assets/logo.png">
+                <img alt="logo" src="./assets/icon.svg">
             </router-link>
         </div>
 
