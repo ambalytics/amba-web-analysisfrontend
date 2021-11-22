@@ -1,9 +1,5 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "73b80bb307b1261867c9959a3b916df8",
-    "url": "/CNAME"
-  },
-  {
     "revision": "513093985ede872b00c29b9296938359",
     "url": "/android-icon-144x144.png"
   },
@@ -76,20 +72,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/browserconfig.xml"
   },
   {
-    "revision": "3d81eb51bfebf9aaab93",
-    "url": "/css/Author~FieldsOfStudy~Publications.a5b4f210.css"
+    "revision": "5c5b3a9d017b29bbc918",
+    "url": "/css/About.acbc4467.css"
   },
   {
-    "revision": "af0b0e33efd82d72ddf7",
+    "revision": "67b44d3cf24a2b70f5f6",
+    "url": "/css/Author~CovidPapers~FieldsOfStudy~Publications.a5b4f210.css"
+  },
+  {
+    "revision": "57000ce161a224267cb1",
     "url": "/css/Publication.2bcd74aa.css"
   },
   {
-    "revision": "07d934ab588696ea57b3",
-    "url": "/css/about.acbc4467.css"
-  },
-  {
-    "revision": "fab1f32988205eaa3d98",
-    "url": "/css/app.b93519da.css"
+    "revision": "0a5a8bf84029e87e165d",
+    "url": "/css/app.be241fe4.css"
   },
   {
     "revision": "6a377b49c5a12a22a2b4",
@@ -616,40 +612,44 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/windows11/Wide310x150Logo.scale-400.png"
   },
   {
-    "revision": "86da5115c7f67f1e28f04910e9fb20e8",
+    "revision": "d72263dd18da3755b9649193bda6fd01",
     "url": "/index.html"
   },
   {
-    "revision": "bee56b62ead81431b01d",
-    "url": "/js/Author.ecac84ff.js"
+    "revision": "5c5b3a9d017b29bbc918",
+    "url": "/js/About.edcdc7cf.js"
   },
   {
-    "revision": "190bffe1355d63abb42d",
-    "url": "/js/Authors.58688164.js"
+    "revision": "c5de8e1128525bcbb7a6",
+    "url": "/js/Author.17374c13.js"
   },
   {
-    "revision": "3d81eb51bfebf9aaab93",
-    "url": "/js/Author~FieldsOfStudy~Publications.827a8eca.js"
+    "revision": "4a88c5720985738c1f17",
+    "url": "/js/Authors.4945055c.js"
   },
   {
-    "revision": "6b768668512e26e5e510",
-    "url": "/js/FieldsOfStudy.b85682aa.js"
+    "revision": "67b44d3cf24a2b70f5f6",
+    "url": "/js/Author~CovidPapers~FieldsOfStudy~Publications.28823db4.js"
   },
   {
-    "revision": "af0b0e33efd82d72ddf7",
-    "url": "/js/Publication.d45c944d.js"
+    "revision": "13c275386429eb383735",
+    "url": "/js/CovidPapers.00f1d172.js"
   },
   {
-    "revision": "2bba867440ea6d1848a0",
-    "url": "/js/Publications.7de2b6ce.js"
+    "revision": "3ea9157e8248154283aa",
+    "url": "/js/FieldsOfStudy.d86be978.js"
   },
   {
-    "revision": "07d934ab588696ea57b3",
-    "url": "/js/about.f63ddc3d.js"
+    "revision": "57000ce161a224267cb1",
+    "url": "/js/Publication.63271438.js"
   },
   {
-    "revision": "fab1f32988205eaa3d98",
-    "url": "/js/app.48107314.js"
+    "revision": "2590ca270567bbc21ffe",
+    "url": "/js/Publications.9d756384.js"
+  },
+  {
+    "revision": "0a5a8bf84029e87e165d",
+    "url": "/js/app.b4d9adef.js"
   },
   {
     "revision": "d4512f394ba762fddfac",
