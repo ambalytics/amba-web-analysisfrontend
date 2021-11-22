@@ -6,7 +6,7 @@
                 <p>Sorry the page you requested could not be found :/</p>
             </div>
             <h3><a href="/#"><img
-                    src="../assets/logo.png">take me back to ambalytics analysis streams home</a></h3>
+                    src="../assets/logo.png">take me back to ambalytics trends home</a></h3>
         </div>
     </div>
 </template>

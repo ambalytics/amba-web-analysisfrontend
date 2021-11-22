@@ -1,4 +1,6 @@
 class LicenseCheck {
+   // check if an abstract with an given license can be displayed or not
+
  allowed = ["http://iopscience.iop.org/info/page/text-and-data-mining",
     "http://creativecommons.org/licenses/by-nc-nd/3.0",
     "http://creativecommons.org/licenses/by-nc-nd/3.0/",

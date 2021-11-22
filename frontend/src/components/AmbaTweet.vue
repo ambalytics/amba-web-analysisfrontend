@@ -127,7 +127,6 @@
     import StatService from "../services/StatService";
     import LanguageDecode from "../helper/LanguageDecode";
     import LocationDecode from "../helper/LocationDecode";
-    // import FieldOfStudyService from "../services/FieldOfStudyService";
     import LicenseCheck from "../helper/LicenseCheck";
 
     export default {
@@ -197,31 +196,28 @@
             },
             startAutoUpdate() {
                 this.loadNewestTweet();
-                console.log('start auto update');
                 this.timer = setInterval(this.loadNewestTweet, 10000);
             },
             cancelAutoUpdate() {
-                console.log('cancel auto update');
                 clearInterval(this.timer);
             },
             allowExternalContent: function () {
-                this.$cookie.setCookie('external-content-allowed', true);
+                this.$cookie.setCookie('external-content-allowed', true, { expire: "1y" });
                 this.tweetsAllowed = true;
             },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
-                return x.toLocaleString();  //'de-De'
+                return x.toLocaleString();
             },
             localeTime: function (x) {
                 let d = new Date(x + 'Z');
-                return d.toLocaleString(); // 'de-De'
+                return d.toLocaleString();
             },
             formatBot: function (x) {
                 if (x === 10) return 'no Bot';
                 return 'Bot'
             },
             loadNewestTweet() {
-                console.log('load tweet');
                 StatService.newestTweet(this.mode, this.doi_in, this.id_in)
                     .then(r => {
                         let response = r.data.results[0].data;
@@ -259,7 +255,6 @@
                         } else {
                             this.entities = JSON.parse(this.entities)
                         }
-                        console.log(this.$cookie.getCookie('external-content-allowed'));
                         if (this.$cookie.getCookie('external-content-allowed') && this.$cookie.getCookie('external-content-allowed') === 'true') {
                             this.tweetsAllowed = true;
                         }

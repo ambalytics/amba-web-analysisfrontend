@@ -56,11 +56,6 @@
 <style lang="scss">
     @import '../assets/_theme.scss'; // copied from '~primevue/resources/themes/nova/theme.css'
 
-    .trending-items-card {
-        /*height: 50rem;*/
-
-    }
-
     .trending-items {
         margin-top: -2em;
         position: relative;

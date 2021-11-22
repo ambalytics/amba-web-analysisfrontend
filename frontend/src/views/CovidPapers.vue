@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    // top publications
     import PublicationService from "../services/PublicationService";
     import TimeTooltip from "../components/TimeTooltip";
     import PublicationChart from "../components/PublicationChart";

@@ -1,4 +1,6 @@
 class LocationDecode {
+    // decide a given location short code and return the full location
+
     locations = {
         ae: "United Arab Emirates",
         af: "Afghanistan",

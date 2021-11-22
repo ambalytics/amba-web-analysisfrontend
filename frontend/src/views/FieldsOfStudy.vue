@@ -257,12 +257,11 @@ Publications.vue
             },
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
-                return x.toLocaleString(); // 'de-De'
+                return x.toLocaleString();
             },
             fetchData() {
                 this.error = this.post = null;
                 this.loading = true;
-                // console.log(this.lazyParams.sortOrder);
                 FieldOfStudyService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;

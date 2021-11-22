@@ -5,6 +5,7 @@
 </template>
 
 <script>
+    // render a tweet using twitter js api therefore ensuring comlicance
     let __rest = (this && this.__rest) || function (s, e) {
         let t = {};
         for (let p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)

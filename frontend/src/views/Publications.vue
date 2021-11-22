@@ -85,7 +85,6 @@
         },
         created() {
             document.title = "Trending publications";
-
             if (this.$route.query.time !== undefined) {
                 this.duration = this.$route.query.time;
             }
@@ -97,7 +96,7 @@
                     rows: 10,
                     sortField: 'score',
                     sortOrder: -1,
-                }
+                };
             this.timer = setInterval(this.fetchData, 180000);
         },
         methods: {
@@ -122,7 +121,6 @@
             fetchData() {
                 this.error = this.post = null;
                 this.loading = true;
-                // console.log(this.lazyParams.sortOrder);
                 PublicationService.trending(this.duration, this.lazyParams.first, this.lazyParams.rows, this.lazyParams.sortField, this.lazyParams.sortOrder > 0 ? 'asc' : 'desc', this.searchWord)
                     .then(response => {
                         this.data = response.data.results;

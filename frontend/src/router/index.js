@@ -1,7 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from '../views/Home.vue'
 import NotFound from "../views/NotFound.vue";
-// import Publication from "../views/Publication";
 
 const routes = [
     {
@@ -15,7 +14,7 @@ const routes = [
         label: 'COVID-19',
         name: 'covid',
         show: true,
-        component: () => import(/* webpackChunkName: "Publications" */ '../views/CovidPapers.vue')
+        component: () => import(/* webpackChunkName: "CovidPapers" */ '../views/CovidPapers.vue')
     },{
         path: '/publications',
         label: 'Publications',
@@ -57,7 +56,7 @@ const routes = [
         label: 'About',
         name: 'about',
         show: true,
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+        component: () => import(/* webpackChunkName: "About" */ '../views/About.vue')
     }, {
         path: '/:pathMatch(.*)*',
         label: 'NotFound',
