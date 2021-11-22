@@ -149,19 +149,17 @@
                 this.scale.max = dynamicMapCssResult.max;
 
                 let barData = [];
-
+                // render scale
                 let colors = this.chromaScale.colors(this.scale.resolution);
                 colors.forEach((e) => {
                     barData.push(e)
                 });
                 this.scale.barData = barData;
-                // console.log(this.scale.barData);
                 this.$data.node.innerHTML = getCombinedCssString(baseCss, dynamicMapCssResult.css);
             }
         },
         mounted() {
             this.$data.node.id = 'map-style';
-            console.log(this.$data.node)
             if (document.getElementById(this.$data.node.id)) {
                 document.getElementById(this.$data.node.id).remove();
             }

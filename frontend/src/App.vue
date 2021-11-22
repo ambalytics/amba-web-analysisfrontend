@@ -87,7 +87,6 @@
         ,
         methods: {
             changeDuration() {
-                console.log(this.selectedTime.duration);
                 this.$router.push({path: this.$route.path, query: {time: this.selectedTime.duration}});
             }
         }

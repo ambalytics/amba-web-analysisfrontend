@@ -274,8 +274,6 @@
                         for (let i = 0; i < data.length; i++) {
                             colors.push(c(i / (data.length - 1)).hex())
                         }
-                        // console.log(response.data.length);
-                        // console.log(colors);
 
                         let dt = [{
                             label: this.title,
@@ -292,6 +290,7 @@
                             datasets: dt
                         };
                     } else {
+                        // line chart
                         let label = [];
                         let dt = [];
 

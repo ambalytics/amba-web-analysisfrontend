@@ -62,18 +62,20 @@
                 this.$emit('sort', event);
             },
             search(e) {
+                // search on enter key
                 if (e.keyCode === 13) {
-                    console.log('search')
                     this.$emit('search', this.searchWord);
                 }
             },
             rowClick(event) {
+                // open publication page
                 this.$router.push('/publication/' + event.data.doi)
             },
             localeNumber: function (x) {
+                // round and transform to localized number or '-'
                 if (isNaN(x)) return '-';
                 x = Math.round(x * 100) / 100;
-                return x.toLocaleString(); // 'de-De'
+                return x.toLocaleString();
             },
         },
         data() {

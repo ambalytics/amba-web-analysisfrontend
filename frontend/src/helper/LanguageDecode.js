@@ -1,4 +1,6 @@
 class LanguageDecode {
+    // decide a given language short code (from twitter) and return the full language
+
     // https://gist.github.com/piraveen/fafd0d984b2236e809d03a0e306c8a4d
     langs = {
         'am': 'Amharic',

@@ -24,14 +24,11 @@ export default {
         onWordClick: {
             type: Function,
             default: (word) => {
-                // console.log(word.target.textContent);
+                // open either a search or a persons page
                 let annotation = word.target.textContent;
                 if (annotation.startsWith('@')) {
-                    // remove @
-                    // add css pointer for cursor todo
                     window.open("https://twitter.com/" + annotation, '_blank');
                 } else {
-                    // window.open("https://translate.google.com/?sl=auto&tl=en&text=" + annotation, '_blank');
                     window.open("https://twitter.com/search?q=" + annotation, '_blank');
                 }
             },
@@ -72,42 +69,39 @@ export default {
         }
     },
     mounted() {
-        // console.log('this.$refs.wordCloud.clientHeight')
-        // console.log(this.$refs.wordCloud.clientHeight)
-        // console.log('mounted canvas')
-        // console.log(this.data)
-        this.createCanvas()
-        this.ro = new ResizeObserver(this.onResize).observe(this.$refs.wordCloud)
+        this.createCanvas();
+        this.ro = new ResizeObserver(this.onResize).observe(this.$refs.wordCloud);
     },
     beforeUnmount () {
         if (this.ro)
-          this.ro.unobserve(this.$refs.wordCloud)
+          this.ro.unobserve(this.$refs.wordCloud);
     },
     watch: {
         data() {
-            this.createCanvas()
+            this.createCanvas();
         },
         rotate() {
-            this.createCanvas()
+            this.createCanvas();
         },
         font() {
-            this.createCanvas()
+            this.createCanvas();
         },
         padding() {
-            this.createCanvas()
+            this.createCanvas();
         },
         spiral() {
-            this.createCanvas()
+            this.createCanvas();
         },
         colors() {
-            this.createCanvas()
+            this.createCanvas();
         },
         coloring() {
-            this.createCanvas()
+            this.createCanvas();
         }
     },
     methods: {
         fontSizeMapper: function (word) {
+            // map a given word based to its count (value) to a size within max and min
             let max = 0;
             let min = 10000;
             this.data.forEach((e) => {
@@ -117,12 +111,12 @@ export default {
                     min = e.value;
                 }
             });
-            let maxOut = 150;
-            let minOut = 20;
-            let r = (word.value - min) * (maxOut - minOut) / (max - min) + minOut;
-            return r;
+            let maxOut = 150;   // max font size
+            let minOut = 20;    // min font size
+            return (word.value - min) * (maxOut - minOut) / (max - min) + minOut;
         },
         onResize () {
+            // resize word cloud using transform to keep everything working
             if (this.$refs && this.$refs.wordCloud) {
                 let wrapperHeight = this.$refs.wordCloud.offsetHeight;
                 let wrapperWidth = this.$refs.wordCloud.offsetWidth;
@@ -138,6 +132,7 @@ export default {
             }
         },
         createCanvas: function() {
+            // create the word cloud using provided data
             const wordCounts = this.data.map(
                 text => ({ ...text })
             );
@@ -154,8 +149,6 @@ export default {
             .font(this.font)
             .fontSize(this.fontSizeMapper)
             .on('end', this.end);
-
-
 
             if (this.colors)
                 this.fill = d3.scaleOrdinal().range(this.colors);
@@ -214,6 +207,5 @@ export default {
             }
         }
     }
-
 
 </style>

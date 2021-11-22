@@ -343,7 +343,7 @@
         methods: {
             localeNumber: function (x) {
                 if (isNaN(x)) return '-';
-                return x.toLocaleString('de-De');
+                return x.toLocaleString();
             },
             hover(e) {
                 if (!e) {
@@ -387,7 +387,6 @@
             loadTweetCount() {
                 StatService.tweetCount('publication', this.$route.params.p)
                     .then(response => {
-                        // console.log(response);
                         this.totalTweetCount = response.data.results[0].sum;
                     })
                     .catch(e => {
@@ -398,7 +397,6 @@
             fetchData() {
                 PublicationService.get(this.$route.params.p, this.duration)
                     .then(response => {
-                        // console.log(response.data.data);
                         this.publication = response.data.results['publication'][0];
                         document.title = this.publication.title;
                         this.publication['authors'] = response.data.results['authors'];
@@ -411,7 +409,6 @@
                             this.publication.abstract = false;
                             this.publication.license = false;
                         }
-                        // console.log(this.publication);
                     })
                     .catch(e => {
                         console.log(e);
@@ -482,7 +479,6 @@
             dateFormat: function (date) {
                 if (date) {
                     date = new Date(date);
-                    console.log(date);
                     return date.toLocaleDateString();
                 }
             },

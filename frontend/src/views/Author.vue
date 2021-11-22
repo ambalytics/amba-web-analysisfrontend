@@ -7,8 +7,9 @@
                     Trending {{ authorName }}
                 </template>
                 <template #content>
-                    <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading" :totalRecords="totalRecords"
-                                           @page="onPage($event)" @sort="onPage($event)" @search="onSearch($event)">
+                    <TrendingPublicationsTable :value="data" :lazyParams="lazyParams" :loading="loading"
+                                               :totalRecords="totalRecords"
+                                               @page="onPage($event)" @sort="onPage($event)" @search="onSearch($event)">
                     </TrendingPublicationsTable>
                 </template>
             </Card>
@@ -17,7 +18,8 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card class="big-chart">
                 <template #title>
-                    <time-tooltip/>Trending Publications by Ambalytics Trends
+                    <time-tooltip/>
+                    Trending Publications by Ambalytics Trends
                 </template>
                 <template #content>
                     <Dropdown v-model="selectedTrendField" :options="trendFields" optionLabel="label"
@@ -39,21 +41,21 @@
                     Stats
                 </template>
                 <template #content>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Tweet Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Publication Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Total Followers Reached
@@ -61,30 +63,30 @@
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Score per Tweet
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(score * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Sentiment
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Abstract Similarity
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left" >
-                        <h3>Tweet Author Count</h3>
-                        <p class="padding-left">{{ localeNumber(tweetAuthorCount) }}</p>
+                    <div class="padding-left">
+                        <h3>Total Tweets Processed</h3>
+                        <p class="padding-left">{{ localeNumber(totalTweetCount) }}</p>
                     </div>
                 </template>
             </Card>
@@ -102,7 +104,7 @@
             </Card>
         </div>
 
-         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
+        <div class="p-col-12 p-md-12 p-lg-6 p-xl-6">
             <Card>
                 <template #title>
                     Tweet Author Locations
@@ -177,7 +179,7 @@
     import TrendingPublicationsTable from "../components/TrendingPublicationsTable";
 
     export default {
-        name: 'Publications',
+        name: 'Author',
         components: {PublicationChart, MapChart, AmbaTweet, WordCloud, TimeTooltip, TrendingPublicationsTable},
         beforeRouteUpdate(to, from) {
             if (to.query.time !== from.query.time) {
@@ -213,7 +215,7 @@
                 containsAbstract: '-',
                 questions: '-',
                 exclamations: '-',
-                tweetAuthorCount: '-',
+                totalTweetCount: '-',
                 trendOverTimeData: [],
                 selectedTrendField: 'score',
                 trendFields: [
@@ -283,7 +285,6 @@
                     .then(response => {
                         this.trendOverTimeData = response.data.results;
                         this.renderTrendingChart = true;
-                        console.log(this.trendOverTimeData);
                     })
                     .catch(e => {
                         this.renderTrendingChart = false;
@@ -320,7 +321,7 @@
                     .then(response => {
                         this.data = response.data.results;
                         this.data.forEach(element => {
-                               element.score = Math.round(element.score);
+                            element.score = Math.round(element.score);
                             element.length_avg = Math.round(element.length_avg);
                             element.projected_change = Math.round(element.projected_change);
                             element.mean_age = Math.round(element.mean_age / 3600 * 10) / 10;
@@ -411,13 +412,12 @@
                         console.log(e);
                     });
 
-                StatService.tweetAuthorCount('author', null, this.$route.params.id)
+                StatService.tweetCount('author', null, this.$route.params.id)
                     .then(response => {
-                        // console.log(response);
-                        this.tweetAuthorCount = response.data.results[0].count;
+                        this.totalTweetCount = response.data.results[0].count;
                     })
                     .catch(e => {
-                        this.tweetAuthorCount = '-';
+                        this.totalTweetCount = '-';
                         console.log(e);
                     });
             },

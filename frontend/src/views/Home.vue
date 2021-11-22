@@ -23,21 +23,21 @@
                     Stats
                 </template>
                 <template #content>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Tweet Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(tweetCount) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Publication Count
                         </h3>
                         <p class="padding-left">{{ localeNumber(pubCount)}}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Total Followers Reached
@@ -45,42 +45,42 @@
                         <p class="padding-left">{{ localeNumber(totalFollowers) }}</p>
                     </div>
                     <!-- total score, average score -->
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Score per Tweet
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(scoreSum / tweetCount * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Sentiment
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(sentiment * 100) / 100) }}</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Abstract Similarity
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(containsAbstract * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Exclamations
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(exclamations * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>
                             <time-tooltip/>
                             Average Questions
                         </h3>
                         <p class="padding-left">{{ localeNumber(Math.round(questions * 10000) / 100) }}%</p>
                     </div>
-                    <div class="padding-left" >
+                    <div class="padding-left">
                         <h3>Total Tweets Processed</h3>
                         <p class="padding-left">{{ localeNumber(totalTweetCount) }}</p>
                     </div>
@@ -91,7 +91,7 @@
         <div class="p-col-12 p-md-12 p-lg-6 p-xl-6 word-wrapper">
             <Card>
                 <template #title>
-                    Tweet Content Word Cloud
+                    <span v-on:dblclick="easterEgg">{{ this.wordCloudTitle }}</span>
                 </template>
                 <template #content>
                     <word-cloud v-if="renderCloud" ref="worldCloud" :data="words"></word-cloud>
@@ -224,7 +224,7 @@
         },
         data: () => ({
             duration: "currently",
-            // fontSizeMapper: word => word.value / 100,
+            wordCloudTitle: 'Tweet Content Word Cloud',
             countries: [],
             words: [],
             render: false,
@@ -289,9 +289,9 @@
             this.fetchData();
         },
         mounted() {
-          this.timerStats = setInterval(this.loadStats, 60000);
-          this.timerTweets = setInterval(this.loadTweetCount, 5000);
-          this.timerTrending = setInterval(this.trendingUpdates, 180000);
+            this.timerStats = setInterval(this.loadStats, 60000);
+            this.timerTweets = setInterval(this.loadTweetCount, 5000);
+            this.timerTrending = setInterval(this.trendingUpdates, 180000);
         },
         methods: {
             trendingUpdates() {
@@ -313,11 +313,14 @@
                         console.log(e);
                     });
             },
+            easterEgg() {
+                // show fields of study instead of tweet word content
+                this.wordCloudTitle = 'Fields of Study Word Cloud';
+                this.loadFosWordData();
+            },
             loadFosWordData() {
-                 FieldOfStudy.trending(this.duration, 0, 80)
+                FieldOfStudy.trending(this.duration, 0, 80)
                     .then(response => {
-                        // this.fosWords = response.data.results;
-
                         let words = [];
                         response.data.results.forEach((e) => {
                             let obj = {};
@@ -398,7 +401,6 @@
             loadTweetCount() {
                 StatService.tweetCount('publication', this.$route.params.p)
                     .then(response => {
-                        // console.log(response);
                         this.totalTweetCount = response.data.results[0].sum;
                     })
                     .catch(e => {
@@ -431,7 +433,6 @@
                             console.log(e);
                         });
                 }
-                // this.loadFosWordData();
 
                 if (!this.renderMap) {
                     StatService.top(['location'], null, 1000)
