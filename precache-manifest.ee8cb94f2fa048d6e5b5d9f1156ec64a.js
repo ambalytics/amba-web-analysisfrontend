@@ -680,7 +680,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ms-icon-70x70.png"
   },
   {
-    "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
+    "revision": "bf5bfc19b559ae8aeeba480d2b88926b",
     "url": "/robots.txt"
   },
   {
